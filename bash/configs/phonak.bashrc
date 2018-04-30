@@ -15,7 +15,9 @@ alias rsyncHelios="rsync -cv --delete --force --recursive --whole-file --stats -
 export servicepi="pi@${testNetwork}.1"
 alias dhcPi="ssh $servicepi cat DHCP.leases"
 function sshpi() {
-	ssh ${testNetwork}.$1
+	ip=$1
+	shift
+	ssh ${testNetwork}.$ip "$@"
 }
 
 function cpi() {
