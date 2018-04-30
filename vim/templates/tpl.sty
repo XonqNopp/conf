@@ -1,0 +1,31 @@
+%% Are you sure you checked Google and CTAN that what you wanna do does not already exist?
+%% Rule to decide between writing a class or a package:
+%% If it can only work with one or more given class(es), make it a class; otherwise a package.
+%%
+%% This is a package to #&%
+%%
+%% TODO:
+%%
+
+%% TeX
+\NeedsTeXFormat{LaTeX2e}[1998/12/01]
+%% Package name {{{
+%% Tell your name and your birthday and describe yourself in 5 words
+\newcommand{\GI#&%pkgName}{#&%}
+\ProvidesPackage{\GI#&%pkgName}[2013/#&%]
+%% }}}
+%% Other packages needed {{{
+%% What do you want?
+%% Syntax: \RequirePackage[options]{package}[date]
+%% }}}
+%% Options provided {{{
+%% What options do you give the users?
+%% Syntax: \DeclareOption{option}{code}
+%% Syntax for default: \DeclareOption*{code}
+%% \DeclareOption*{\PackageWarningNoLine{\GI#&%pkgName}{Unkonwn option `\CurrentOption'}}
+%% \ExecuteOptions{default options here}
+\ProcessOptions\relax
+%% }}}
+%% Events handled: AtEndOfClass AtEndOfPackage AtBeginDocument AtEndDocument
+%% Errors and warnings: (Class|Package)(Info|Error|Warning(NoLine)?)
+%% What do you do?

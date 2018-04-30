@@ -1,0 +1,9 @@
+#!/bin/bash
+echo " NEVER TESTED IT IN THIS WAY"
+if [[ ${SHOWHIDDEN} == "true" ]]; then
+	export SHOWHIDDEN="false"
+else
+	export SHOWHIDDEN="true"
+fi
+defaults write com.apple.finder AppleShowAllFiles ${SHOWHIDDEN}
+killall Finder

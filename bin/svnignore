@@ -1,0 +1,26 @@
+#!/bin/bash
+if [[ $# -eq 0 ]]; then
+	paths="."
+else
+	paths="$@"
+fi
+
+#local this_path
+for iii in "${paths}"; do
+	this_path=${iii%/}
+	if [[ ! -d "${this_path}/.svn" ]]; then
+		echo " Missing svn directory for ${this_path}... Skipping..."
+	else
+		svn pg svn:ignore ${this_path} > /tmp/svn_ignore_pre
+		echo "Setting property svn:ignore on directory ${this_path}"
+		### TEMPORARY ###
+		if [[ -f "${this_path}/.ignore.svn" ]]; then
+			svn rm ${this_path}/.ignore.svn
+		fi
+		###
+		svn pe svn:ignore ${this_path}
+		svn pg svn:ignore ${this_path} > /tmp/svn_ignore_post
+		echo " Changes:"
+		diff -u /tmp/svn_ignore_pre /tmp/svn_ignore_post | tail -n +4
+	fi
+done

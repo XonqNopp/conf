@@ -1,0 +1,327 @@
+%%
+%% Headers %%% {{{
+%% Document variables %%% {{{
+\newcommand*{\Gael}{Ga\"el Induni}
+\newcommand*{\ThisAuthors}{\Gael}
+\newcommand*{\ThisTitle}{#&%}
+\newcommand*{\ThisTitleSHORT}{\ThisTitle}
+%% End of document variables %%% }}}
+\documentclass[portrait,a0b,final]{a0poster}
+%%
+%% Usepackages %%% {{{
+%% Graphics and figures %% {{{
+\usepackage{graphicx}
+%\usepackage{xypic}
+\usepackage{wrapfig}
+%\usepackage{subfig,caption,keyval}
+%\usepackage{subfigure}% For beamer presentation, subfig is not compatible yet
+%\captionsetup{justification=centering}
+\usepackage{float}
+%\usepackage{wallpaper}
+%% }}}
+%% Math %% {{{
+\usepackage{amsmath}
+%\usepackage{amssymb}
+%\usepackage{empheq}
+%\usepackage{cancel}
+%% }}}
+%% Programming %% {{{
+%\usepackage{listings}
+%\renewcommand{\thelstlisting}{\arabic{section}.\arabic{lstlisting}}
+%\lstloadlanguages{bash,C,C++,Fortran,HTML,Lisp,make,Matlab,Perl,Python,PHP,[LaTeX]TeX,SQL}
+%\lstloadlanguages{C++}
+%\lstdefinestyle{cpp}{
+%    language=C++,
+%    numbers=left,
+%    numberstyle=\tiny,
+%    basicstyle=\small,
+%    keywordstyle=\bfseries,
+%    identifierstyle=,
+%    commentstyle=\color{blue},
+%    stringstyle=,
+%    showstringspaces=false,
+%    showspaces=false,
+%    frame=single,
+%    morecomment=[s][\color{red}]{/***}{***/},
+%    tabsize=4,
+%    breaklines=true
+%}
+%\lstdefinestyle{matlab}{
+%    language=Matlab,
+%    numbers=left,
+%    numberstyle=\tiny,
+%    basicstyle=\small,
+%    keywordstyle=\bfseries,
+%    identifierstyle=,
+%    commentstyle=\color{blue},
+%    stringstyle=,
+%    showstringspaces=false,
+%    showspaces=false,
+%    frame=single,
+%    breaklines=true
+%}
+%% }}}
+%% Page display %% {{{
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+%\usepackage{multicol}% Remember environement is multicols{n}
+%% }}}
+%% Tables %% {{{
+%\usepackage{longtable}
+%\usepackage{multirow}
+%\usepackage{colortbl}
+%\usepackage{spreadtab}
+%\usepackage{numprint}
+%% }}}
+%% Bibliography %% {{{
+%% For superscript references:
+%\usepackage[superscript,nomove,nospace]{cite}
+%% For bracket references:
+%\usepackage{cite}
+%\usepackage[square,numbers]{natbib}
+%% To have the bibliography in the ToC:
+%\usepackage[section,numbib]{tocbibind}% numindex?
+%% }}}
+%% Miscellaneous %% {{{
+%\usepackage{alltt}
+%\usepackage{color}
+%\usepackage{everysel,ragged2e}
+%\usepackage{gensymb}
+%\usepackage{marvosym}
+%\usepackage{nicefrac}
+%% }}}
+\usepackage[french,english]{babel}
+\hypersetup{
+     colorlinks = true,
+     bookmarks  = true,
+     linkcolor  = blue,
+     urlcolor   = blue,
+     citecolor  = blue,
+     pdftitle   = {\ThisTitle},
+     pdfsubject = {\ThisTitle},
+     pdfauthor  = {\ThisAuthors}%,
+%     pdfpagemode= FullScreen
+}
+\newcommand*{\mailto}[1]{\href{mailto:#1}{#1}}
+\newcommand*{\ftplink}[1]{\href{ftp://#1}{#1}}
+\newcommand*{\myurl}[1]{\href{http://#1}{#1}}
+%% End of usepackages %%% }}}
+%%
+%% Following (and preceeding) should be updated!!!
+%% New commands %%% {{{
+%% References %% {{{
+\newcommand*{\figref}[1]{\ref{fig:#1}}
+\newcommand*{\tabref}[1]{\ref{tab:#1}}
+%% }}}
+%% Math %% {{{
+%\renewcommand{\vec}[1]{\underline{#1}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand*{\mat}[1]{\underline{\underline{#1}} }
+%\newcommand*{\Rey}{\mathcal{R}e}
+\newcommand*{\dd}{\textrm{d}}
+\newcommand*{\intdd}[1]{intdd #1\ }
+\newcommand*{\intddlim}[2]{\int\limits_{#2}\dd #1 }
+\newcommand*{\intddlims}[3]{\int\limits_{#2}^{#3}\dd #1\ }
+\newcommand*{\avg}[1]{\left\langle #1 \right\rangle}
+%\newcommand*{\grad}{\vec{\nabla}}
+\newcommand*{\grad}{\nabla}
+\renewcommand{\div}{\grad \cdot}
+\newcommand*{\curl}{\grad \wedge}
+\newcommand*{\lap}{\nabla^2}
+\newcommand*{\crossp}[2]{#1 \wedge #2}
+\newcommand*{\crosspv}[2]{\vec{#1} \wedge \vec{#2}}
+\newcommand*{\dsd}[2]{\partial_{#2} #1}
+\newcommand*{\dsdf}[2]{\displaystyle\frac{\partial #1}{\partial #2}}
+\newcommand*{\ddsd}[2]{\dd_{#2} #1}
+%\newcommand*{\ddsdf}[2]{\displaystyle\frac{\dd #1}{\dd #2}}
+\newcommand*{\dsdt}[1]{\dsd{#1}{t}}
+\newcommand*{\dsdtf}[1]{\dsdf{#1}{t}}
+\newcommand*{\dsdtfs}[1]{\frac{\partial #1}{\partial t}}
+%\newcommand*{\ddsdthf}[1]{\displayfrac{	extrm{D} {#1}}{	extrm{D} t}}
+%\newcommand*{\dhexpl}[2]{\dsdt{#1} + ( #2 \cdot \grad ) #1}
+\renewcommand{\epsilon}{\varepsilon}
+%\renewcommand{\labelitemi}{\textbullet}% Default is \textendash
+%\makeatletter
+%\newcommand{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+%\makeatother
+%% }}}
+%% BibTeX %% {{{
+%\newcommand{\footnoteone}[2]{\footnote{#2}\newcounter{#1}\setcounter{#1}{\value{footnote}} }
+%\newcommand{\footnoterecall}[1]{\footnotemark[\value{#1}]}
+%% }}}
+%% Miscellaneous %% {{{
+%\newcommand*{\cpp}{C{\scriptsize ++}\ }
+%\newcommand*{\hpp}{C{\normalsize ++}\ }
+%\newcommand{\alali}{\\ \hline}
+\renewcommand{\roman}{\Roman}
+%% }}}
+%% End of new commands %%% }}}
+%% Poster environments specific %%% {{{
+\setlength{\columnsep}{2cm}
+\setlength{\columnseprule}{2mm}\setlength{\parindent}{0.0cm}\setlength{\parskip}{0.5ex}%
+%% New environments and commands %%% {{{
+%% Background color
+\newcommand{\background}[3]{
+	\newrgbcolor{cgradbegin}{#1}
+	\newrgbcolor{cgradend}{#2}
+	\psframe[fillstyle=gradient,gradend=cgradend,gradbegin=cgradbegin,gradmidpoint=#3](0.,0.)(1.\textwidth,-1.\textheight)
+}
+%%
+%% Poster
+\newenvironment{poster}{
+	\begin{center}
+	\begin{minipage}[c]{0.98\textwidth}
+}{
+	\end{minipage} 
+	\end{center}
+}
+%%
+%% Postertitle environment
+\newenvironment{postertitle}[2]{
+	\begin{minipage}[c][#1cm][c]{#2\textwidth}
+	\begin{center}
+}{
+	\end{center}
+	\end{minipage}
+}
+%%
+%% Image side title
+\newcommand{\imagesidetitle}[3]{
+	\begin{minipage}[c][9cm][c]{0.1\textwidth}
+	\begin{center}
+	\includegraphics[width=#1cm,angle=#2]{#3}
+	\end{center}
+	\end{minipage}
+}
+%%
+%% Header title
+\newcommand{\printtitle}[1]{\textsc{\VERYHuge #1 }\\[10mm]}
+%%
+%% Authors and EPFL
+\newcommand{\authorsepfl}[3]{\Large #1, #2\\[4mm]{\small Professeur~: #3}\\[15mm]\includegraphics[width=5cm]{EPFLno.eps}}
+%%
+%% Arrondi title
+\newcommand{\arrondititle}[4]{\pbox{0.95\textwidth}{}{linewidth=2mm,framearc=0.3,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{#4}}
+%%
+%% pcolumn
+\newenvironment{pcolumn}[1]{
+	\begin{minipage}{#1\textwidth}
+	\begin{center}
+}{
+	\end{center}
+	\end{minipage}
+}
+%%
+%% Arrondi
+\newcommand{\arrondi}[5]{\pbox{0.9\textwidth}{#1cm}{linewidth=2mm,framearc=0.1,linecolor=#2,fillstyle=gradient,gradangle=0,gradbegin=#3,gradend=#4,gradmidpoint=1.0,framesep=1em}{#5}}
+%%
+%% Space title
+\newcommand{\spacetitlesquare}[4]{\vspace{2cm}\begin{center}\pbox{0.8\textwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% Title
+\newcommand{\titlesquare}[4]{\begin{center}\pbox{0.8\textwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% Cols space title
+\newcommand{\colsspacetitlesquare}[4]{\vspace{2cm}\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% Cols title
+\newcommand{\colstitlesquare}[4]{\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% paul does everything
+\newcommand{\paul}[6]{\begin{pcolumn}{#1}\arrondi{#2}{#3}{#4}{#5}{#6}\end{pcolumn}}
+%%
+%% pbox
+\newcommand{\pbox}[4]{
+\psshadowbox[#3]{
+\begin{minipage}[t][#2][t]{#1}
+#4
+\end{minipage}
+}}
+%%
+%% myfig
+%% \myfig - replacement for \figure
+%% necessary, since in multicol-environment 
+%% \figure won't work
+\newcommand{\myfig}[3][0]{
+\begin{center}
+	\vspace{1cm}
+	\includegraphics[width=#3\hsize,angle=#1]{#2}
+	%\vspace{-0.5cm}
+	%\nobreak\medskip
+\end{center}}
+%%
+%% mycaption
+%% \mycaption - replacement for \caption
+%% necessary, since in multicol-environment \figure and
+%% therefore \caption won't work
+%\newcounter{figure}
+\setcounter{figure}{1}
+\newcommand{\mycaption}[1]{
+	%\vspace{0.5cm}
+	\begin{quote}
+	\textsc{Figure} \arabic{figure}: #1
+	\end{quote}
+	\vspace{1cm}
+	\stepcounter{figure}
+}
+%%
+\setcounter{tocdepth}{2}
+\hyphenation{}
+
+%%
+\background{#&%}{#&%}{#&%}
+%%
+%% New colours %%% {{{
+%%
+\newrgbcolor{lcolor}{0. 0. 0.80}
+\newrgbcolor{gcolor1}{1. 1. 1.}
+\newrgbcolor{gcolor2}{.80 .80 1.}
+\newrgbcolor{white}{1. 1. 1.}
+\newrgbcolor{red}{1. 0. 0.}
+\newrgbcolor{green}{0. 1. 0.}
+\newrgbcolor{blue}{0. 0. 1.}
+\newrgbcolor{lightred}{0.80 0. 0.}
+\newrgbcolor{whitered}{1. 0.80 0.80}
+\newrgbcolor{lightgreen}{0. 0.80 0.}
+\newrgbcolor{whitegreen}{0.80 1. 0.80}
+\newrgbcolor{lightblue}{0. 0. 0.80}
+\newrgbcolor{whiteblue}{0.80 0.80 1.}
+%%
+%% }}}
+%% }}}
+%% }}}
+%%
+\begin{poster}
+%%
+%% Header title
+%%
+\begin{center}
+\begin{pcolumn}{0.98}
+%%
+\arrondititle{#&%}{#&%}{#&%}{
+%%
+\imagesidetitle{#&%}{#&%}{#&%.eps}
+%%
+\begin{postertitle}{#&%}{0.78}% or 1 if no images aside
+\printtitle{#&%}
+\authorsepfl{#&%}{#&%}{#&%}
+\end{postertitle}
+%%
+\imagesidetitle{#&%}{#&%}{#&%.eps}
+%%
+}
+\end{pcolumn}
+\end{center}
+%%
+\vspace*{1cm}
+%%
+\begin{center}
+%%
+#&%
+%%
+\end{center}
+%%
+\end{poster}
+%%
+\end{document}
+%%

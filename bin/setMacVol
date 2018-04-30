@@ -1,0 +1,6 @@
+#!/bin/bash
+if [[ $# -eq 0 || ${1} -lt 0 || ${1} -gt 7 ]]; then
+	echo " Usage : setVol [0-7]"
+else
+	osascript -e "set Volume $1"
+fi

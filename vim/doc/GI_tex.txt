@@ -1,0 +1,189 @@
+*GI_tex.txt* All helps that concerns my tex ftplugins
+
+TOC:
+        |vbib|
+        |Header|
+        |LatexPawa|
+        |LogTexPawa|
+        |MO2tex|
+        |tex:bea|
+        |tex:beano|
+        |tex:bec|
+        |tex:bep|
+        |tex:bef|
+        |tex:belgt|
+        |tex:bespt|
+        |tex:bei|
+        |tex:bee|
+        |tex:beia|
+        |tex:beea|
+        |tex:beinoa|
+        |tex:beenoa|
+        |tex:belst|
+        |tex:lstinst|
+        |tex:lstinnost|
+        |tex:lstinnono|
+        |tex:ccccc|
+        |tex:sss|
+        |tex:ssss|
+        |tex:sssss|
+        |tex:cccccl|
+        |tex:sssl|
+        |tex:ssssl|
+        |tex:sssssl|
+        |tex:ppool|
+        |tex:fiG|
+        |tex:fiG2|
+        |tex:sufiG|
+        |tex:sufiG3|
+        |tex:sufiG2|
+        |tex:wfiG|
+        |tex:<F1>|
+        |tex:<F4>|
+
+
+
+vbib *vbib* *vbibl* *vbibr* *Vbib()*
+    vbib          or
+    call Vbib()         =  vsplit *.bib
+
+    vbib 0        or
+    call Vbib('')       =  vsplit current_file.bib
+
+    vbib f.tex    or
+    call Vbib('f.tex')  =  vsplit f.bib
+
+    vbibl for left-vsplit
+    vbibr for right-vsplit
+
+
+Header("class","babel_language","title") *Header()*
+    Creates a LaTeX skeleton (all arguments are optional).
+    class: LaTeX classes (supposed to work with article/report/
+                            beamer/a0poster/lettre)
+    babel_language : see LaTeX babel package
+    title : title (oh yeah)
+
+
+LatexPawa *LatexPawa* *LatexPawa()*
+    This function is intended to call the LaTeXpawa perl script
+    and get its return status to warn you if an error has occured.
+    Usage: call LatexPawa()
+       or: call LatexPawa("file1","file2","file3",......)
+
+LogTexPawa *LogTexPawa* *LogTexPawa()*
+    Makes a little split with the bottom of the LaTeXpawa log
+
+MO2tex *MO2tex* *MO2tex()*
+    >Tries< to convert a word document into tex...
+
+
+
+tex:bea *tex:bea*
+    inserts an align environment
+
+tex:beano *tex:beano*
+    inserts an align environment without equation numbering
+
+tex:bec *tex:bec*
+    inserts a cases environment
+
+tex:bep *tex:bep*
+    inserts a pmatrix envornment
+
+tex:bef *tex:bef*
+    inserts a frame environment with note
+
+tex:belgt *tex:belgt*
+    inserts a longtable environment
+
+tex:bespt *tex:bespt*
+    inserts a spreadtab environment
+
+tex:bei *tex:bei*
+    inserts an itemize environment
+
+tex:bee *tex:bee*
+    inserts an enumerate environment
+
+tex:beia *tex:beia*
+    inserts an itemize with beamer option to uncover and show the last
+    uncovered in red
+
+tex:beea *tex:beea*
+    inserts an enumerate with beamer option to uncover and show the last
+    uncovered in red
+
+tex:beinoa *tex:beinoa*
+    inserts an itemize environment with beamer option to uncover
+
+tex:beenoa *tex:beenoa*
+    inserts an enumerate environment with beamer option to uncover
+
+tex:belst *tex:belst*
+    inserts a listing environment
+
+tex:lstinst *tex:lstinst*
+    inserts a listing inline command with style, caption and linerange
+
+tex:lstinnost *tex:lstinnost*
+    inserts a listing inline command with caption and linerange
+
+tex:lstinnono *tex:lstinnono*
+    inserts a listing inline command with linerange
+
+tex:ccccc *tex:ccccc*
+    inserts a chapter header
+
+tex:sss *tex:sss*
+    inserts a section header with comments to fold
+
+tex:ssss *tex:ssss*
+	inserts a subsection header with comments to fold
+
+tex:sssss *tex:sssss*
+	inserts a subsubsection header with comments to fold
+
+tex:cccccl *tex:cccccl*
+    inserts a chapter header with label
+
+tex:sssl *tex:sssl*
+    inserts a section header with label and comments to fold
+
+tex:ssssl *tex:ssssl*
+    inserts a subsection header with label and comments to fold
+
+tex:sssssl *tex:sssssl*
+    inserts a subsubsection header with label and comments to fold
+
+tex:ppool *tex:ppool*
+    inserts a Paul command for A0 posters
+
+tex:fiG *tex:fiG*
+    inserts a figure environment with caption and label
+
+tex:fiG2 *tex:fiG2*
+    inserts two figure environments
+
+tex:sufiG *tex:sufiG*
+    inserts a figure environment with two subfigures aside
+
+tex:sufiG3 *tex:sufiG3*
+    inserts a figure environment with 3 subfigures aside
+
+tex:sufiG2 *tex:sufiG2*
+    inserts a figure environment with two subfigures one over the other
+
+tex:wfiG *tex:wfiG*
+    inserts a wrapfigure environment
+
+tex:<F1> *tex:<F1>* *tex:<f1>*
+    Calls |LatexPawa|
+
+tex:<F4> *tex:<F4>* *tex:<f4>*
+    Insert the section name into the fold comment
+
+
+
+
+vim:tw=78:et:ft=help:norl:

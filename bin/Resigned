@@ -1,0 +1,52 @@
+#!/bin/bash
+##
+## Remove all private files
+ff="-f"
+df="-rf"
+rm $df $HOME/.wash
+rm $df $HOME/.bashrc
+rm $df $HOME/.bash_history
+rm $df $HOME/.vimrc
+rm $df $HOME/.viminfo
+rm $df $HOME/.subversion
+rm $df $HOME/Desktop/private
+rm $df $HOME/Desktop/phPDM
+rm $df $HOME/Desktop/.boschung
+rm $df $HOME/Desktop/.SolDo
+
+rm $ff "$HOME/Desktop/600175/09 Tests/obs/.vimrc.local"
+rm $ff "$HOME/Desktop/600175/09 Tests/obs/.vimrc2"
+
+rm $ff "$HOME/Desktop/600162/11 Rapports/GI_notes/Eching/LaTeX_files/.vimrc2"
+rm $ff "$HOME/Desktop/600162/11 Rapports/GI_notes/Eching/perl/.vimrc2"
+rm $ff "$HOME/Desktop/600162/11 Rapports/GI_notes/Eching/analysis/.vimrc2"
+rm $ff "$HOME/Desktop/600162/11 Rapports/GI_notes/Eching/data/.vimrc2"
+
+rm $ff "$HOME/Desktop/600162/09 Tests/ValidationCampaign/.virmc2"
+
+rm $ff "$HOME/Desktop/600162/09 Tests/ASFiNAG_UBIMET/.vimrc2"
+rm $ff "$HOME/Desktop/600162/09 Tests/ASFiNAG_UBIMET/LaTeX_files/.vimrc2"
+
+rm $ff "$HOME/Desktop/600165/11 Rapports/Team_caracterisation/LaTeX_files/.vimrc2"
+
+rm $ff "$HOME/Desktop/600165/11 Rapports/GI_notes/LaTeX_files/presentations/2014-01-08/.vimrc2"
+
+rm $ff "$HOME/Desktop/600165/09 Tests/71_individuels/GI/.vimrc2"
+
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/xls/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/utils/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/tmp/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/science/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/perl/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/miscellaneous/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/ITS/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/def/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/data/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/conversions/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/60_octave/analysing/.vimrc2"
+
+rm $ff "$HOME/Desktop/600165/09 Tests/50_ValidationCampaign/.vimrc2"
+
+rm $ff "$HOME/Desktop/600165/09 Tests/09_NormesEuropeennes/CurrentSituation/LaTeX_files/.vimrc2"
+rm $ff "$HOME/Desktop/600165/09 Tests/09_NormesEuropeennes/givre/LaTeX_files/.vimrc2"

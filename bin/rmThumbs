@@ -1,0 +1,3 @@
+#!/bin/bash
+## Remove useless Thumbs.db files from current directory recursively
+find . -name "Thumbs.db" -exec rm -v {} +

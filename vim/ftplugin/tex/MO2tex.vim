@@ -1,0 +1,22 @@
+function! MO2tex()
+	execute "%s/’/'/g"
+	execute "%s/ / /g"
+	execute "%s/«/\\\\og/g"
+	execute "%s/\s*»/\\\\fg/g"
+	execute "%s/“/``/g"
+	execute "%s/”/''/g"
+	execute "%s/°C/\\\\celsius/g"
+	execute "%s/CO2/\\\\COO/g"
+	execute "%s/…/.../g"
+	execute "%s/  / /gc"
+	execute "%s/ \+$//c"
+	execute "%s/ ?/?/g"
+	execute "%s/ !/!/g"
+	execute "%s/ :/:/g"
+	execute "%s/ ;/;/g"
+	echo " - You should check the following commands afterspace: - "
+	echo "     fg"
+	echo "     COO"
+	echo "     celsius"
+endfunction
+" vim:nospell:

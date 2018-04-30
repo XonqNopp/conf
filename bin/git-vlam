@@ -1,0 +1,17 @@
+#!/bin/bash
+if [[ $# < 1 ]]; then
+	exit
+fi
+files=$@
+for f in $files; do
+	tmpf="${f}.blame"
+	git blame $f | \
+		sed "s/ *[0-9]*).*$//" | \
+		sed "s/(//" | \
+		sed "s/:[0-9]\{2\} / /" | \
+		sed "s/00$//" | \
+		sed "s/00000000 Not Committed Yet */Not Committed Yet   /" \
+		> $tmpf
+	vim -O -S /home/induni/.wash/vim/ftplugin/git/vlam.vim $tmpf $f
+	rm $tmpf
+done

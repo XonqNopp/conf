@@ -1,0 +1,90 @@
+%% New commands %%% {{{
+%% Environments {{{
+%% Subfigure without main caption {{{
+\newenvironment{SubfigWoMainCap}{%
+\renewcommand{\thesubfigure}{\thefigure\alph{subfigure}}
+\begin{figure}[H]%
+\begin{center}%
+}{%
+\vspace{-5mm}%
+\end{center}%
+\stepcounter{figure}
+\vspace{-5mm}%
+\end{figure}%
+\renewcommand{\thesubfigure}{\alph{subfigure}}
+}
+%% }}}
+%% }}}
+%% References %% {{{
+\newcommand*{\FigRef}[1]{\ref{fig:#1}}
+\newcommand*{\TabRef}[1]{\ref{tab:#1}}
+\newcommand*{\RefP}[1]{\S\ref{#1} p.~\pageref{#1}}
+\newcommand*{\RefPP}[1]{\S\ref{#1} (p.~\pageref{#1})}
+%% }}}
+%% Hyperref {{{
+\newcommand*{\mailto}[1]{\href{mailto:#1}{#1}}
+\newcommand*{\biburl}[2]{\href{#1}{\texttt{#2} }}
+%% \url{link}
+%% \href{link}{text}
+%% \href[ref]{text}
+%% Form commands {{{
+%% Must be placed in a 'Form' environment
+%% \MyField{fieldname (like HTML form)}{additional options}{Text to be displayed before}
+%% options: (double) width, (int) maxlen, (bool) multiline
+%\newcommand{\MyField}[3]{\TextField[name=#1,backgroundcolor=1 1 0.95,bordercolor=0 0 0,bordersep=3,borderwidth=1,charsize=12pt,color=0 0 0,#2]{#3}}
+%% \MyRadio{fieldname (like HTML form)}{wth}{wtf} %% prints a radio box AFTER text
+%\newcommand{\MyRadio}[3]{\ChoiceMenu[name=#1,backgroundcolor=1 1 0.95,bordercolor=0 0 0,bordersep=3,borderwidth=1,charsize=12pt,color=0 0 0,radio=true,radiosymbol=\ding{54}]{#2}{#3}}
+%% \MySingleRadio{fieldname (like HTML form)} %% only prints a radio box
+%\newcommand{\MySingleRadio}[1]{\MyRadio{#1}{ }{ }}
+%% }}}
+%% }}}
+%% Math %% {{{
+%%\renewcommand{\vec}[1]{\ensuremath{\underline{#1}} }
+%\renewcommand{\vec}[1]{\ensuremath{\boldsymbol #1}}
+%\newcommand*{\mat}[1]{\ensuremath{\underline{\underline{#1}} }}
+%%\newcommand*{\Rey}{\ensuremath{\mathcal{R}e}}
+%\newcommand*{\dd}{\ensuremath{\textrm{d}} }
+%\newcommand*{\Intdd}[1]{\ensuremath{\int \dd #1\ }}
+%\newcommand*{\IntddLim}[2]{\ensuremath{\int\limits_{#2}\dd #1 }}
+%\newcommand*{\IntddLims}[3]{\ensuremath{\int\limits_{#2}^{#3}\dd #1\ }}
+%\newcommand*{\Avg}[1]{\ensuremath{\left\langle #1 \right\rangle}}
+%%\newcommand*{\Grad}{\ensuremath{\vec{\nabla}} }
+%\newcommand*{\Grad}{\ensuremath{\nabla}}
+%\newcommand*{\Div}{\ensuremath{\Grad \cdot}}
+%\newcommand*{\Curl}{\ensuremath{\Grad \wedge}}
+%\newcommand*{\Lap}{\ensuremath{\nabla^2}}
+%\newcommand*{\CrossP}[2]{\ensuremath{#1 \wedge #2}}
+%\newcommand*{\CrossPV}[2]{\ensuremath{\vec{#1} \wedge \vec{#2}} }
+%\newcommand*{\dsd}[2]{\ensuremath{\partial_{#2} #1}}
+%\newcommand*{\dsdf}[2]{\ensuremath{\displaystyle\frac{\partial #1}{\partial #2}} }
+%\newcommand*{\ddsd}[2]{\ensuremath{\dd_{#2} #1}}
+%%\newcommand*{\ddsdf}[2]{\ensuremath{\displaystyle\frac{\dd #1}{\dd #2}} }
+%\newcommand*{\dsdt}[1]{\ensuremath{\dsd{#1}{t}} }
+%\newcommand*{\dsdtf}[1]{\ensuremath{\dsdf{#1}{t}} }
+%\newcommand*{\dsdtfs}[1]{\ensuremath{\frac{\partial #1}{\partial t}} }
+%%\newcommand*{\ddsdthf}[1]{\ensuremath{\displayfrac{\textrm{D} {#1}}{ extrm{D} t}} }
+%%\newcommand*{\dhexpl}[2]{\ensuremath{\dsdt{#1} + ( #2 \cdot \grad ) #1}}
+%% }}}
+%% BibTeX %% {{{
+%\newcommand{\FootnoteOne}[2]{\footnote{#2}\newcounter{#1}\setcounter{#1}{\value{footnote}} }
+%\newcommand{\FootnoteRecall}[1]{\footnotemark[\value{#1}]}
+%% }}}
+%% Miscellaneous %% {{{
+%\renewcommand\STprintnum[1]{\numprint{#1}}
+%\npdecimalsign{.}
+%\newcommand*{\Cpp}{C{\scriptsize ++}\ }
+%\newcommand*{\Hpp}{C{\normalsize ++}\ }
+\renewcommand*{\epsilon}{\varepsilon}
+\renewcommand*{\roman}{\Roman}
+%\renewcommand*{\geq}{\geqslant}
+%\renewcommand*{\leq}{\leqslant}
+\newcommand*{\oC}{\ensuremath{^{\circ}C}}
+\AtBeginDocument{\renewcommand{\labelitemi}{\textbullet}}% Default is \textendash % must be placed after begin-doc
+\makeatletter
+\newcommand{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+%\newcommand{\InlineTOC}{\@starttoc{toc}}%% For report inline toc (to use with the 'notitlepage' class option
+\makeatother
+%% }}}
+%% Specific to document {{{
+%% }}}
+%% End of new commands %%% }}}

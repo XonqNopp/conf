@@ -1,0 +1,134 @@
+%% Poster environments specific %%% {{{
+\setlength{\columnsep}{2cm}
+\setlength{\columnseprule}{2mm}\setlength{\parindent}{0.0cm}\setlength{\parskip}{0.5ex}%
+%% New environments and commands %%% {{{
+%% Background color
+\newcommand{\background}[3]{
+	\newrgbcolor{cgradbegin}{#1}
+	\newrgbcolor{cgradend}{#2}
+	\psframe[fillstyle=gradient,gradend=cgradend,gradbegin=cgradbegin,gradmidpoint=#3](0.,0.)(1.\textwidth,-1.\textheight)
+}
+%%
+%% Poster
+\newenvironment{poster}{
+	\begin{center}
+	\begin{minipage}[c]{0.98\textwidth}
+}{
+	\end{minipage} 
+	\end{center}
+}
+%%
+%% Postertitle environment
+\newenvironment{postertitle}[2]{
+	\begin{minipage}[c][#1cm][c]{#2\textwidth}
+	\begin{center}
+}{
+	\end{center}
+	\end{minipage}
+}
+%%
+%% Image side title
+\newcommand{\imagesidetitle}[3]{
+	\begin{minipage}[c][9cm][c]{0.1\textwidth}
+	\begin{center}
+	\includegraphics[width=#1cm,angle=#2]{#3}
+	\end{center}
+	\end{minipage}
+}
+%%
+%% Header title
+\newcommand{\printtitle}[1]{\textsc{\VERYHuge #1 }\\[10mm]}
+%%
+%% Authors and EPFL
+\newcommand{\authorsepfl}[3]{\Large #1, #2\\[4mm]{\small Professeur~: #3}\\[15mm]\includegraphics[width=5cm]{EPFLno.eps}}
+%%
+%% Arrondi title
+\newcommand{\arrondititle}[4]{\pbox{0.95\textwidth}{}{linewidth=2mm,framearc=0.3,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{#4}}
+%%
+%% pcolumn
+\newenvironment{pcolumn}[1]{
+	\begin{minipage}{#1\textwidth}
+	\begin{center}
+}{
+	\end{center}
+	\end{minipage}
+}
+%%
+%% Arrondi
+\newcommand{\arrondi}[5]{\pbox{0.9\textwidth}{#1cm}{linewidth=2mm,framearc=0.1,linecolor=#2,fillstyle=gradient,gradangle=0,gradbegin=#3,gradend=#4,gradmidpoint=1.0,framesep=1em}{#5}}
+%%
+%% Space title
+\newcommand{\spacetitlesquare}[4]{\vspace{2cm}\begin{center}\pbox{0.8\textwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% Title
+\newcommand{\titlesquare}[4]{\begin{center}\pbox{0.8\textwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% Cols space title
+\newcommand{\colsspacetitlesquare}[4]{\vspace{2cm}\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% Cols title
+\newcommand{\colstitlesquare}[4]{\begin{center}\pbox{0.8\columnwidth}{}{linewidth=2mm,framearc=0.1,linecolor=#1,fillstyle=gradient,gradangle=0,gradbegin=#2,gradend=#3,gradmidpoint=1.0,framesep=1em}{\begin{center}\textbf{#4}\end{center}}\end{center}\vspace{1.25cm}}
+%%
+%% paul does everything
+\newcommand{\paul}[6]{\begin{pcolumn}{#1}\arrondi{#2}{#3}{#4}{#5}{#6}\end{pcolumn}}
+%%
+%% pbox
+\newcommand{\pbox}[4]{
+\psshadowbox[#3]{
+\begin{minipage}[t][#2][t]{#1}
+#4
+\end{minipage}
+}}
+%%
+%% myfig
+%% \myfig - replacement for \figure
+%% necessary, since in multicol-environment 
+%% \figure won't work
+\newcommand{\myfig}[3][0]{
+\begin{center}
+	\vspace{1cm}
+	\includegraphics[width=#3\hsize,angle=#1]{#2}
+	%\vspace{-0.5cm}
+	%\nobreak\medskip
+\end{center}}
+%%
+%% mycaption
+%% \mycaption - replacement for \caption
+%% necessary, since in multicol-environment \figure and
+%% therefore \caption won't work
+%\newcounter{figure}
+\setcounter{figure}{1}
+\newcommand{\mycaption}[1]{
+	%\vspace{0.5cm}
+	\begin{quote}
+	\textsc{Figure} \arabic{figure}: #1
+	\end{quote}
+	\vspace{1cm}
+	\stepcounter{figure}
+}
+%% }}}
+%%
+\setcounter{tocdepth}{2}
+\hyphenation{}
+
+%%
+\background{#&%}{#&%}{#&%}
+%%
+%% New colours %%% {{{
+%%
+\newrgbcolor{lcolor}{0. 0. 0.80}
+\newrgbcolor{gcolor1}{1. 1. 1.}
+\newrgbcolor{gcolor2}{.80 .80 1.}
+\newrgbcolor{white}{1. 1. 1.}
+\newrgbcolor{red}{1. 0. 0.}
+\newrgbcolor{green}{0. 1. 0.}
+\newrgbcolor{blue}{0. 0. 1.}
+\newrgbcolor{lightred}{0.80 0. 0.}
+\newrgbcolor{whitered}{1. 0.80 0.80}
+\newrgbcolor{lightgreen}{0. 0.80 0.}
+\newrgbcolor{whitegreen}{0.80 1. 0.80}
+\newrgbcolor{lightblue}{0. 0. 0.80}
+\newrgbcolor{whiteblue}{0.80 0.80 1.}
+%%
+%% }}}
+%% }}}

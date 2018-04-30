@@ -1,0 +1,11 @@
+[include]
+	path = .../.wash/git/gitconfig
+[core]
+	excludesfile = .../.wash/git/gitignore
+	#trustctime = false  # if cross-working on windows and linux
+[user]
+	name = (none)
+	email = (none)
+[push]
+	default = current
+

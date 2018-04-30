@@ -1,0 +1,330 @@
+# Special stuff {{{
+# I don't want to save many same commands and other short ones:
+HISTIGNORE="&:help:info:exit"
+HISTIGNORE="${HISTIGNORE}:svnadd:svn st"
+HISTIGNORE="${HISTIGNORE}:hg st:hG st:hg st ."
+HISTIGNORE="${HISTIGNORE}:git st"
+HISTIGNORE="${HISTIGNORE}:ls:ll:lu:bc:cd:cd -:pw:pwd"
+HISTIGNORE="${HISTIGNORE}:vash:vimpwd"
+export HISTIGNORE
+# Setting size of bash_history
+export HISTFILESIZE=10000
+# Language parameters (for things such as svn):
+export LANG="en_US.UTF-8"
+export EDITOR="vim"
+export VISUAL="vim"
+export SUDO_EDITOR="vim"
+# Homepage for elinks:
+export WWW_HOME="http://www.bash.org/?latest"
+#
+# Up and down arrows are matlab-like ## {{{
+bind '"\e[A":history-search-backward'
+bind '"\e[B":history-search-forward'
+# }}}
+#
+# Tells the terminal to kill background processes on exit
+# (If you want daemons that are not binded to the window, use the command "nohup".)
+shopt -s huponexit
+# For the LS command to be readable on a dark background
+export LSCOLORS="gxfxcxdxbxegedabagacad"
+# PS1 colors ## {{{
+# Colors and styles ## {{{
+# Foreground colors ## {{{
+black='\[\033[0;30m\]'
+blue='\[\033[0;34m\]'
+green='\[\033[0;32m\]'
+cyan='\[\033[0;36m\]'
+red='\[\033[0;31m\]'
+purple='\[\033[0;35m\]'
+brown='\[\033[0;33m\]'
+lightgray='\[\033[0;37m\]'
+darkgray='\[\033[1;30m\]'
+lightblue='\[\033[1;34m\]'
+lightgreen='\[\033[1;32m\]'
+lightcyan='\[\033[1;36m\]'
+lightred='\[\033[1;31m\]'
+lightpurple='\[\033[1;35m\]'
+yellow='\[\033[1;33m\]'
+white='\[\033[1;37m\]'
+nc='\[\033[0m\]' # = No color
+# }}}
+# Background colors (useful?) ## {{{
+Bblack='\[\033[40m\]'
+Bred='\[\033[41m\]'
+Bgreen='\[\033[42m\]'
+Byellow='\[\033[43m\]'
+Bblue='\[\033[44m\]'
+Bmagenta='\[\033[45m\]'
+Bcyan='\[\033[46m\]'
+Bwhite='\[\033[47m\]'
+# }}}
+# Styles ## {{{
+boldOn='\[\033[1m\]'
+underOn='\[\033[4m\]'
+blinkOn='\[\033[5m\]'
+inverseOn='\[\033[7m\]'
+styleOff='\[\033[m\]'
+# }}}
+# }}}
+# PS1 ## {{{
+function PS1gitBranch() {
+	git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ @\1/'
+}
+if [[ $UID -eq 0 ]]; then
+	export PS1="$brown\t $red$boldOn$blinkOn### ROOT ###$styleOff $purple\w $nc# $red"
+	#export PROMPT_COMMAND='/bin/echo -ne "\033]0;## R*O*O*T ## @${HOSTNAME%%.*}:${PWD/#${HOME}/~}\007"'
+else
+	export PS1="$brown\t $cyan\u$nc@$red\h$nc: $lightblue\W$brown\$(PS1gitBranch) $nc$ "
+	#export PROMPT_COMMAND='/bin/echo -ne "\033]0;$USER@${HOSTNAME%%.*}:${PWD/#${HOME}/~}\007"'
+fi
+# }}}
+# }}}
+# HSH vash ## {{{
+if [[ -z ${HSH+defined} ]]; then
+	export HSH="$HOME"
+fi
+if [[ -z ${vash+defined} || $vash == "" ]]; then
+	export vash="$HSH/.wash"
+fi
+# }}}
+export PATH="$PATH:$vash/bin"
+# }}}
+#
+# From now on, each section has the following structure:
+# variables
+# functions
+# aliases
+#
+# Vim ## {{{
+alias vi="vim"
+alias ex="vim"
+alias vix="perl $vash/perl/vix.pl"
+# }}}
+# SSH ## {{{
+export switchplus="ssh-728988-gi@134.119.224.37"
+alias wsh="ssh $switchplus"
+function wcp() {
+	one=$1
+	if (( $# == 1 )); then
+		scp -r $switchplus:$one .
+	else
+		one=$1
+		shift
+		scp -r $@ $switchplus:$one
+	fi
+}
+# }}}
+# python {{{
+alias python="python3"
+#alias ipython="ipython3"
+#alias ipy="ipython --pylab"
+#alias nipy="ipython notebook --pylab inline &"
+# }}}
+# cpp ## {{{
+# All the C++ warnings I want
+#export ALLWG="-Wall -Wextra -Wabi -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wconversion -Wshadow -Wctor-dtor-privacy -Wnon-virtual-dtor -Wreorder -Wno-non-template-friend -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo -fno-default-inline"
+# A limited collection ofwarnings
+export SMWG="-Wall -Wextra -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-qual -Wconversion -Woverloaded-virtual"
+# eff C++ (not compatible with Boost)
+export WEFF="-Weffc++"
+# }}}
+# path stuff and shortcuts ## {{{
+# HSH {{{
+function hsh()
+{
+	if [[ $# == 0 ]]; then
+		cd $HSH
+	else
+		cd $HSH/$1*
+	fi
+}
+# }}}
+# vash {{{
+function vash()
+{
+	if [[ $# == 0 ]]; then
+		cd $vash
+	else
+		cd $vash/$1*
+	fi
+}
+# }}}
+# }}}
+# (re)new commands ## {{{
+# ps2png ## {{{
+function ps2png()
+{
+	pstopnm -xborder=0 -yborder=0 $1
+	pnmtopng $1 > $2
+}
+# }}}
+# mergePDF ## {{{
+function mergePDF()
+{
+	output=$1
+	shift
+	gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$output $*
+}
+# }}}
+# splitPDF ## {{{
+function splitPDF()
+{
+	pdftk $1 burst
+}
+# }}}
+# ps aux ## {{{
+function psf()
+{
+	local com="ps $1"
+	shift;
+	local header=`${com} | head -n 1`
+	local contents=`${com} | egrep -v grep | egrep --color=always $@`
+	if [[ ${contents} != "" ]]; then
+		echo "${header}"
+		echo "${contents}"
+	fi
+}
+# }}}
+# Needs this before lu:
+alias du="du -h --max-depth=0"
+# ls function for sizes {{{
+function lu()
+{
+	if [[ $# == 0 ]]; then
+		du .[^.]* * 2> /dev/null
+	else
+		if [[ $# == 1 ]] && [[ $1 == "-h" ]]; then
+			echo " Usage: lu [./% dir1 dir2...]"
+			echo "   Displays the sizes of the elements of the current directory, or of dir1, dir2..."
+			echo "   . : displays the sizes of each arguments"
+			echo "   % : displays the sizes of the elements of each arguments"
+		else
+			local type=$1
+			shift
+			for i in "$@"; do
+				if [[ $type == "." ]]; then
+					du $i 2> /dev/null
+				elif [[ $type == "%" ]]; then
+					du $i $i/.[^.]* $i/* 2> /dev/null
+				else
+					echo "Type not recognized..."
+				fi
+			done
+		fi
+	fi
+}
+# }}}
+# For swaping filnames or changing filename case {{{
+function mvDuo()
+{
+	local typ=$1
+	shift
+	local TMP=tmp.bash
+	mv "$1" "$TMP"
+	if [[ $typ == "swap" ]]; then
+		mv "$2" "$1"
+	fi
+	mv "$TMP" "$2"
+	if [[ $typ == "swap" ]]; then
+		echo "$1 <==> $2"
+	else
+		echo "$1 -> $2"
+	fi
+}
+# }}}
+# For swaping to names of files {{{
+function mvSwap()
+{
+	if [[ $# -ne 2 ]]; then
+		echo "Usage: mvswap file1 file2"
+		echo "   Swaps the file names"
+	else
+		mvDuo "swap" "$1" "$2"
+	fi
+}
+# }}}
+# For changing case {{{
+function mvCase()
+{
+	if [[ $# -ne 2 ]]; then
+		echo "Usage: mvcase file1 file2"
+		echo "   Renames the file with the same name but the case"
+	else
+		mvDuo "case" "$1" "$2"
+	fi
+}
+# }}}
+# Create a directory and go into it {{{
+function mkcd()
+{
+	if [[ $# -ne 1 ]]; then
+		# HELP
+		echo " Usage: mkcd directory"
+		echo "   Creates directory and goes into it"
+	else
+		mkdir -p $1
+		cd $1
+	fi
+}
+# }}}
+# pwd function that displays absolute and relative path only if they're different {{{
+function pw()
+{
+	set +P
+	local relative=$(pwd)
+	set -P
+	local absolute=$(pwd)
+	set +P
+	if [[ $absolute == $relative ]]; then
+		echo $absolute
+	else
+		echo " +Rel: $relative"
+		echo " +Abs: $absolute"
+	fi
+}
+# }}}
+alias cp="cp -r"
+alias mv="mv -i"
+alias scp="scp -r"
+alias bc="bc -ql"
+alias zip="zip -r"
+alias who="who -bptuHT"
+#alias shred="shred -vz --iterations=1"
+alias df="df -h"
+alias jobs="jobs -l"
+alias ll="ls -lh"
+alias grip="egrep -i --color=always"
+alias gripHn="egrep -inH --color=always"
+alias gripl="egrep -il --color=always"
+alias grim="gripl --color=never"
+alias psg="psf \"aux\""
+alias psgu="psf \"-u \$USER\""
+alias lp_dup="lp -oPrintOutMode=Draft -oDuplexNoTumble -q100"
+alias lpstata="lpstat -t"
+alias lpstatl="lpstat -dl"
+alias ping1="ping -c 1"
+alias mysqlL="mysql -h localhost -u root --socket=/Applications/MAMP/tmp/mysql/mysql.sock -p"
+alias forNum="echo \"for i in {1..10..2}\""
+alias tree="tree -a"
+# Remove pages:
+#pdftk myDocument.pdf cat 1-9 26-end output withoutRemovedPages.pdf (10-25)
+# Merge:
+#pdftk file1.pdf file2.pdf cat output newFile.pdf
+# }}}
+# system utilities ## {{{
+# }}}
+# some completion ## {{{
+complete -f -X '!*.tex' latexpawa
+# }}}
+# fun stuff uncategorized ## {{{
+alias GEf16="sudo vim /opt/google-earth/resources/flightsim/aircraft/f16.acf"
+# }}}
+# miscellaneous ## {{{
+# }}}
+#
+if [[ ${OSTYPE:0:6} == "darwin" ]] || [[ ${OSTYPE:0:6} == "Darwin" ]]; then
+	source $vash/bash/mac.bash
+else
+	source $vash/bash/linux.bash
+fi
+

@@ -1,0 +1,73 @@
+*EscapeBchars.txt* Some informations about the buffer comment characters.
+
+Author: Gael Induni *EscapeBchars-author*
+Licence: Same terms as Vim itself (see |licence|)
+
+
+INTRODUCTION *EscapeBchars* *EscapeBchars.vim*
+This plugin is mainly used in |FoldImproved| and |MapComments| to escape the
+characters which need. Since both of these plugins use the |ComChars|, they
+are also described in the present document.
+
+
+REQUIREMENTS *EscapeBchars-requirements*
+Vim
+
+
+COMMANDS *EscapeBchars-commands*
+
+EscapeBchars() *EscapeBchars()*
+    Returns the com char with backalsashes to escape sensible
+    characters.
+    Can be called as >
+  EscapeBchars( b:ComChar )
+<   or >
+  EscapeBchars( b:ComCharOne, b:ComCharOneMore, number )
+<   where One can be Start or Stop and number is > 0 for Start and 
+    < 0 for Stop to enable adding the magic * regexp char
+    at the right place. >
+    switch( number ) {
+        case 1: the More character will be included in the string
+                with a regexp '*'
+        case 2: the More character will be excluded from the string.
+        case 3: the same as for 1 but with escaped brackets to
+                make a group around the part within the start and stop.
+        case 4: the same as for 2 but with escaped brackets to
+                make a group around the part within the start and stop.
+    }
+<
+
+
+CONFIGURATION *EscapeBchars-configuration*
+
+g:loaded_EscapeBchars *g:loaded_EscapeBchars*
+    set it to 1 in your |vimrc| if you don't want to load |EscapeBchars|
+
+g:EscapeBchars_version *g:EscapeBchars_version*
+    |EscapeBchars| version
+
+ComChars *ComChars*
+    At least |b:ComChar| or (|b:ComCharStart| and |b:ComCharStop|) must be
+    defined. I suggest you to define them in the ftplugin files since they
+    depend upon the filetype. If they are not defined, the default is
+    using only |b:ComChar| = #
+    These characters are also used with the |FoldImproved| plugin to be
+    removed in the foldtext.
+
+b:ComChar *b:ComChar*
+    The <buffer> character used for comments. This is used for single-line
+    comments. If |b:ComCharStart| and |b:ComCharStop| are not defined, this is
+    also used for range of lines.
+
+b:ComCharStart *b:ComCharStart*
+b:ComCharStop  *b:ComCharStop*
+    These are the <buffer> characters used to comment out a bunch of lines.
+    If |b:ComChar| is not defined, these are used to comment out each line.
+
+
+SEE ALSO *EscapeBchars-seealso*
+    |FoldImproved|
+    |MapComments|
+
+
+vim:tw=78:et:ft=help:norl:nospell:

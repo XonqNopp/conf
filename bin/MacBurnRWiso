@@ -1,0 +1,8 @@
+#!/bin/bash
+if [[ $# -eq 0 || $# -gt 1 ]]; then
+	## HELP
+	echo " Usage MacBurnRWiso disk_image.iso"
+	echo "   Burns a CD-RW with disk_image.iso"
+else
+	hdiutil burn -verifyburn -speed 10 ${1}
+fi

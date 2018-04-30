@@ -1,0 +1,42 @@
+#!/bin/bash
+##
+port="1234"
+dfile=".git/description"
+pfile=".git/pid"
+descr="Unnamed repository; edit this file 'description' to name the repository."
+##
+if [[ ! -f "$dfile" ]]; then
+	echo " git can only launch instaweb from the top-level of the project."
+	echo " Please change to the root directory of the project to try again."
+	exit 1
+fi
+##
+if [[ $# > 0 ]]; then
+	port=$1
+else
+	echo "(You can specify the port you want to use with 'git iwa \$port')"
+fi
+##
+if [[ -f "$pfile" ]]; then
+	echo " instaweb is already running."
+	echo " If you want to restart it, please stop it before."
+	exit 1
+fi
+##
+cat=$(cat $dfile)
+if [[ $descr == $cat ]]; then
+	echo " This project has no description."
+	read -p " Opening now the description file so you can edit it   (press enter) " hello
+	vim $dfile
+fi
+##
+echo " Starting git instaweb on http://localhost:$port/"
+echo " (Browser opens page right now)"
+##
+git instaweb --port=$port
+sta=$?
+if [[ $sta > 0 ]]; then
+	echo
+	echo " Could not start git instaweb..."
+	exit $sta
+fi

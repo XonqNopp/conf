@@ -1,0 +1,78 @@
+*SpitVspit.txt* Improved split/vsplit/edit function
+
+Author: Gael Induni *SpitVspit-author*
+Licence: Same terms as Vim itself (see |licence|)
+
+
+INTRODUCTION *SpitVspit* *SpitVspit.vim*
+
+SpitVspit function enables the user to use the split/vsplit/edit function
+further
+
+
+REQUIREMENTS *SpitVspit-requirements*
+
+This plugin is based upon the simplest commands and don't require much extra
+stuff (if any). What is used are the commands
+  |:split|
+  |:args|
+  |:substitute|
+  |:command|
+  |:cabclear|
+
+
+COMMANDS *SpitVspit-commands*
+
+Sp[it] *Spit* *Sp*
+    Splits the screen with the given filenames (can be more than one!)
+    If the regexp character '*' is found, it expands among existing filenames.
+    Spit also works with new filenames, except if you try to use it with
+    *.qwererqw and you don't have matching files.
+    :sp is remapped to this function.
+
+Vsp[it] *Vspit* *Vsp*
+    |Spit| vertically the screen with the given filenames (can be more than one!)
+    :vsp is remapped to this function.
+
+Wsp[it] *Wspit* *Wsp*
+    Used with a single file, it is equivalent to |Vspit|.
+    Used with multiple arguments, makes |:vsplit| with the first, then |:split|
+    horizontally the other files in the newly created vertical buffer.
+
+E *E*
+    Adds to your editting files the ones that you give. They can also be more
+    than one or conaining the regexp '*' character. (See |Spit| for further
+    infos). If you want to see what files you are editing, use the |:args|
+    command.
+    :e is remapped to this function.
+
+SpitUp (Spu) *SpitUp* *Spu*
+    |Spit| forced up.
+
+SpitDown (Spd) *SpitDown* *Spd*
+    |Spit| forced down.
+
+VspitLeft (Vspl) *VspitLeft* *Vspl*
+    |Vspit| forced to the left.
+
+VspitRight (Vspr) *VspitRight* *Vspr*
+    |Vspit| forced to the right.
+
+WspitLeft (Wspl) *WspitLeft* *Wspl*
+    |Wspit| forced to the left.
+
+WspitRight (Wspr) *WspitRight* *Wspr*
+    |Wspit| forced to the right.
+
+
+CONFIGURATION *SpitVspit-configuration*
+
+g:loaded_SpitVspit *g:loaded_SpitVspit*
+    set it to 1 in your |vimrc| if you don't want to load |SpitVspit|
+
+g:SpitVspit_version *g:SpitVspit_version*
+    |SpitVspit| version as string
+
+
+
+vim:tw=78:et:ft=help:norl:

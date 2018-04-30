@@ -1,0 +1,29 @@
+%% Fancy and header and footer rules %%% {{{
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\newcommand*{\LastPage}{\pageref{LastPage}}
+%% Defining document filename
+\newcommand*{\GoodJob}{\jobname.pdf}
+%% Fancy!
+\fancypagestyle{plain}{%
+\fancyhf{}
+%% Header for left-odd right-even (1st: left)
+\fancyhf[HRO,HLE]{\ThisAuthors}
+%% Header for center
+%\fancyhf[HCO,HCE]{}
+%% Header for right-odd left-even (1st: right)
+%\fancyhf[HLO,HRE]{\includegraphics[width=20mm]{EPFL.eps}}
+%% Footer for left-odd right-even (1st: left)
+%\fancyhf[FLO,FRE]{}
+\fancyhf[FRE]{(\GoodJob, v. \DocVersion) \ThisTitleSHORT}
+\fancyhf[FLO]{\ThisTitleSHORT\ (\GoodJob, v. \DocVersion)}
+%% Footer for center
+%\fancyhf[FCO,FCE]{}
+%% Footer for right-odd left-even (1st: right)
+\fancyhf[FRO,FLE]{\thepage/\LastPage}
+%% Rules at top and bottom
+}
+\pagestyle{plain}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+%% End of fancy %%% }}}

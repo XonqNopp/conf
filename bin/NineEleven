@@ -1,0 +1,81 @@
+#!/bin/bash
+## Preamble
+rm -f ~/nohup.out
+delay=0.5
+screensize=$(xdpyinfo | grep dimension | cut -d":" -f2 | cut -d" " -f5)
+screenW=$(echo $screensize | cut -dx -f1)
+screenH=$(echo $screensize | cut -dx -f2)
+w1=85
+w2=170
+h=63
+ww=0
+wh=0
+	## Workspace 1 (already in) {{{
+	gnome-terminal --window-with-profile="default" --geometry="${w1}x${h}-0+0"
+	sleep $delay
+	## }}}
+	## Workspace 2 {{{
+	ww=$screenW
+	#wmctrl -s 1
+	wmctrl -o $screenW,$screenH
+	sleep $delay
+	gnome-terminal --window-with-profile="default" --geometry="${w1}x${h}+0+0" --window-with-profile="default" --geometry="${w1}x${h}-0+0"
+	sleep $delay
+	## }}}
+	## Workspace 3 {{{
+	ww=$(echo "2*$screenW" | bc)
+	#wmctrl -s 2
+	wmctrl -o $screenW,$screenH
+	sleep $delay
+	gnome-terminal --window-with-profile="default" --geometry="${w1}x${h}+0+0" --window-with-profile="default" --geometry="${w1}x${h}-0+0"
+	sleep $delay
+	## }}}
+	## Workspace 6 (below) {{{
+	wh=$screenH
+	#wmctrl -s 5
+	wmctrl -o $screenW,$screenH
+	sleep $delay
+	gnome-terminal --window-with-profile="default" --geometry="${w1}x${h}+0+0" --window-with-profile="default" --geometry="${w1}x${h}-0+0"
+	sleep $delay
+	## }}}
+	## Workspace 5 {{{
+	ww=$screenW
+	#wmctrl -s 4
+	wmctrl -o $screenW,$screenH
+	sleep $delay
+	gnome-terminal --window-with-profile="default" --geometry="${w1}x${h}+0+0" --window-with-profile="default" --geometry="${w1}x${h}-0+0"
+	sleep $delay
+	## }}}
+	## Workspace 9 {{{
+	ww=$(echo "2*$screenW" | bc)
+	wh=$(echo "2*$screenH" | bc)
+	#wmctrl -s 8
+	wmctrl -o $screenW,$screenH
+	sleep $delay
+	gnome-terminal --working-directory="/tmp" --geometry="${w2}x${h}+0+0"
+	nohup thunderbird > /dev/null 2> /dev/null &
+	sleep $delay
+	## }}}
+	## Workspace 8 {{{
+	#ww=$screenW
+	##wmctrl -s 7
+	#wmctrl -o $screenW,$screenH
+	#sleep $delay
+	#gnome-terminal --working-directory="/tmp" --geometry="${w2}x${h}+0+0"
+	#sleep $delay
+	## }}}
+	## Workspace 7 {{{
+	ww=0
+	#wmctrl -s 6
+	wmctrl -o $screenW,$screenH
+	sleep $delay
+	gnome-terminal --working-directory="/tmp" --geometry="${w2}x${h}+0+0"
+	sleep $delay
+	## }}}
+	## Workspace 4 {{{
+	wh=$screenH
+	#wmctrl -s 3
+	wmctrl -o $screenW,$screenH
+	sleep $delay
+	nohup firefox > /dev/null 2> /dev/null &
+	## }}}

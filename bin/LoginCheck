@@ -1,0 +1,76 @@
+#!/bin/bash
+function youre_dead()
+{
+	local file=$1
+	if [[ $file == "" ]]; then
+		file=${loginOK}
+	fi
+	local dt=0.4
+	echo -n " T"
+	sleep $dt
+	echo -n "h"
+	sleep $dt
+	echo -n "a"
+	sleep $dt
+	echo -n "n"
+	sleep $dt
+	echo -n "k "
+	sleep $dt
+	echo -n "y"
+	sleep $dt
+	echo -n "o"
+	sleep $dt
+	echo "u"
+	sleep $dt
+	. $HOME/.wash/bin/Resigned
+	touch ${file}
+	return 0
+}
+##
+## Make the exit impossible:
+trap youre_dead SIGINT SIGTERM
+## Check if tmp file present:
+if [[ ! -f ${loginOK} ]]; then
+	## Ask pw:
+	read -sp "Enter \"boschung\" and type <enter>: " Pw
+	## If someone else already provided pw, do not proceed:
+	if [[ ! -f ${loginOK} ]] ; then
+		## Check pw
+		if [[ $Pw == "helloworld" ]]; then
+			echo
+			touch ${loginOK}
+			echo " Thanks"
+			trap - SIGINT SIGTERM
+			## Starting the Q daemon
+			perl ~/.wash/perl/Qdaemon.pl
+			## Opening another terminal here
+			read -p "9/11 " ne
+			if [[ ${ne} == "" ]]; then
+				~/.wash/bin/NineEleven
+			fi
+			## Opening the working hours file
+			#wh
+			## Too early...
+			clear
+			#echo " Check that the volumes in media (me_date gael.induni Q) are OK"
+			exit
+		elif [[ $Pw == "boschung" ]]; then
+			echo
+			sleep 0.5
+			youre_dead ${loginOK}
+			trap - SIGINT SIGTERM
+			exit
+		else
+			read -s toobad
+			echo
+			youre_dead ${loginOK}
+			trap - SIGINT SIGTERM
+			exit
+		fi
+	else
+		echo
+		echo " Already done..."
+	fi
+fi
+trap - SIGINT SIGTERM
+##

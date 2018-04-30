@@ -1,0 +1,17 @@
+\setlength{\parskip}{1ex}
+%\setlength{\topmargin}{6mm}
+\setlength{\openingspace}{5mm}
+\setlength{\sigspace}{5mm}
+%\setlength{\letterwidth}{20cm}
+%\setlength{\lettermargin}{0mm}
+\makeatletter
+%% To have the subject in bold
+\def\concline{% 
+    \noindent\parbox[t]{\letterwidth}%
+    {\@hangfrom{\textbf{\concname}}\ignorespaces\textbf{\concdecl}\strut}%
+    \par}
+%% Uncomment the next line if you want to get rid of the folding mark
+%\def\rule@length{0}
+\makeatother 
+%%
+%%%%% CHECK IF IT IS STILL OK, SEEMS NOT...

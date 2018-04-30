@@ -1,0 +1,61 @@
+%%
+%%% Headers %%% {{{
+%%% Document variables %%% {{{
+\newcommand*{\Gael}{Ga\"el Induni}
+\newcommand*{\ThisAuthors}{\Gael}
+\newcommand*{\ThisTitle}{#&%}
+\newcommand*{\ThisTitleSHORT}{\ThisTitle}
+%%% End of document variables %%% }}}
+\documentclass[romand,12pt,a4paper]{lettre}
+%%
+%%% Usepackages %%% {{{
+\usepackage{mailing}
+\usepackage[french,english]{babel}
+%%% End of usepackages %%% }}}
+%%
+%%
+\setcounter{tocdepth}{2}
+\hyphenation{}
+%\addressfile{#&%.mail}
+%%
+%%
+%% }}}
+%%
+\begin{document}
+\setlength{\parskip}{0.5ex}
+%%
+\begin{letter}{#&% Addressee address}
+%%
+%% {{{ Here is me (Be careful: by using the package "mailing", you can only change these parameters in the file /usr/local/texlive/2007/texmf-dist/tex/latex/lettre/default.ins)
+\name{\Gael}
+\lieu{Belfaux}
+\date{le \today}
+\notelephone
+%\telephone{026/534.64.01}
+%\telephone{078/847.22.08}
+\nofax
+\address{%
+	\Gael\\
+	Champ Bonajrd 1\\%
+	1782 Belfaux\\%
+	gael.induni@gmail.com%
+}
+\signature{\Gael}
+\conc{\title}
+\romand
+%% }}}
+%%
+\opening{#&% Opening greetings}
+%%
+%\mailingtext{}
+%%
+#&%
+%%
+\closing{#&% Closing greetings}
+%%
+\end{letter}
+%%
+%\makemailing
+%%
+\end{document}
+%%

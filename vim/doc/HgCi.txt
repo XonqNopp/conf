@@ -1,0 +1,40 @@
+*HgCi.txt* Function to commit with hg after saving a change.
+
+Author: Gael Induni *HgCi-author*
+Licence: Same terms as Vim itself (see |licence|)
+
+
+INTRODUCTION *HgCi.vim*
+
+
+
+REQUIREMENTS *HgCi-requirements*
+
+
+
+COMMANDS *HgCi-commands*
+
+HgCi *HgCi* *:HgCi*
+	Command invoked after saving a change to commit to mercurial.
+
+HgCiEnd() *HgCiEnd()*
+    Command invoked by |autocmd| defined in |HgCi|.
+
+
+CONFIGURATION *HgCi-configuration*
+    You should define some |autocmd| at |BufWritePost| to call |HgCi| on the files
+    you need to keep track.
+
+g:loaded_HgCi *g:loaded_HgCi*
+    Set it to 1 in your |vimrc| if you don't want the |HgCi|plugin to be loaded.
+
+g:HgCi_version *g:HgCi_version*
+    |HgCi| version
+
+
+SEE ALSO *HgCi-seealso*
+
+
+
+
+vim:tw=78:et:ft=help:norl:nospell:

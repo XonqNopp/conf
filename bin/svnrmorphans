@@ -1,0 +1,6 @@
+#!/bin/bash
+for i in `svn st | grep "!"`; do
+	if [[ ${i} != "!" ]] && [[ ${i} != "+" ]]; then
+		svn rm --force ${i}
+	fi
+done

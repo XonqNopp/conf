@@ -1,0 +1,83 @@
+*MapComments.txt* Powerful (un)commenting maps
+
+Author: Gael Induni *MapComments-author*
+Licence: Same terms as Vim itself (see |licence|)
+
+
+INTRODUCTION *MapComments* *MapComments.vim*
+    This plugin enables mapping on 2 keys to (un)comment a bunch of text.
+
+    It is assumed that we have the following definitions (assuming we comment
+    lines with the character # or with /*...*/):
+
+    A line is COMMENTED OUT if it has the form >
+    #echo "hello world"
+    ##echo "hello world"
+    ###echo "hello world"
+    ####echo "hello world"
+    /*echo "hello world"*/
+    /*/*echo "hello world"*/*/
+    /*/*/*echo "hello world"*/*/*/
+    /*/*/*/*echo "hello world"*/*/*/*/
+<
+    and so on.
+
+    A line is A COMMENT (i.e. no code) if it has the form >
+    ## This is no code
+    /***This is no code***/
+<
+
+
+REQUIREMENT *MapComments-requirements*
+    This plugin requires the plugin |EscapeBchars| (No 4081) from the same author.
+
+
+COMMANDS *MapComments-commands*
+
+MapComment() *MapComment()*
+    Comments out the current line.
+
+MapUnComment() *MapUnComment()*
+    Uncomments the current line.
+
+MapCommentV() *MapCommentV()*
+    Comments out the current visual range.
+
+MapUnCommentV() *MapUnCommentV()*
+    Uncomments the current visual range.
+
+
+CONFIGURATION *MapComments-configuration*
+
+g:loaded_MapComments *g:loaded_MapComments*
+    set it to 1 in your |vimrc| if you don't want to load |MapComments|
+
+g:MapComments_version *g:MapComments_version*
+    |MapComments| version
+
+g:MapComment_key *g:MapComment_key*
+    The key to call |MapComment()|
+    Default: <F5>
+    WARNING: this parameter is only used at Vim start, changing it during
+        a Vim session will have no effect.
+
+g:MapUnComment_key *g:MapUnComment_key*
+    The key to call |MapUnComment()|
+    Default: <F6>
+    WARNING: this parameter is only used at Vim start, changing it during
+        a Vim session will have no effect.
+
+g:MapComment_at_beginning *g:MapComment_at_beginning*
+    If set to 1, the comment character will appear at the very beginning of
+    the line, except for file whose foldmethod is set to "indent".
+    Default: 0
+
+
+SEE ALSO *MapComments-seealso*
+    |EscapeBchars|
+    |b:ComChar|
+    |b:ComCharStart|
+    |b:ComCharStop|
+
+
+vim:tw=78:et:ft=help:norl:nospell:

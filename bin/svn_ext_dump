@@ -1,0 +1,32 @@
+#!/bin/bash
+## Written by GI, see http://code.google.com/p/support/wiki/SubversionFAQ#How_do_I_download_my_Subversion_history?
+## Preparing needed informations
+new_dir=${1}
+## Must be absolute path
+source_url=${2}
+usname=${3}
+## Treating...
+svnadmin create ${new_dir}
+if [[ $? > 0 ]]; then
+	echo "Sorry... admin create"
+	exit $?
+fi
+hookname="${new_dir}/hooks/pre-revprop-change"
+## short perl script writes everything except if =~ /^exit 1/: exit 0
+echo ${hookname} | perl -e '$fn=<>; chomp($fn); open(IN,"<","$fn.tmpl") or die(" Cannot read input $fn.tmpl"); open(OUT,">",$fn) or die(" Cannot write output $fn"); while($i=<IN>){ if($i=~/^exit 1/){print OUT "exit 0\n";}else{print OUT $i;}} close(IN); close(OUT);'
+chmod a+x ${new_dir}/hooks/pre-revprop-change
+svnsync init --username ${usname} file://${new_dir} ${source_url}
+if [[ $? > 0 ]]; then
+	echo "Sorry... sync init"
+	exit $?
+fi
+svnsync sync --username ${usname} file://${new_dir}
+if [[ $? > 0 ]]; then
+	echo "Sorry... sync^2"
+	exit $?
+fi
+svnadmin dump ${new_dir} > ${new_dir}.dump
+if [[ $? > 0 ]]; then
+	echo "Sorry... admin dump"
+	exit $?
+fi

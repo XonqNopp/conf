@@ -1,0 +1,8 @@
+#!/bin/bash
+echo " Stopping git instaweb..."
+git instaweb stop
+sta=$?
+if [[ $sta > 0 ]]; then
+	echo "  Could not stop git instaweb..."
+	exit $sta
+fi

@@ -1,0 +1,60 @@
+*FoldImproved.txt* Nice fold text function
+
+Author: Gael Induni *FoldImproved-author*
+Licence: Same terms as Vim itself (see |licence|)
+
+
+INTRODUCTION *FoldImproved* *FoldImproved.vim*
+
+
+REQUIREMENT *FoldImproved-requirements*
+    This plugin requires the plugin |EscapeBchars| (No 4081) from the same author.
+
+
+COMMANDS *FoldImproved-commands*
+
+FoldImproved() *FoldImproved()*
+    This is the function that gives back the fold text. At the beginning is
+    the following statement: >
+        set foldtext=FoldImproved()
+<   so that it is defined for each buffer.
+
+
+CONFIGURATION *FoldImproved-configuration*
+
+g:loaded_FoldImproved *g:loaded_FoldImproved*
+    set it to 1 in your |vimrc| if you don't want to load
+    |FoldImproved|. This won't prevent thet foldtext to be set to this
+    function, so you should better not touch this parameter.
+
+g:FoldImproved_version *g:FoldImproved_version*
+    |FoldImproved| version
+
+g:FoldImprovedEnable *g:FoldImprovedEnable*
+    If set to 0, disables the foldtextx=FoldImproved() setting.
+    Default is enabled.
+
+g:FoldImprovedLocal *g:FoldImprovedLocal*
+    If set to 1, sets foldtext=FoldImproved local to buffer.
+    Should be used together with |b:FoldImprovedEnable|.
+    Default is 0.
+
+b:FoldImprovedEnable *b:FoldImprovedEnable*
+    Buffer variable to enable FoldImproved only with some files.
+    Can be set in a local configuration file, or in ftplugin files for
+    instance. WARNING: |g:FoldImprovedEnable| superseeds this choice, so it
+    has to be set to 0.
+    Default is unused.
+
+
+SEE ALSO *FoldImproved-seealso*
+    |EscapeBchars|
+    |b:ComChar|
+    |b:ComCharStart|
+    |b:ComCharStartMore|
+    |b:ComCharStop|
+    |b:ComCharStopMore|
+
+
+
+vim:tw=78:et:ft=help:norl:nospell:
