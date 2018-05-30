@@ -58,3 +58,16 @@ function ws() {
 	fi
 }
 
+function buildrootDL() {
+	directory=$1
+	name=$2
+	ws=/media/sf_WS
+	base=buildroot$name
+	target=$base.img
+	sha=$base.sha512
+	cd $ws
+	scp 192.168.3.3:buildroot/buildroot$directory/output/images/sdcard.img $target
+	sha512sum $target > $sha
+	cd - > /dev/null
+}
+
