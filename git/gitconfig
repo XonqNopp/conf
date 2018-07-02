@@ -5,25 +5,28 @@
 	email = xonqnoppp@gmail.com
 
 [alias]
-	## basic
+	# basic
 	st       = status -sb --ignore-submodules=none
+
+	# files
 	chmodx   = update-index --chmod=+x
-	##
-	## commit
+	grin = grep -in
+
+	# commit
 	cm       = commit -m
 	cam      = commit -a -m
 	amend    = commit --amend
 	aamend   = commit --amend -a
 	amende   = commit --amend --no-edit
 	aamende  = commit --amend --no-edit -a
-	##
-	## tag
-	tg       = tag -n # show tag message
+
+	# tag
+	tg       = tag -n  # show tag message
 	tagle    = tag -a -m
 	lasttag  = tag -l --contains HEAD
 	lastdate = log -1 --pretty=format:"%cd" --date=short
-	##
-	## rebase
+
+	# rebase
 	rebi  = rebase -i
 	recit = rebase --continue
 	reboa = rebase --abort
@@ -31,8 +34,8 @@
 	rebud = rebase upstream/development
 	fru   = !git fetch -p upstream && git rebum
 	frud  = !git fetch -p upstream && git rebud
-	##
-	## branches
+
+	# branches
 	co     = checkout
 	coo    = checkout -
 	cb     = checkout -b
@@ -41,35 +44,35 @@
 	bra    = branch -va
 	remaster = !git co master && git pull && git coo && git rebase master && git st
 	redev    = !git co development && git pull && git coo && git rebase development && git st
-	##
-	## remote
+
+	# remote
 	putsh = push --follow-tags
 	rem   = remote -v
 	fep   = fetch -p
 	fup   = fetch -p upstream
-	pinup = pull   upstream ## must add branch when invoking
-	rebu  = rebase upstream ## must add branch
-	murge = merge  upstream ## must add branch
+	pinup = pull   upstream  # must add branch when invoking
+	rebu  = rebase upstream  # must add branch
+	murge = merge  upstream  # must add branch
 	poush = !git push upstream && git push
 	pushf = push --force
 	poushf = !git push upstream && git pushf
 	pushu = push -u
 	pushuu = push -u upstream
-	##
-	## diff
+
+	# diff
 	df = difftool --ignore-submodules=none
 	dfh = !git df HEAD^
 	mt = mergetool
 	mta = mergetool --tool=vimgitall
 	dispatch = format-patch -M -n -s -o outgoing
-	##
-	## log
+
+	# log
 	slog = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)' -1
 	flog = log --graph --all --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' -1
 	browse2vim = log --graph --all --pretty=format:'%h {%ci} %an %% %s%d'
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
-	##
-	## submodule
+
+	# submodule
 	sub = submodule
 	subu   = submodule update --init
 	sugus  = submodule update --init --recursive 
@@ -86,11 +89,11 @@
 
 [mergetool "vimgit"]
 	cmd = vim -d -f -c 'wincmd J' "$MERGED" "$LOCAL" "$REMOTE"
-	## $BASE is not worth it
+	# $BASE is not worth it
 
 [mergetool "vimgitall"]
 	cmd = vim -d -f -c 'wincmd J' "$MERGED" "$LOCAL" "$BASE" "$REMOTE"
-	## if I really want to see $BASE
+	# if I really want to see $BASE
 
 [rebase]
 	autosquash = true
