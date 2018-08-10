@@ -14,7 +14,11 @@
 
 	# commit
 	cm       = commit -m
+	cof      = commit --fixup
+	cos      = commit --squash
 	cam      = commit -a -m
+	caf      = commit -a --fixup
+	cas      = commit -a --squash
 	amend    = commit --amend
 	aamend   = commit --amend -a
 	amende   = commit --amend --no-edit
