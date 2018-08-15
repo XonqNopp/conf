@@ -10,6 +10,7 @@ TOC:
     |buf2html|
     |MRU|
     |LS|
+    |howtoCount|
 
 
 Kuf() *Kuf()*
@@ -18,7 +19,7 @@ Kuf() *Kuf()*
 
 
 NewMakefile( "type", "name (tex)", "dvips,ps2pdf", *NewMakefile()*
-             "number for all", "bib (to be done)" ) 
+             "number for all", "bib (to be done)" )
     Creates a makefile skeleton. First argument is required, others are
     optional.
     type : tex, cpp, both
@@ -252,11 +253,11 @@ Configuration *configuration*
 LS *LS* *:LS*
     LS - Enters "DirList" ls -aF mode (e.g :LS or :LS /tmp)
     LSL - Enters "DirList" ls -alF mode (e.g :LSL or :LSL /tmp)
-   
+
     Commands in "DirList" mode
     --------------------------
     Tag - tags a range of lines (e.g. 'a,'s Tag in the DirList buffer)
-   
+
     Macros in "DirList" mode
     ------------------------
     T - tag a line
@@ -275,6 +276,13 @@ LS *LS* *:LS*
     MKD - make a new directory
     S - which between long and short listings
     [Enter] - selects the current line (traverses a directory or edits a file
+
+
+howtoCount *howtoCount*
+
+    Number of occurences in file: :%s/pattern//gn
+    Number of lines with occurence: :%s/pattern//n
+
 
 
 
