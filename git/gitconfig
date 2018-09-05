@@ -38,6 +38,8 @@
 	# branches
 	co     = checkout
 	coo    = checkout -
+	com    = checkout master
+	cod    = checkout development
 	cb     = checkout -b
 	br     = branch
 	rewind = merge --no-ff
