@@ -34,9 +34,11 @@
 	rebi  = rebase -i
 	recit = rebase --continue
 	reboa = rebase --abort
+	remas = rebase master
+	redev = rebase development
 	rebum = rebase upstream/master
 	rebud = rebase upstream/development
-	fru   = !git fetch -p upstream && git rebum
+	frum  = !git fetch -p upstream && git rebum
 	frud  = !git fetch -p upstream && git rebud
 
 	# branches
