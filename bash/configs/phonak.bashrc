@@ -1,73 +1,53 @@
 #!/bin/bash
 
 source ~/.wash/bash/bashrc
-alias vim="/usr/local/bin/vim"
-export LD_LIBRARY_PATH=/media/sf_WS/helios/_build/protobuf-2.4.1/lib
-export ww68="induni@192.168.3.3"
-export testNetwork="10.64.75"
-export pi="root@${testNetwork}.45"
-export servicepi="pi@${testNetwork}.1"
-alias dhcPi="ssh $servicepi cat DHCP.leases"
-alias apt-proxy="sudo vim /etc/apt/apt.conf.d/99Proxy"
-alias vimnotes="vim /media/sf_WS/notes.rst"
-alias rsyncHelios="rsync -cv --delete --force --recursive --whole-file --stats --exclude *.pyc --exclude *.pyo --exclude _build --exclude obj --exclude __pycache__ --exclude _arc --exclude _archives --exclude _tools --exclude _prefix --exclude *.obj helios/ induni@192.168.3.3:/home/induni/helios/"
 
+alias apt-proxy="sudo vim /etc/apt/apt.conf.d/99Proxy"
+#export LD_LIBRARY_PATH=/media/sf_WS/helios/_build/protobuf-2.4.1/lib
+export testNetwork="10.64.75"
 export servicepi="pi@${testNetwork}.1"
 alias dhcPi="ssh $servicepi cat DHCP.leases"
+
 function sshpi() {
 	ip=$1
 	shift
 	ssh ${testNetwork}.$ip "$@"
 }
 
-function cpi() {
-	byte=$1
-	shift
-	direction=$1
-	shift
-	if [ $direction == "2" ]; then
-		where=$1
-		shift
-		scp "$@" ${testNetwork}.$byte:$where
-		#echo "scp \"$@\" ${testNetwork}.$byte:$where"
-	else
-		where="."
-		args=""
-		for arg in $@; do
-			args="$args ${testNetwork}.$byte:$arg"
-		done
-		scp $args $where
-		#echo "scp $args $where"
-	fi
-}
-
-export HTTP_PROXY="http://proxy.ch03.emea.corp.ads:8080"
-export HTTPS_PROXY="http://proxy.ch03.emea.corp.ads:8080"
-export http_proxy="http://proxy.ch03.emea.corp.ads:8080"
-export https_proxy="http://proxy.ch03.emea.corp.ads:8080"
-
 alias ssj="ssh continuous@ch03jenkins.corp.ads"
 alias ssg="ssh root@ch03gitproxy.corp.ads"
 
-export mediaWS="/media/sf_WS"
-function ws() {
-	if (( $# > 0 )); then
-		cd $mediaWS/$1*
-	else
-		cd $mediaWS
+
+# PROXY
+export SONOVA_PROXY_URL="http://proxy.ch03.emea.corp.ads"
+export SONOVA_PROXY_PORT="8080"
+export HTTP_PROXY="$SONOVA_PROXY_URL:$SONOVA_PROXY_PORT"
+export HTTPS_PROXY="$SONOVA_PROXY_URL:$SONOVA_PROXY_PORT"
+export http_proxy="$SONOVA_PROXY_URL:$SONOVA_PROXY_PORT"
+export https_proxy="$SONOVA_PROXY_URL:$SONOVA_PROXY_PORT"
+
+#gsettings set org.gnome.system.proxy mode 'manual'
+#gsettings set org.gnome.system.proxy.http host $SONOVA_PROXY_URL
+#gsettings set org.gnome.system.proxy.http port $SONOVA_PROXY_PORT
+#gsettings set org.gnome.system.proxy.https host $SONOVA_PROXY_URL
+#gsettings set org.gnome.system.proxy.https port $SONOVA_PROXY_PORT
+#gsettings set org.gnome.system.proxy.ftp host $SONOVA_PROXY_URL
+#gsettings set org.gnome.system.proxy.ftp port $SONOVA_PROXY_PORT
+#gsettings set org.gnome.system.proxy ignore-hosts "['localhost', '127.0.0.0/8']"
+
+
+
+# OneDrive
+onedriveDir=$HOME/OneDrive
+function mountOneDrive() {
+	if [[ ! -d "$onedriveDir/backgrounds" ]]; then
+		rclone --vfs-cache-mode writes mount SonovaOneDrive: $onedriveDir &
 	fi
 }
 
-function buildrootDL() {
-	directory=$1
-	name=$2
-	ws=/media/sf_WS
-	base=buildroot$name
-	target=$base.img
-	sha=$base.sha512
-	cd $ws
-	scp 192.168.3.3:buildroot/buildroot$directory/output/images/sdcard.img $target
-	sha512sum $target > $sha
-	cd - > /dev/null
-}
+
+
+
+# Display on login
+who
 
