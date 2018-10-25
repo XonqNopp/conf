@@ -80,6 +80,9 @@
 	browse2vim = log --graph --all --pretty=format:'%h {%ci} %an %% %s%d'
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
 
+	# misc
+	stlog = !git slog && git st
+
 	# submodule
 	sub = submodule
 	subu   = submodule update --init
