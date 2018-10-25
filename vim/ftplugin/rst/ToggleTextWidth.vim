@@ -5,10 +5,10 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ""
 "" Set default LaTeX values:
-"" Limit to 80 columns for diff purpose
-setlocal textwidth=80
+"" Limit to 120 columns for diff purpose
+setlocal textwidth=120
 "" make the first illegal column highlight
-setlocal colorcolumn=81
+setlocal colorcolumn=121
 
 if exists("g:loaded_TogTexTex") && g:loaded_TogTexTex
 	finish
@@ -18,8 +18,8 @@ let g:loaded_TogTexTex = 1
 "" toggle textwidth for special lines
 function ToggleTexTextwidth()
 	if &textwidth == 0
-		setlocal textwidth=80
-		setlocal colorcolumn=81
+		setlocal textwidth=120
+		setlocal colorcolumn=121
 	else
 		setlocal textwidth=0
 		setlocal colorcolumn=3
