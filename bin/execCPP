@@ -1,9 +1,0 @@
-#!/bin/bash
-exec=$1
-shift
-exec="$vash/cpp/$exec"
-if [[ ! -f "$exec" ]]; then
-	echo " Executable file $exec not found"
-	exit 1;
-fi
-$exec $@

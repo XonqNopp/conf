@@ -1,2 +1,0 @@
-#!/bin/bash
-perl $vash/perl/extIP.pl $@
