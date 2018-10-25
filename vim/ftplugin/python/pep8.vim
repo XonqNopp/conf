@@ -76,7 +76,7 @@ let g:pep8_ftplugin_loaded = 1
 " Params. {{{
 " The command to be used by this plugin
 if !exists("g:pep8_cmd")
-  let g:pep8_cmd="pep8"
+  let g:pep8_cmd="pycodestyle"
 endif
 " Show all occurrences of the same error
 if !exists("g:pep8_args")
