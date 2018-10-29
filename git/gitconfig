@@ -81,7 +81,7 @@
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
 
 	# misc
-	stlog = !git slog && git st
+	stlog = !echo && git st && echo && git slog
 
 	# submodule
 	sub = submodule
