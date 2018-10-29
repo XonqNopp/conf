@@ -1,10 +1,7 @@
 # Special stuff {{{
 # I don't want to save many same commands and other short ones:
-HISTIGNORE="&:help:info:exit"
-HISTIGNORE="${HISTIGNORE}:svnadd:svn st"
-HISTIGNORE="${HISTIGNORE}:hg st:hG st:hg st ."
+HISTIGNORE="&:help:info:exit:ls:ll:cd:cd -:pw:pwd:bc"
 HISTIGNORE="${HISTIGNORE}:git st"
-HISTIGNORE="${HISTIGNORE}:ls:ll:lu:bc:cd:cd -:pw:pwd"
 HISTIGNORE="${HISTIGNORE}:vash:vimpwd"
 export HISTIGNORE
 # Setting size of bash_history
