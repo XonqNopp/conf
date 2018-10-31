@@ -23,6 +23,7 @@
 	aamend   = commit --amend -a
 	amende   = commit --amend --no-edit
 	aamende  = commit --amend --no-edit -a
+	ramend   = commit --amend --no-edit --reset-author
 
 	# tag
 	tg       = tag -n  # show tag message
