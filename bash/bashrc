@@ -84,7 +84,7 @@ if [[ -z ${vash+defined} || $vash == "" ]]; then
 	export vash="$HSH/.wash"
 fi
 # }}}
-export PATH="$PATH:$vash/bin"
+export PATH="$PATH:$vash/bin:$vash/git/bin"
 # }}}
 #
 # From now on, each section has the following structure:
