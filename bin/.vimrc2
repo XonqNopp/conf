@@ -1,2 +1,0 @@
-let fina = "this_filename_shall_never_occur_to_exist_in_this_directory"
-autocmd BufNewFile * set filetype=sh
