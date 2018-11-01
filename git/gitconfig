@@ -60,13 +60,11 @@
 	fep   = fetch -p
 	fup   = fetch -p upstream
 	pinup = pull   upstream  # must add branch when invoking
-	rebu  = rebase upstream  # must add branch
-	murge = merge  upstream  # must add branch
-	poush = !git push upstream && git push
+	rebu  = rebase upstream  # must add branch when invoking
 	pushf = push --force
-	poushf = !git push upstream && git pushf
 	pushu = push -u
-	pushuu = push -u upstream
+	pushup = push -u upstream
+	pustash = !git stash && git pull && git stash pop
 
 	# diff
 	df = difftool --ignore-submodules=none
