@@ -1,33 +1,50 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""""  .vimrc made by Gael Induni  """""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-""
-"" Defining global and script variables {{{
-let g:HosNa = hostname()
+" vimrc
+if has("gui_running") || has("win16") || has("win32") || has("win64") || has("win95")
+	quit
+endif
+set t_Co=8
+
+" Some directories used by Vim {{{
+set runtimepath+=$vash/vim,$vash/vim/after
+set viewdir=$vash/vim/view
+
 let g:HSH = expand("$HSH")
 let g:vash = g:HSH . "/.wash"
 let g:VimDir = g:vash . "/vim"
-execute "autocmd BufWritePost " . g:VimDir . "/runcom/*," . g:VimDir . "/runcom/.vim*,~/.vimrc source ~/.vimrc"
-let g:GetLatestVimScripts_allowautoinstall=0
-let g:vimball_home = g:VimDir
+
+execute "autocmd BufWritePost " . g:VimDir . "vimrc,~/.vimrc source ~/.vimrc"
+" }}}
+" Defining global and script variables {{{
 let MRU_File = g:VimDir . "/mru_files.txt"
+
 let g:LargeFile = 5          " [MB]
-let g:VimITunesMapPrefix = ',i'
+
+let g:NERDTreeDirArrows = 1
+
+let g:gitgutter_highlight_lines = 0
+
+let g:pep8_cmd="pycodestyle"
+let g:pep8_args="--max-line-length=119"
+let g:pep8_ignore="E221,E265,E266,W391,W503"
+"" E221: multiple whitespace before operator
+"" E265: block comments
+"" E266: too many # leading block comments
+"" W391: newline at end
+"" W503: break before binary operator
+
 let g:b2h_use_css = 1
 let g:b2h_output_xhtml = 1
 let g:b2h_number_lines = 1
 let g_b2h_meta_expires = 0
 let g:b2h_no_display_credit = 1
-let g:journal_directory = g:VimDir . "/journal"
+
 let g:timestamp_modelines = 10
 let g:timestamp_rep = "%a %Y-%m-%d %H:%M:%S %Z"
 let g:timestamp_regexp = '\v\C%(<%(%([lL]ast )?%([cC]hanged?|[mM]odified))\s*:\s+)@<=.*|TIMESTAMP'
-"" single quote required
-if has("gui_running") || has("win16") || has("win32") || has("win64") || has("win95")
-	quit
-endif
-set t_Co=8
-"" }}}
+
+execute pathogen#infect()
+execute pathogen#helptags()
+" }}}
 "" Configuration {{{
 if has("autocmd")
 	"" Read template file if available for new files
@@ -42,10 +59,6 @@ if has("autocmd")
 	"" Restore previous position
 	autocmd BufRead * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
-"" }}}
-""" Some directories used by Vim {{{
-set runtimepath+=$vash/vim,$vash/vim/after
-set viewdir=$vash/vim/view
 "" }}}
 """ Some set stuff {{{
 let mapleader = ","

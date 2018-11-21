@@ -1,0 +1,33 @@
+[submodule "vim/bundle/MultipleSearch"]
+	path = vim/bundle/MultipleSearch
+	url = ../../vim-scripts/MultipleSearch.git
+[submodule "vim/bundle/vim-man"]
+	path = vim/bundle/vim-man
+	url = ../../vim-utils/vim-man.git
+[submodule "vim/bundle/openssl.vim"]
+	path = vim/bundle/openssl.vim
+	url = ../../vim-scripts/openssl.vim.git
+[submodule "vim/bundle/LargeFile"]
+	path = vim/bundle/LargeFile
+	url = ../../vim-scripts/LargeFile.git
+[submodule "vim/bundle/vim-cs-explorer"]
+	path = vim/bundle/vim-cs-explorer
+	url = ../../jdevera/vim-cs-explorer.git
+[submodule "vim/bundle/vim-diffchanges"]
+	path = vim/bundle/vim-diffchanges
+	url = ../../plytophogy/vim-diffchanges.git
+[submodule "vim/bundle/vim-speeddating"]
+	path = vim/bundle/vim-speeddating
+	url = ../../tpope/vim-speeddating.git
+[submodule "vim/bundle/nerdtree"]
+	path = vim/bundle/nerdtree
+	url = ../../scrooloose/nerdtree.git
+[submodule "vim/bundle/vim-gitgutter"]
+	path = vim/bundle/vim-gitgutter
+	url = ../../airblade/vim-gitgutter.git
+[submodule "vim/bundle/vim-pep8"]
+	path = vim/bundle/vim-pep8
+	url = ../vim-pep8.git
+[submodule "vim/pathogen"]
+	path = vim/pathogen
+	url = ../../tpope/vim-pathogen.git
