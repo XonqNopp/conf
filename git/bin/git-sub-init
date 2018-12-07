@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# See https://XonqNopp.github.io/_build/html/git-sub.html
+
+if [ $# -lt 2 ]; then
+	echo "Usage: git sub-init path/to/sub remote [branch]"
+	exit 1
+fi
+
+sub="$1"
+remote="$2"
+branch=""
+if [ $# = 3 ]; then
+	branch="$3"
+fi
+
+subinitnew=".subinit.new"
+
+if [ ! -d "$sub" ]; then
+	mkdir $sub
+	touch $sub/$subinitnew
+fi
+
+cd $sub
+
+# init
+if [ ! -d ".git" ]; then
+	echo "git init"
+	git init
+fi
+
+# remote
+remoteExists=0
+remoteName="origin"
+for rem in $(git remote -v); do
+	if [ "$rem" = "$remote" ]; then
+		remoteExists=1
+		break
+	fi
+done
+if [ "$remoteExists" = "0" ]; then
+	echo "Add remote $remoteName: $remote"
+	git remote add $remoteName $remote
+fi
+
+# fetch
+echo "Fetching..."
+git fetch $remoteName
+
+# branch
+if [ "$branch" = "" ]; then
+	branch="master"  # not always the default branch...
+fi
+echo "Checkout $branch"
+git checkout -f $branch
+
+cd - > /dev/null
+
+if [ -f "$sub/$subinitnew" ]; then
+	rm $sub/$subinitnew
+	# Cannot run `git add $sub` as it would be treated as submodule :-S
+	git add $sub/*
+	git add $sub/.*  # cannot do in one line or it is considered a submodule
+fi
+
+# check did not mess anything
+git status -sb
+
