@@ -42,6 +42,9 @@ export https_proxy="$SONOVA_PROXY_URL:$SONOVA_PROXY_PORT"
 
 
 
+# transfer
+export tg="/mnt/ch03transfer/13ginduni"
+
 # OneDrive
 onedriveDir=$HOME/OneDrive
 function mountOneDrive() {
@@ -51,12 +54,29 @@ function mountOneDrive() {
 }
 
 
-alias swtpep8="docker run --rm -it -v \$PWD:/project swt_env:ba8b43d python3 -m pep8 . --exclude=env,docs,helpers/software/corti/andromeda,framework,_* --max-line-length=119 --ignore=E221,E265,E266,E722,E402,W391,W503"
-alias swtpylint="docker run --rm -it -v \$PWD:/project swt_env:ba8b43d python3 -m pylint --score=no --persistent=no --reports=no --ignore=env,docs,andromeda,framework --enable=wrong-import-order,fixme,missing-docstring,empty-docstring,blacklisted-name,invalid-name,undefined-variable,unused-variable,unused-import,unused-argument,notimplemented-raised,unexpected-line-ending-format,consider-iterating-dictionary,syntax-error,parse-error,exec-used,eval-used,bad-indentation,mixed-indentation,print-statement,multiple-imports,ungrouped-imports,wrong-import-position,bad-super-call,not-callable,assignment-from-no-return,unexpected-keyword-arg,redundant-keyword-arg,repeated-keyword,bad-format-character,truncated-format-string,mixed-format-string,format-needs-mapping,missing-format-string-key,too-many-format-args,too-few-format-args,bad-format-string-key,unused-format-string-key,bad-format-string,missing-format-argument-key,unused-format-string-argument,format-combined-specification,missing-format-attribute,invalid-format-index,consider-merging-isinstance,simplifiable-if-statement,simplify-boolean-expression,inconsistent-return-statements,unnecessary-pass,unnecessary-lambda,deprecated-lambda,unnecessary-semicolon,relative-import,unused-wildcard-import,backtick,raw_input-builtin,unicode-builtin,xrange-builtin,trailing-whitespace,superfluous-parens --notes=FIXME devices generic.py helpers remote run.py scripts ssh swt_env.py templates tests utils"
-alias swtsphinx="docker run --rm -it -v \$PWD/..:/project swt_env:ba8b43d sphinx-build -W -b html framework/docs framework/docs/_build/html"
+export venv="/home/induni/workspace/swt/_venv"
+export vPy="$venv/bin/python"
+alias vPep8="$vPy -m pep8 . --exclude=env,docs,helpers/software/corti/andromeda,framework,_* --max-line-length=119 --ignore=E221,E265,E266,E722,E402,W391,W503"
+alias vPylint="$vPy -m pylint --score=no --persistent=no --reports=no --ignore=env,docs,andromeda,framework --enable=wrong-import-order,fixme,missing-docstring,empty-docstring,blacklisted-name,invalid-name,undefined-variable,unused-variable,unused-import,unused-argument,notimplemented-raised,unexpected-line-ending-format,consider-iterating-dictionary,syntax-error,parse-error,exec-used,eval-used,bad-indentation,mixed-indentation,print-statement,multiple-imports,ungrouped-imports,wrong-import-position,bad-super-call,not-callable,assignment-from-no-return,unexpected-keyword-arg,redundant-keyword-arg,repeated-keyword,bad-format-character,truncated-format-string,mixed-format-string,format-needs-mapping,missing-format-string-key,too-many-format-args,too-few-format-args,bad-format-string-key,unused-format-string-key,bad-format-string,missing-format-argument-key,unused-format-string-argument,format-combined-specification,missing-format-attribute,invalid-format-index,consider-merging-isinstance,simplifiable-if-statement,simplify-boolean-expression,inconsistent-return-statements,unnecessary-pass,unnecessary-lambda,deprecated-lambda,unnecessary-semicolon,relative-import,unused-wildcard-import,backtick,raw_input-builtin,unicode-builtin,xrange-builtin,trailing-whitespace,superfluous-parens --notes=FIXME --rcfile=/home/induni/workspace/swt/framework/pylintrc"
+alias vPylintF="vPylint devices generic.py helpers remote run.py scripts ssh swt_env.py templates tests utils"
+alias vSphinx="$venv/bin/sphinx-build -W -b html"
+function bSphinx() {
+	vSphinx "$@" "$@/_build/html"
+}
 
 
+
+export todoFile="$HOME/.todos"
+
+function todo() {
+	echo "* $@" >> $todoFile
+}
+alias todos="cat $todoFile"
+alias vimtodos="vim $todoFile"
 
 # Display on login
 who
+echo
+echo "TODO:"
+todos
 
