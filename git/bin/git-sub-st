@@ -21,12 +21,13 @@ for sub in "$@"; do
 
 	subStatus=$(git status -s | wc -l)
 	subRemote=$(git status -sb | head -n 1)
+	subBranch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 
 	cd - > /dev/null
 
 	echo -n "$sub: "
 	if [ "$subStatus" = "0" ]; then
-		echo "clean"
+		echo "clean @$subBranch"
 
 		if [[ "$subRemote" != *"..."* ]]; then
 			echo "WARNING: the sub's branch is not remotely tracked yet."
@@ -41,7 +42,7 @@ for sub in "$@"; do
 		fi
 
 	else
-		echo "dirty"
+		echo "dirty @$subBranch"
 
 		if [[ "$main" != *"$sub/"* ]]; then
 			echo "WARNING: we have changes committed to main repo BUT NOT to sub's remote."
