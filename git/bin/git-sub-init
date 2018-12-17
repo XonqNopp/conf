@@ -2,10 +2,19 @@
 
 # See https://XonqNopp.github.io/_build/html/git-sub.html
 
-if [ $# -lt 2 ]; then
-	echo "Usage: git sub-init path/to/sub remote [branch]"
+if [ $# -lt 1 ]; then
+	echo "Usage: git sub-init path/to/sub [remote [branch]]"
 	exit 1
 fi
+
+curDir=$PWD
+topDir=$(git rev-parse --show-toplevel)
+if [ "$topDir" = "" ]; then
+	echo "Not a git repository"
+	exit 1
+fi
+
+cd $topDir
 
 sub="$1"
 remote="$2"
@@ -14,7 +23,31 @@ if [ $# = 3 ]; then
 	branch="$3"
 fi
 
+gitsub=".gitsub"
 subinitnew=".subinit.new"
+
+
+function appendToSubFile() {
+	sub=$1
+	remote=$2
+	echo -e "$sub\t$remote" >> $gitsub
+}
+
+
+if [ -f "$gitsub" ]; then
+	if grep $sub $gitsub; then
+		providedRemote=$remote
+		remote=$(grep $sub $gitsub | cut -f2)
+		if [ "$providedRemote" != "" ] && [ "$providedRemote" != "$remote" ]; then
+			echo "Remote provided but was already stored, discarding provided one and using $remote"
+		fi
+	else
+		# sub not already logged
+		appendToSubFile $sub $remote
+	fi
+else
+	appendToSubFile $sub $remote
+fi
 
 if [ ! -d "$sub" ]; then
 	mkdir $sub
@@ -61,7 +94,11 @@ if [ -f "$sub/$subinitnew" ]; then
 	# Cannot run `git add $sub` as it would be treated as submodule :-S
 	git add $sub/*
 	git add $sub/.*  # cannot do in one line or it is considered a submodule
+
+	git add $gitsub
 fi
+
+cd $curDir
 
 # check did not mess anything
 git status -sb
