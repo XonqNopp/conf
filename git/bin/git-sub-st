@@ -2,16 +2,24 @@
 
 # See https://XonqNopp.github.io/_build/html/git-sub.html
 
-sub=$1
-if [ "$#" = "0" ]; then
-	echo "Usage: git sub-st path/to/sub1 [path/to/sub2...]"
-	exit 1
-fi
-
 git status -sb
 main=$(git status -s)
 
-for sub in "$@"; do
+curDir=$PWD
+topDir=$(git rev-parse --show-toplevel)
+if [ "$topDir" = "" ]; then
+	echo "Not a git repository"
+	exit 1
+fi
+
+cd $topDir
+
+gitsub=".gitsub"
+if [ ! -f "$gitsub" ]; then
+	exit 0
+fi
+
+for sub in $(cat $gitsub | cut -f1); do
 	cd $sub
 
 	if [ ! -d ".git" ]; then
@@ -51,4 +59,6 @@ for sub in "$@"; do
 		fi
 	fi
 done
+
+cd $curDir
 
