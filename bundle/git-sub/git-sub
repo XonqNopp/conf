@@ -1,0 +1,196 @@
+#!/bin/bash
+# See https://XonqNopp.github.io/_build/html/git-sub.html
+
+GITSUB_FILE=".gitsub"
+
+function usageAndExit() {
+	echo "Usage:"
+	echo -e "\tgit sub init path/to/sub [remote [ref]]"
+	echo -e "\tgit sub st"
+	exit 1
+}
+
+function appendToSubFile() {
+	sub=$1
+	remote=$2
+	ref=$3
+	echo -e "$sub\t$remote\t$ref" >> $GITSUB_FILE
+}
+
+function subInit() {
+	sub="$1"
+	remote="$2"
+	ref=""
+	if [ $# = 3 ]; then
+		ref="$3"
+	fi
+
+	GITSUBINIT_FILE=".gitsub.init"
+
+	if [ ! -z "$(git status --untracked-files=no --porcelain)" ]; then
+		echo "Error: There are modified or staged files. This is not allowed."
+		exit 1
+	fi
+	
+	if [ ! -d "$sub" ]; then
+		mkdir $sub
+		touch $sub/$GITSUBINIT_FILE
+	fi
+
+	if grep -q $sub $GITSUB_FILE 2> /dev/null; then
+		providedRemote=$remote
+		remote=$(grep $sub $GITSUB_FILE | cut -f2 | head -n 1)
+		if [ "$providedRemote" != "" ] && [ "$providedRemote" != "$remote" ]; then
+			echo "Remote provided but was already stored, discarding provided one and using $remote"
+		fi
+
+		providedRef=$ref
+		ref=$(grep $sub $GITSUB_FILE | cut -f3 | head -n 1)
+		if [ "$providedRef" != "" ] && [ "$providedRef" != "$ref" ]; then
+			echo "Ref provided but was already stored, discarding provided one and using $ref"
+		fi
+	fi
+
+	if [ "$ref" = "" ]; then
+		ref="master"  # not always the default branch...
+	fi
+
+	cd $sub
+
+	# init
+	if [ ! -d ".git" ]; then
+		echo "git init"
+		git init
+	fi
+
+	# remote
+	remoteExists=0
+	remoteName="origin"
+	for rem in $(git remote -v); do
+		if [ "$rem" = "$remote" ]; then
+			remoteExists=1
+			break
+		fi
+	done
+	if [ "$remoteExists" = "0" ]; then
+		echo "Add remote $remoteName: $remote"
+		git remote add $remoteName $remote
+	fi
+
+	# fetch
+	echo "Fetching..."
+	git fetch $remoteName
+
+	# ref
+	echo "Checkout $ref"
+	git checkout -f $ref
+
+	cd - > /dev/null
+
+	# Append to gitsub
+	if ! grep -q $sub $GITSUB_FILE 2> /dev/null; then
+		# sub not already logged
+		appendToSubFile $sub $remote $ref
+	fi
+
+	if [ -f "$sub/$GITSUBINIT_FILE" ]; then
+		rm $sub/$GITSUBINIT_FILE
+		# Cannot run `git add $sub` as it would be treated as submodule :-S
+		git add $sub/*
+		git add $sub/.*  # cannot do in one line or it is considered a submodule
+
+		git add $GITSUB_FILE
+
+		commitMessage="adding new sub $sub@$ref from $remote"
+		echo "git commit: $commitMessage"
+		git commit -m "$commitMessage"
+	fi
+
+	cd $curDir
+
+	# check did not mess anything
+	git status -sb
+}
+
+function subStatus() {
+	git status -sb
+	main=$(git status -s)
+
+	if [ ! -f "$GITSUB_FILE" ]; then
+		exit 0
+	fi
+
+	for sub in $(cat $GITSUB_FILE | cut -f1); do
+		cd $sub
+
+		if [ ! -d ".git" ]; then
+			echo "$sub: Not a git repository, are you sure you did 'git sub init $sub' in parent git repo yet?"
+			exit 1
+		fi
+
+		subStatus=$(git status -s | wc -l)
+		subRemote=$(git status -sb | head -n 1)
+		subBranch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+
+		cd - > /dev/null
+
+		echo -n "$sub: "
+		if [ "$subStatus" = "0" ]; then
+			echo "clean @$subBranch"
+
+			if [[ "$subRemote" != *"..."* ]]; then
+				echo "WARNING: the sub's branch is not remotely tracked yet."
+				echo "Please push it to the remote ASAP."
+				exit 1
+			fi
+
+			if [[ "$subRemote" == *"["* ]]; then
+				echo "WARNING: sub has local commits not pushed to its remote yet."
+				echo "Please push them to the remote ASAP."
+				exit 1
+			fi
+
+		else
+			echo "dirty @$subBranch"
+
+			if [[ "$main" != *"$sub/"* ]]; then
+				echo "WARNING: we have changes committed to main repo BUT NOT to sub's remote."
+				echo "Please commit and push in sub ASAP."
+				exit 1
+			fi
+		fi
+	done
+}
+
+
+if [ $# -lt 1 ]; then
+	usageAndExit
+fi
+
+action=$1
+shift
+
+curDir=$PWD
+topDir=$(git rev-parse --show-toplevel)
+if [ "$topDir" = "" ]; then
+	echo "Not a git repository"
+	exit 1
+fi
+
+cd $topDir
+
+case $action in
+	"init")
+		subInit $@
+		;;
+	"status" | "st")
+		subStatus
+		;;
+	*)
+		cd $curDir
+		usageAndExit
+		;;
+esac
+
+cd $curDir
+
