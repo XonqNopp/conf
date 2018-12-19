@@ -78,17 +78,12 @@
 	flog = log --graph --all --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' -1
 	browse2vim = log --graph --all --pretty=format:'%h {%ci} %an %% %s%d'
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
-	checklog   = log --pretty=fuller --name-status -1
-	statlog    = log --pretty=fuller --stat -1
+	logCheck   = log --pretty=fuller --name-status -1
+	logStat    = log --pretty=fuller --stat -1
 
 	# misc
 	stlog = !echo && git st && echo && git slog
 
-	# submodule
-	sub = submodule
-	subu   = submodule update --init
-	sugus  = submodule update --init --recursive 
-	suburb = submodule update --init --recursive --remote
 
 [diff]
 	tool = vimdiff
