@@ -20,12 +20,12 @@ https://github.com/XonqNopp/git-sub/blob/master/git-sub
 
 * To introduce a new sub, the following command will clone the repo and stage all files for commit::
 
-     git sub init my/sub/path/in/repo https://github.com/awesome/repo [branch_name_or_whatever_git_ref]
+     git sub clone my/sub/path/in/repo https://github.com/awesome/repo [branch_name_or_whatever_git_ref]
 
 * If you pulled from the repo and new commits introduce a sub, running the following command will add the .git
   directory in the sub so you can easily change branch, commit or anything::
 
-     git sub init my/sub/path/in/repo
+     git sub init
 
 Later on, you can also check if there are uncommitted changes with::
 

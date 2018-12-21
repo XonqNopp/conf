@@ -1,12 +1,20 @@
 #!/bin/bash
 # See https://XonqNopp.github.io/_build/html/git-sub.html
 
-GITSUB_FILE=".gitsub"
+CUR_DIR=$PWD
+TOP_DIR=$(git rev-parse --show-toplevel)
+if [ "$TOP_DIR" = "" ]; then
+	echo "Not a git repository"
+	exit 1
+fi
+GITSUB_FILE="$TOP_DIR/.gitsub"
+
 
 function usageAndExit() {
 	echo "Usage:"
-	echo -e "\tgit sub init path/to/sub [remote [ref]]"
-	echo -e "\tgit sub st"
+	echo -e "\tgit sub clone path/to/sub [remote [ref]]"
+	echo -e "\tgit sub init  # only the first time you want to work in an existing sub"
+	echo -e "\tgit sub st  # git status of main repo and all subs"
 	exit 1
 }
 
@@ -17,7 +25,8 @@ function appendToSubFile() {
 	echo -e "$sub\t$remote\t$ref" >> $GITSUB_FILE
 }
 
-function subInit() {
+function subClone() {
+	# Add a new sub
 	sub="$1"
 	remote="$2"
 	ref=""
@@ -25,88 +34,109 @@ function subInit() {
 		ref="$3"
 	fi
 
-	GITSUBINIT_FILE=".gitsub.init"
-
 	if [ ! -z "$(git status --untracked-files=no --porcelain)" ]; then
 		echo "Error: There are modified or staged files. This is not allowed."
 		exit 1
 	fi
 	
-	if [ ! -d "$sub" ]; then
-		mkdir $sub
-		touch $sub/$GITSUBINIT_FILE
+	if [ -d "$sub" ]; then
+		echo "Error: path '$sub' already exists"
+		exit 1
 	fi
 
 	if grep -q $sub $GITSUB_FILE 2> /dev/null; then
-		providedRemote=$remote
-		remote=$(grep $sub $GITSUB_FILE | cut -f2 | head -n 1)
-		if [ "$providedRemote" != "" ] && [ "$providedRemote" != "$remote" ]; then
-			echo "Remote provided but was already stored, discarding provided one and using $remote"
-		fi
-
-		providedRef=$ref
-		ref=$(grep $sub $GITSUB_FILE | cut -f3 | head -n 1)
-		if [ "$providedRef" != "" ] && [ "$providedRef" != "$ref" ]; then
-			echo "Ref provided but was already stored, discarding provided one and using $ref"
-		fi
+		echo "Error: sub '$sub' already in .gitsub file"
+		exit 1
 	fi
 
-	if [ "$ref" = "" ]; then
-		ref="master"  # not always the default branch...
-	fi
+	mkdir $sub
 
 	cd $sub
 
 	# init
-	if [ ! -d ".git" ]; then
-		echo "git init"
-		git init
-	fi
+	git init
 
-	# remote
-	remoteExists=0
-	remoteName="origin"
-	for rem in $(git remote -v); do
-		if [ "$rem" = "$remote" ]; then
-			remoteExists=1
-			break
-		fi
-	done
-	if [ "$remoteExists" = "0" ]; then
-		echo "Add remote $remoteName: $remote"
-		git remote add $remoteName $remote
-	fi
+	echo "Add remote $remoteName: $remote"
+	git remote add $remoteName $remote
 
 	# fetch
 	echo "Fetching..."
 	git fetch $remoteName
 
 	# ref
-	echo "Checkout $ref"
-	git checkout -f $ref
+	if [ "$ref" != "" ]; then
+		echo "Checkout $ref"
+		git checkout -f $ref
+	else
+		# Use default branch as stored ref
+		ref=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+	fi
 
 	cd - > /dev/null
 
-	# Append to gitsub
-	if ! grep -q $sub $GITSUB_FILE 2> /dev/null; then
-		# sub not already logged
-		appendToSubFile $sub $remote $ref
-	fi
+	appendToSubFile $sub $remote $ref
 
-	if [ -f "$sub/$GITSUBINIT_FILE" ]; then
-		rm $sub/$GITSUBINIT_FILE
-		# Cannot run `git add $sub` as it would be treated as submodule :-S
-		git add $sub/*
-		git add $sub/.*  # cannot do in one line or it is considered a submodule
+	# Cannot run `git add $sub` as it would be treated as submodule :-S
+	git add $sub/*
+	# cannot do in one line or it is considered a submodule
+	git add $sub/.*  # ignores .git anyway
 
-		git add $GITSUB_FILE
+	git add $GITSUB_FILE
 
-		commitMessage="adding new sub $sub@$ref from $remote"
-		echo "git commit: $commitMessage"
-		git commit -m "$commitMessage"
-	fi
+	commitMessage="adding new sub $sub@$ref from $remote"
+	echo "git commit: $commitMessage"
+	git commit -m "$commitMessage"
 
-	cd $curDir
+	cd $CUR_DIR
+
+	# check did not mess anything
+	git status -sb
+}
+
+function subInit() {
+	# Init existing subs the first time
+	for sub in $(cat $GITSUB_FILE | cut -f1); do
+		remote=$(grep $sub $GITSUB_FILE | cut -f2)
+		ref=$(grep $sub $GITSUB_FILE | cut -f3)
+
+		echo "git sub init $sub: running..."
+		cd $sub
+
+		# init
+		if [ ! -d ".git" ]; then
+			echo "git init"
+			git init
+		fi
+
+		# remote
+		remoteExists=0
+		remoteName="origin"
+		if [ "$(git remote | wc -l)" = "1" ]; then
+			remoteName=$(git remote)
+		fi
+		for rem in $(git remote -v); do
+			if [ "$rem" = "$remote" ]; then
+				remoteExists=1
+				break
+			fi
+		done
+		if [ "$remoteExists" = "0" ]; then
+			echo "Add remote $remoteName: $remote"
+			git remote add $remoteName $remote
+		fi
+
+		# fetch
+		echo "Fetching..."
+		git fetch $remoteName
+
+		# ref
+		echo "Checkout $ref"
+		git checkout -f $ref
+
+		cd - > /dev/null
+	done
+
+	cd $CUR_DIR
 
 	# check did not mess anything
 	git status -sb
@@ -124,34 +154,39 @@ function subStatus() {
 		cd $sub
 
 		if [ ! -d ".git" ]; then
-			echo "$sub: Not a git repository, are you sure you did 'git sub init $sub' in parent git repo yet?"
+			echo "$sub: Not a git repository, are you sure you ran 'git sub init' in parent git repo yet?"
 			exit 1
 		fi
 
-		subStatus=$(git status -s | wc -l)
-		subRemote=$(git status -sb | head -n 1)
-		subBranch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+		thisStatus=$(git status -s | wc -l)
+		thisRemote=$(git status -sb | head -n 1)
+		thisBranch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+		ref=$(grep $sub $GITSUB_FILE | cut -f3)
+
+		if [ "$ref" != "$thisBranch" ]; then
+			sed -i "s/^\($sub\t[^\t]\+\t\)$ref/\1$thisBranch/" $GITSUB_FILE
+		fi
 
 		cd - > /dev/null
 
 		echo -n "$sub: "
-		if [ "$subStatus" = "0" ]; then
-			echo "clean @$subBranch"
+		if [ "$thisStatus" = "0" ]; then
+			echo "clean @$thisBranch"
 
-			if [[ "$subRemote" != *"..."* ]]; then
+			if [[ "$thisRemote" != *"..."* ]]; then
 				echo "WARNING: the sub's branch is not remotely tracked yet."
 				echo "Please push it to the remote ASAP."
 				exit 1
 			fi
 
-			if [[ "$subRemote" == *"["* ]]; then
+			if [[ "$thisRemote" == *"["* ]]; then
 				echo "WARNING: sub has local commits not pushed to its remote yet."
 				echo "Please push them to the remote ASAP."
 				exit 1
 			fi
 
 		else
-			echo "dirty @$subBranch"
+			echo "dirty @$thisBranch"
 
 			if [[ "$main" != *"$sub/"* ]]; then
 				echo "WARNING: we have changes committed to main repo BUT NOT to sub's remote."
@@ -160,6 +195,10 @@ function subStatus() {
 			fi
 		fi
 	done
+
+	# In case it was modified when we were in the sub:
+	git add $GITSUB_FILE
+	git status -s $GITSUB_FILE  # and show it
 }
 
 
@@ -170,27 +209,23 @@ fi
 action=$1
 shift
 
-curDir=$PWD
-topDir=$(git rev-parse --show-toplevel)
-if [ "$topDir" = "" ]; then
-	echo "Not a git repository"
-	exit 1
-fi
-
-cd $topDir
+cd $TOP_DIR
 
 case $action in
+	"clone")
+		subClone $@
+		;;
 	"init")
-		subInit $@
+		subInit
 		;;
 	"status" | "st")
 		subStatus
 		;;
 	*)
-		cd $curDir
+		cd $CUR_DIR
 		usageAndExit
 		;;
 esac
 
-cd $curDir
+cd $CUR_DIR
 
