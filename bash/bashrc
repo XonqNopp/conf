@@ -116,6 +116,7 @@ alias python="python3"
 #alias ipython="ipython3"
 #alias ipy="ipython --pylab"
 #alias nipy="ipython notebook --pylab inline &"
+alias d2h="python -c \"import sys; print('{:#x}'.format(int(sys.argv[1])))\""
 # }}}
 # cpp ## {{{
 # All the C++ warnings I want
