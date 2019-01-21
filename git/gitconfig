@@ -6,7 +6,7 @@
 
 [alias]
 	# basic
-	st       = status -sb --ignore-submodules=none
+	st       = status -sb
 
 	# files
 	chmodx   = update-index --chmod=+x
@@ -49,6 +49,7 @@
 	cod    = checkout development
 	cb     = checkout -b
 	br     = branch
+	bd     = branch -d
 	rewind = merge --no-ff
 	bra    = branch -va
 	remaster = !git co master && git pull && git coo && git rebase master && git st
@@ -68,7 +69,7 @@
 	pustash = !git stash && git pull && git stash pop
 
 	# diff
-	df = difftool --ignore-submodules=none
+	df = difftool
 	dfh = !git df HEAD^
 	mt = mergetool
 	mta = mergetool --tool=vimgitall
@@ -89,6 +90,7 @@
 
 [diff]
 	tool = vimdiff
+	ignoreSubmodules = none
 
 [difftool]
 	prompt = false
