@@ -1,20 +1,30 @@
 #!/bin/bash
-# See https://XonqNopp.github.io/_build/html/git-sub.html
+# See https://XonqNopp.github.io/output/git-sub.html
+
 
 CUR_DIR=$PWD
-TOP_DIR=$(git rev-parse --show-toplevel)
-if [ "$TOP_DIR" = "" ]; then
+TOP_DIR=$(git rev-parse --show-toplevel 2> /dev/null)
+if [ $? = 128 ]; then
+	echo "Not a git repository"
+	exit 128
+fi
+# Just to be sure we have a repo, but the previous test should already fail
+if [ -z "$TOP_DIR" ]; then
 	echo "Not a git repository"
 	exit 1
 fi
 GITSUB_FILE="$TOP_DIR/.gitsub"
 
 
+# Abort on error:
+set -e
+
+
 function usageAndExit() {
 	echo "Usage:"
-	echo -e "\tgit sub clone path/to/sub [remote [ref]]"
+	echo -e "\tgit sub clone <remote path> [<destination directory> [<commitish>]]"
 	echo -e "\tgit sub init  # only the first time you want to work in an existing sub"
-	echo -e "\tgit sub st  # git status of main repo and all subs"
+	echo -e "\tgit sub status  # git status of main repo and all subs"
 	exit 1
 }
 
@@ -25,10 +35,28 @@ function appendToSubFile() {
 	echo -e "$sub\t$remote\t$ref" >> $GITSUB_FILE
 }
 
+###############################################################################
+# Clones a sub into the optionally specified directory
+# Globals:
+#	None
+# Arguments:
+#	$1	- Remote path to the sub
+#	$2	- (OPTIONAL) Directory path to the destination of the sub
+#	$3	- (OPTIONAL) The commitish to check out in the sub
+# Returns:
+#	None
+###############################################################################
 function subClone() {
 	# Add a new sub
-	sub="$1"
-	remote="$2"
+	remote="$1"
+
+	if [ $# -gt 1 ]; then
+		sub="$2"
+	else
+		sub=${1%.git*}
+		sub=${sub##*/}
+	fi
+
 	ref=""
 	if [ $# = 3 ]; then
 		ref="$3"
@@ -39,13 +67,13 @@ function subClone() {
 		exit 1
 	fi
 	
-	if [ -d "$sub" ]; then
+	if [ -e "$sub" ]; then
 		echo "Error: path '$sub' already exists"
 		exit 1
 	fi
 
-	if grep -q $sub $GITSUB_FILE 2> /dev/null; then
-		echo "Error: sub '$sub' already in .gitsub file"
+	if grep -q -e "^$sub	" $GITSUB_FILE 2> /dev/null; then
+		echo "Error: sub '$sub' already in .gitsub file but path not present, maybe it was moved?"
 		exit 1
 	fi
 
@@ -53,23 +81,23 @@ function subClone() {
 
 	cd $sub
 
-	# init
-	git init
+	git clone $remote . --quiet --no-checkout
 
-	echo "Add remote $remoteName: $remote"
-	git remote add $remoteName $remote
+	if [ -z "$ref" ]; then
+		ref=$(git symbolic-ref --short HEAD) 
+	fi
 
-	# fetch
-	echo "Fetching..."
-	git fetch $remoteName
+	git checkout $ref
 
-	# ref
-	if [ "$ref" != "" ]; then
-		echo "Checkout $ref"
-		git checkout -f $ref
+	namedRef=$ref
+
+	# Store commit in sub file
+	ref=$(git rev-parse HEAD)
+
+	if [ "$namedRef" = "$ref" ]; then
+		namedRef=""
 	else
-		# Use default branch as stored ref
-		ref=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+		namedRef=" = $namedRef"
 	fi
 
 	cd - > /dev/null
@@ -83,7 +111,7 @@ function subClone() {
 
 	git add $GITSUB_FILE
 
-	commitMessage="adding new sub $sub@$ref from $remote"
+	commitMessage="adding new sub $sub@${ref:0:8}$namedRef from $remote"
 	echo "git commit: $commitMessage"
 	git commit -m "$commitMessage"
 
@@ -96,15 +124,14 @@ function subClone() {
 function subInit() {
 	# Init existing subs the first time
 	for sub in $(cat $GITSUB_FILE | cut -f1); do
-		remote=$(grep $sub $GITSUB_FILE | cut -f2)
-		ref=$(grep $sub $GITSUB_FILE | cut -f3)
+		remote=$(grep -e "^$sub	" $GITSUB_FILE | cut -f2)
+		ref=$(grep -e "^$sub	" $GITSUB_FILE | cut -f3)
 
-		echo "git sub init $sub: running..."
+		echo "git sub [$sub]: init remote=$remote ref=$ref"
 		cd $sub
 
 		# init
 		if [ ! -d ".git" ]; then
-			echo "git init"
 			git init
 		fi
 
@@ -161,35 +188,57 @@ function subStatus() {
 		thisStatus=$(git status -s | wc -l)
 		thisRemote=$(git status -sb | head -n 1)
 		thisBranch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
-		ref=$(grep $sub $GITSUB_FILE | cut -f3)
+		thisRef=$(git rev-parse HEAD)
+		thisShortRef=$(git rev-parse --short HEAD)
+		ref=$(grep -e "^$sub	" $GITSUB_FILE | cut -f3)
 
-		if [ "$ref" != "$thisBranch" ]; then
-			sed -i "s/^\($sub\t[^\t]\+\t\)$ref/\1$thisBranch/" $GITSUB_FILE
+		if [ "${thisRemote:0:19}" = "## HEAD (no branch)" ]; then
+			thisRemote=""
+		fi
+
+		if [ "${thisBranch:0:14}" = "(HEAD detached" ]; then
+			thisBranch=""
+		else
+			thisBranch=" = $thisBranch"
+		fi
+
+		#echo "$sub: status=$thisStatus   remote=$thisRemote   branch=$thisBranch   ref=$thisShortRef    from subfile=${ref:0:7}"
+
+		if [ "$ref" != "$thisRef" ]; then
+			# Be careful to escape slash from sub otherwise sed thinks matching expr is finished and you get:
+			# sed: -e expression #1 char XX: unknown option to `s'
+			sed -i "s/^\(${sub/\//\\\/}\t[^\t]\+\)\t$ref/\1\t$thisRef/" $GITSUB_FILE
 		fi
 
 		cd - > /dev/null
 
 		echo -n "$sub: "
 		if [ "$thisStatus" = "0" ]; then
-			echo "clean @$thisBranch"
+			echo "clean @$thisShortRef$thisBranch"
 
-			if [[ "$thisRemote" != *"..."* ]]; then
-				echo "WARNING: the sub's branch is not remotely tracked yet."
+			if [[ ( "$thisRemote" != "" ) && ( "$thisRemote" != *"..."* ) ]]; then
+				echo "WARNING: the branch of sub '$sub' is not remotely tracked yet."
 				echo "Please push it to the remote ASAP."
 				exit 1
 			fi
 
-			if [[ "$thisRemote" == *"["* ]]; then
-				echo "WARNING: sub has local commits not pushed to its remote yet."
-				echo "Please push them to the remote ASAP."
+			if [[ ( "$thisRemote" != "" ) && ( "$thisRemote" == *"["* ) ]]; then
+				echo "WARNING: sub '$sub' local commits differ from its remote."
+				echo "Please sync with the remote ASAP."
 				exit 1
 			fi
 
 		else
-			echo "dirty @$thisBranch"
+			echo "dirty @$thisShortRef$thisBranch"
+
+			if [[ ( "$thisBranch" == "" ) || ( "$thisRemote" == "" ) ]]; then
+				echo "WARNING: there are changes in the sub '$sub' but it is not on a branch"
+				echo "Please checkout to a branch in sub ASAP."
+				exit 1
+			fi
 
 			if [[ "$main" != *"$sub/"* ]]; then
-				echo "WARNING: we have changes committed to main repo BUT NOT to sub's remote."
+				echo "WARNING: we have changes committed to main repo BUT NOT to the remote of sub '$sub'."
 				echo "Please commit and push in sub ASAP."
 				exit 1
 			fi
@@ -223,6 +272,7 @@ case $action in
 		;;
 	*)
 		cd $CUR_DIR
+		echo "Unknown command: $action"
 		usageAndExit
 		;;
 esac

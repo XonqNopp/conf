@@ -4,7 +4,7 @@ git sub
 If you are sharing code in several repository or using third-party code, you are likely to have come to think how to do
 it efficiently.
 Git provides some ways to do this, but...
-All existing solution sucks:
+All existing solutions suck:
 
 * submodule is nice but painful for users, and for beginner developers
 * subtree is nice but painful for developers since push can be wrong
@@ -15,8 +15,7 @@ So I have come to think that sticking to the basics is maybe better.
 It is simply a clone of the other repo into the main repo and we track all files in the main repo as well.
 For repositories with more than one developer, I advise to use sub.
 
-I wrote a script for this here:
-https://github.com/XonqNopp/git-sub/blob/master/git-sub
+The ``git-sub`` script helps deal with this.
 
 * To introduce a new sub, the following command will clone the repo and stage all files for commit::
 
@@ -27,9 +26,9 @@ https://github.com/XonqNopp/git-sub/blob/master/git-sub
 
      git sub init
 
-Later on, you can also check if there are uncommitted changes with::
+* Later on, you can also check if there are uncommitted changes with::
 
-   git sub st
+     git sub st
 
 
 Pros

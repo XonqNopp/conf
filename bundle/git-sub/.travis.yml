@@ -1,0 +1,9 @@
+language: bash
+
+before_script:
+    - wget https://github.com/kward/shunit2/archive/master.zip
+    - unzip master.zip
+
+script:
+    - bash test.sh
+
