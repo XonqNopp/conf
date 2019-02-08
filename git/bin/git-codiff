@@ -1,0 +1,17 @@
+#!/bin/bash
+# need bash because of <()
+
+if [ $# -lt 2 ]; then
+	echo "git codiff [--ignore-trailing-space] SHA1 SHA2"
+	exit 1
+fi
+
+args=""
+
+if [ "$1" = "--ignore-trailing-space" ]; then
+	args="$1"
+	shift
+fi
+
+diff $args <(git show $1) <(git show $2)
+
