@@ -1,0 +1,6 @@
+defscrollback 100000
+startup_message off
+altscreen on
+msgwait 0
+#escape 
+
