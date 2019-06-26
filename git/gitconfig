@@ -10,7 +10,10 @@
 
 	# files
 	chmodx   = update-index --chmod=+x
+	grip = grep -i
 	grin = grep -in
+	gripHn = grep -inH
+	gril = grep -il
 
 	# commit
 	cm       = commit -m
@@ -41,24 +44,20 @@
 	recont = rebase --continue
 	rabo = rebase --abort
 	remas = rebase master
-	redev = rebase development
 	rebum = rebase upstream/master
-	rebud = rebase upstream/development
 	frum  = !git fetch -p upstream && git rebum
-	frud  = !git fetch -p upstream && git rebud
+	rebalf = rebase -s recursive -Xignore-space-at-eol
 
 	# branches
 	co     = checkout
 	coo    = checkout -
 	com    = checkout master
-	cod    = checkout development
 	cb     = checkout -b
 	br     = branch
 	bd     = branch -d
 	rewind = merge --no-ff
 	bra    = branch -va
-	remaster = !git co master && git pull && git coo && git rebase master && git st
-	redev    = !git co development && git pull && git coo && git rebase development && git st
+	pum    = !git checkout master && git fetch -p && git pull
 
 	# remote
 	putsh = push --follow-tags
@@ -75,7 +74,10 @@
 
 	# diff
 	df = difftool
-	dfh = difftool HEAD^
+	dfhead = difftool HEAD
+	dfhat = difftool HEAD^
+	dfm = difftool master
+	dfum = difftool upstream/master
 	mt = mergetool
 	mta = mergetool --tool=vimgitall
 	dispatch = format-patch -M -n -s -o outgoing
