@@ -6,7 +6,11 @@ source ~/.wash/bash/bashrc
 export PATH="$PATH:/usr/local/texlive/2018/bin/x86_64-linux"
 
 alias apt-proxy="sudo vim /etc/apt/apt.conf.d/99Proxy"
+
 #export LD_LIBRARY_PATH=/media/sf_WS/helios/_build/protobuf-2.4.1/lib
+
+alias subu="su buildroot"
+
 export testNetwork="10.64.75"
 export servicepi="pi@${testNetwork}.1"
 alias dhcPi="ssh $servicepi cat DHCP.leases"
@@ -20,7 +24,9 @@ function sshpi() {
 }
 
 alias ssj="ssh continuous@ch03jenkins.corp.ads"
-alias ssg="ssh root@ch03gitproxy.corp.ads"
+alias ssg="echo /var/lib/docker/volumes/gitlab_data/_data/git-data/repositories; ssh swteam@ch03rdteam.phonak.com"
+
+alias scR="screen -RR"
 
 
 # PROXY
