@@ -121,6 +121,7 @@
 
 [push]
 	followTags = true
+	default = current  # do not ask for branch when pushing new branch
 
 [instaweb]
 	local = true
