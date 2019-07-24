@@ -1,10 +1,4 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""   Vim script written and maintained by Gael Induni
-"" This script makes a better statusline
-"" Created: Wed 2013-09-11 10:57:17 CEST
-"" Version 0.01
-"" GetLatestVimSciprts: 0000 1 :AutoInstall: #&%
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" This script makes a better statusline
 
 if exists("g:loaded_SLIm") && g:loaded_SLIm
 	finish

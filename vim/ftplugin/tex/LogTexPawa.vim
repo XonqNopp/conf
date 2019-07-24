@@ -1,6 +1,6 @@
-"" Script written and maintained by Gael Induni
-"" This (v)splits to the log of latexpawa
-""
+" Script written and maintained by XonqNopp
+" This (v)splits to the log of latexpawa
+
 if exists("g:loaded_LogTexPawa") && g:loaded_LogTexPawa
 	finish
 endif

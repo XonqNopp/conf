@@ -1,7 +1,7 @@
 *openssl.txt*
 
 Author: Noah Spurrier <noah@noah.org> *openssl-author*
-Maintainer: Gael Induni *openssl-maintainer*
+Maintainer: XonqNopp *openssl-maintainer*
 
 INTRODUCTION *openssl* *openssl.vim*
 If you do not know anything about encrypted files, you should first learn the

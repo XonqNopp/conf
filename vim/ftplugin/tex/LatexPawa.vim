@@ -1,14 +1,7 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""   Vim script written and maintained by Gael Induni
-"" This script run the LaTeXPawa perl script and display
-""  an error message when needed.
-"" The function call is mapped to F1
-"" Created      : long ago
-"" Last modified: Fri 2014-09-05 08:08:09 CEST
-"" Version 0.01
-"" GetLatestVimSciprts: 0000 1 :AutoInstall: #&%
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""
+" This script run the LaTeXPawa perl script and display
+" an error message when needed.
+" The function call is mapped to F1.
+
 if exists("g:loaded_LatexPawa") && g:loaded_LatexPawa
 	finish
 endif

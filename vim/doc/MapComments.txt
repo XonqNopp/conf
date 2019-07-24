@@ -1,6 +1,6 @@
 *MapComments.txt* Powerful (un)commenting maps
 
-Author: Gael Induni *MapComments-author*
+Author: XonqNopp *MapComments-author*
 Licence: Same terms as Vim itself (see |licence|)
 
 

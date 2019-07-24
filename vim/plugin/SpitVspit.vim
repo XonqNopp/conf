@@ -1,21 +1,12 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""  Plugin written and maintained by Gael Induni
-"" This is SpitVspit plugin to split among many files,
-""  even :sp *.cpp<cr> works!!
-"" Created: Wed 25 Nov 2009 03:26:08 PM CET
-"" Last modified: Wed 16 Oct 2013 12:36:38 PM CEST
-"" Version 2.2
-""
-"" Inspired from http://vim.wikia.com/wiki/Opening_multiple_files_from_a_single_command-line
-""  By salmanhalim
-""
-"" To be always up-to-date:
-"" GetLatestVimScripts: 2918 1 :AutoInstall: SpitVspit
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" This is SpitVspit plugin to split among many files,
+"  even :sp *.cpp<cr> works!!
 
-"" TODO:
-"" also tabs
-"" Problem with spaces in filename
+" Inspired from http://vim.wikia.com/wiki/Opening_multiple_files_from_a_single_command-line
+"  By salmanhalim
+
+" TODO:
+" also tabs
+" Problem with spaces in filename
 
 if exists("g:loaded_SpitVspit") && g:loaded_SpitVspit
 	finish

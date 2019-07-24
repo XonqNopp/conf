@@ -1,13 +1,6 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""   Vim script written and maintained by Gael Induni
-""   Inspired from the VIm documentation and JonSkanes on
-""   http://vim.wikia.com/wiki/Show_tab_number_in_your_tab_line
-"" This script makes a better tabline
-"" Created      : Wed 2013-09-11 08:35:02 CEST
-"" Last modified: Thu 2015-04-02 07:35:38 CEST
-"" Version 0.0
-"" GetLatestVimSciprts: 0000 1 :AutoInstall: #&%
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Inspired from the VIm documentation and JonSkanes on
+" http://vim.wikia.com/wiki/Show_tab_number_in_your_tab_line
+" This script makes a better tabline
 
 if exists("g:loaded_TLIm") && g:loaded_TLIm
 	finish

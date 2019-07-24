@@ -1,9 +1,3 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""   Vim script written and maintained by Gael Induni
-"" Created      : Thu 12 Sep 2013 01:05:39 PM CEST
-"" Last modified: Thu 12 Sep 2013 01:10:19 PM CEST
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""
 "" Set default LaTeX values:
 "" Limit to 120 columns for diff purpose
 setlocal textwidth=120

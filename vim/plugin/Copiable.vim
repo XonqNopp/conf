@@ -1,6 +1,4 @@
-"" This is the function called by F2 to make a vim file copiable by CTRL-c
-"" Written and maintained by G. Induni
-"" Version 0.1
+" This is the function called by F2 to make a vim file copiable by CTRL-c
 
 if exists("g:loaded_Copiable") && g:loaded_Copiable
 	finish

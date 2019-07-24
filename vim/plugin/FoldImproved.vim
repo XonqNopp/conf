@@ -1,15 +1,8 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-""  Plugin written and maintained by Gael Induni
-"" This is FoldImproved plugin to have a nice fold text
-""   (especially removing my LaTeX headers)
-""  Last modified: Mon 2015-08-31 09:42:47 CEST
-""  Version 0.1
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-""
-""
-"" When performing, put it on vim.org with MapComments (change keys to be variables to enable other to change them)
-""
-""
+" This is FoldImproved plugin to have a nice fold text
+" (especially removing my LaTeX headers)
+
+" When working, upload to vim.org with MapComments (change keys to be variables to enable other to change them)
+
 if exists("g:loaded_FIm") && g:loaded_FIm
 	finish
 endif

@@ -1,7 +1,7 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ""  Plugin written by Noah Spurrier <noah@noah.org>
 ""    Thanks to Tom Purl for the original des3 tip.
-""    maintained by Gael Induni
+""    maintained by XonqNopp
 "" This is openssl plugin to ensure encryption with Vim
 "" Last modified: Tue 30 Apr 2013 03:17:35 PM CEST
 "" Version 3.4

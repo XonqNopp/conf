@@ -1,6 +1,6 @@
 *EscapeBchars.txt* Some informations about the buffer comment characters.
 
-Author: Gael Induni *EscapeBchars-author*
+Author: XonqNopp *EscapeBchars-author*
 Licence: Same terms as Vim itself (see |licence|)
 
 

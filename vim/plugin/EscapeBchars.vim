@@ -1,12 +1,5 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-""  Plugin written and maintained by Gael Induni
-"" This is EscapeBchars plugin to escape chars in b: vars
-""  Last modified: Sun 24 Mar 2013 05:47:40 PM CET
-""  Version 0.4
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" To be always up-to-date:
-"" GetLatestVimScripts: 4081 1 :AutoInstall: EscapeBchars
-""
+" This is EscapeBchars plugin to escape chars in b: vars
+
 if exists("g:loaded_EscapeBchars") && g:loaded_EscapeBchars == 1
 	finish
 endif

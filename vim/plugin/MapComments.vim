@@ -1,17 +1,13 @@
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-""  Plugin written and maintained by Gael Induni
-"" This is MapComments plugin to have F5 and F6
-""   (un)commenting for each filetype
-""  Last modified: Wed 11 Sep 2013 11:19:09 AM CEST
-""  Version 0.2
-""  GetLatestVimScripts: 
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-""
+" This is MapComments plugin to have F5 and F6
+" (un)commenting for each filetype
+
 "" Comments philosophy:
 "" "" This is a comment (help or doc text, not intended to ever be uncommented)
 "" "This is a commented line (code)
 ""
 "" TODO:
+"" Change to use only one comchar with space as comment
+""
 "" Must be careful with b:chars if strlen > 1, this changes the pattern
 "" add case when only start and stop (css html xml) in uncomment commentv uncommentv
 "" Think about position restoring???

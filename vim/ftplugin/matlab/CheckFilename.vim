@@ -1,7 +1,5 @@
 "" Script to check if the filename is equal to the matlab function name
-"" G. Induni, Feb 2011
-"" Last modified: Mon 2015-04-27 08:39:27 CEST
-"" Version 0.1
+"" XonqNopp, Feb 2011
 
 if exists("g:loaded_checkmatlabfilename") && g:loaded_checkmatlabfilename
 	call CheckMatlabFilename()

@@ -1,6 +1,6 @@
 *SpitVspit.txt* Improved split/vsplit/edit function
 
-Author: Gael Induni *SpitVspit-author*
+Author: XonqNopp *SpitVspit-author*
 Licence: Same terms as Vim itself (see |licence|)
 
 
