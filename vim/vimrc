@@ -8,8 +8,8 @@ set t_Co=8
 set runtimepath+=$vash/vim,$vash/vim/after
 set viewdir=$vash/vim/view
 
-let g:HSH = expand("$HSH")
-let g:vash = g:HSH . "/.wash"
+let g:HOME = expand("$HOME")
+let g:vash = g:HOME . "/.wash"
 let g:VimDir = g:vash . "/vim"
 
 execute "autocmd BufWritePost " . g:VimDir . "vimrc,~/.vimrc source ~/.vimrc"

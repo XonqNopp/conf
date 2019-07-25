@@ -1,5 +1,4 @@
 OS = $(shell (uname | cut -b 1-6 ))
-HSH = $(shell (echo $$HSH))
 
 ifeq ($(OS),Darwin)
 ECHO = echo -e

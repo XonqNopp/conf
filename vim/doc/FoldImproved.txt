@@ -1,6 +1,5 @@
 *FoldImproved.txt* Nice fold text function
 
-Author: Gael Induni *FoldImproved-author*
 Licence: Same terms as Vim itself (see |licence|)
 
 

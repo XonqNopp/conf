@@ -9,7 +9,7 @@ let g:loaded_LatexPawa = 1
 
 let g:LatexPawa_version = 0.1
 
-if exists("g:HSH") && g:HSH != ""
+if exists("g:vash") && g:vash != ""
 	let g:LatexPawa_perl_path = g:vash . "/perl"
 else
 	let g:LatexPawa_perl_path = "."

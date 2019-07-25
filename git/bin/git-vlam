@@ -12,6 +12,6 @@ for f in $files; do
 		sed "s/00$//" | \
 		sed "s/00000000 Not Committed Yet */Not Committed Yet   /" \
 		> $tmpf
-	vim -O -S /home/induni/.wash/vim/ftplugin/git/vlam.vim $tmpf $f
+	vim -O -S $HOME/.wash/vim/ftplugin/git/vlam.vim $tmpf $f
 	rm $tmpf
 done

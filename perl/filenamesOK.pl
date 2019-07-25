@@ -18,9 +18,9 @@ if( $#ARGV > -1 && $ARGV[0] =~ /^--/ ) {
 	}
 }
 
-$HSH = `echo \$HSH`;
-chomp( $HSH );
-require "$HSH/.wash/perl/readrec.pl";
+$HOME = `echo \$HOME`;
+chomp( $HOME );
+require "$HOME/.wash/perl/readrec.pl";
 $dir = ".";
 if( $#ARGV > -1 ) {
 	$dir = $ARGV[0];

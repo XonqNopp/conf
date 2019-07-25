@@ -76,12 +76,9 @@ else
 fi
 # }}}
 # }}}
-# HSH vash ## {{{
-if [[ -z ${HSH+defined} ]]; then
-	export HSH="$HOME"
-fi
+# vash ## {{{
 if [[ -z ${vash+defined} || $vash == "" ]]; then
-	export vash="$HSH/.wash"
+	export vash="$HOME/.wash"
 fi
 # }}}
 export PATH="$PATH:$vash/bin:$vash/git/bin:$vash/perl/bin"
@@ -127,16 +124,6 @@ export SMWG="-Wall -Wextra -Wfloat-equal -Wwrite-strings -Wpointer-arith -Wcast-
 export WEFF="-Weffc++"
 # }}}
 # path stuff and shortcuts ## {{{
-# HSH {{{
-function hsh()
-{
-	if [[ $# == 0 ]]; then
-		cd $HSH
-	else
-		cd $HSH/$1*
-	fi
-}
-# }}}
 # vash {{{
 function vash()
 {

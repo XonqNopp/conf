@@ -1,5 +1,4 @@
-export HSH="/Volumes/chalet"
-source $HSH/.wash/bash/runcom/original.bashrc
+source $HOME/.wash/bash/runcom/original.bashrc
 
 ## To have verbose boot
 #sudo nvram boot-args="-v"
