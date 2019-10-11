@@ -67,7 +67,7 @@
 	fup   = fetch -p upstream
 	pinup = pull   upstream  # must add branch when invoking
 	rebu  = rebase upstream  # must add branch when invoking
-	pushf = push --force
+	pushf = push --force-with-lease
 	pushu = push -u
 	pushup = push -u upstream
 	stapup = !git stash && git pull && git stash pop
@@ -90,6 +90,8 @@
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
 	log-check  = log --pretty=fuller --name-status -1
 	log-stat   = log --pretty=fuller --stat -1
+	log-deleted = log -1 --full-history --
+	log-merges  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s%n%n%b%n%n' --merges
 
 	# misc
 	stlog = !echo && git st && echo && git slog
