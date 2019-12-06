@@ -243,8 +243,9 @@ endif
 if filereadable(vimrc2_path . ".vimrc2")
 	execute "source " . escape(vimrc2_path, " ") . ".vimrc2"
 endif
-if filereadable(".vimrc.local")
-	source .vimrc.local
+if filereadable(".vimrc") && expand("$PWD") != expand("$HOME") && expand("$HOME") != "/root" && expand("$PWD") != "/root"
+	" do not recursively load ~/.vimrc or /root/.vimrc
+	source .vimrc
 endif
 ""
 "" to use environment variables, use expand("$VAR")
