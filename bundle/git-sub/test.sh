@@ -1,4 +1,11 @@
 #!/bin/bash
+if [ ! -z "$(git status --untracked-files=no --porcelain)" ]; then
+	echo "Error: There are modified or staged files. This is not allowed."
+	exit 1
+fi
+
+# Clean previous tests
+rm -rf test_*
 
 if [ $# != 0 ]; then
 	DEBUG=1
@@ -6,6 +13,7 @@ fi
 
 
 root=$PWD
+notRepo="/tmp/notRepo"
 gitsub="$root/git-sub"
 subDir="$root/test_sub"
 subSrc="$subDir.git"
@@ -26,6 +34,18 @@ function newClone() {
 	cd $newDir
 }
 
+
+function mkdirP() {
+	newDir="$1"
+
+	if [ -e "$newDir" ]; then
+		echo "Cannot create directory, already exists: $newDir"
+		exit 1
+	fi
+
+	mkdir "$newDir"
+}
+
 ##########################################
 
 function oneTimeSetUp() {
@@ -41,7 +61,7 @@ function oneTimeSetUp() {
 	echo "testDir2=$testDir2"
 
 	# Prepare dummy sub
-	mkdir $subSrc
+	mkdirP $subSrc
 	cd $subSrc
 	git init --bare > /dev/null
 	cd $root
@@ -57,7 +77,7 @@ function oneTimeSetUp() {
 	cd $root
 
 	# Prepare dummy repo (2x)
-	mkdir $testSrc
+	mkdirP $testSrc
 	cd $testSrc
 	git init --bare > /dev/null
 	cd $root
@@ -87,7 +107,8 @@ function tearDown() {
 function test_notGitRepo() {
 	# Test what happens outside of git repository
 
-	cd ..
+	mkdir -p $notRepo
+	cd $notRepo
 
 	myStdout=$($gitsub)
 
@@ -136,7 +157,7 @@ function test_clone1args() {
 
 	assertEquals 'exit value' 0 $ret
 
-	assertContains "$myStdout" "Your branch is up to date with 'origin/master'."
+	assertContains "$myStdout" "Your branch is up-to-date with 'origin/master'."
 	assertContains "$myStdout" "git commit: adding new sub $subName@"
 	assertContains "$myStdout" "= master from $subSrc"
 	assertContains "$myStdout" "[master "
@@ -163,7 +184,7 @@ function test_clone2args() {
 
 	assertEquals 'exit value' 0 $ret
 
-	assertContains "$myStdout" "Your branch is up to date with 'origin/master'."
+	assertContains "$myStdout" "Your branch is up-to-date with 'origin/master'."
 	assertContains "$myStdout" "git commit: adding new sub $subName@"
 	assertContains "$myStdout" "= master from $subSrc"
 	assertContains "$myStdout" "[master "
@@ -189,7 +210,7 @@ function test_clone3args() {
 
 	assertEquals 'exit value' 0 $ret
 
-	assertContains "$myStdout" "Your branch is up to date with 'origin/master'."
+	assertContains "$myStdout" "Your branch is up-to-date with 'origin/master'."
 	assertContains "$myStdout" "git commit: adding new sub $subName@"
 	assertContains "$myStdout" "= master from $subSrc"
 	assertContains "$myStdout" "[master "
@@ -484,7 +505,7 @@ function test_statusUpdateRefSlash() {
 	newClone "test_statusUpdateRefSlash"
 	$gitsub init > /dev/null 2>&1
 
-	mkdir newdir
+	mkdirP newdir
 	subName="newdir/subb"
 	$gitsub clone $subSrc $subName > /dev/null 2>&1
 
@@ -510,6 +531,9 @@ function test_statusUpdateRefSlash() {
 	if [ "$DEBUG" = "1" ]; then
 		echo "$myStdout"
 	fi
+}
+
+function test_update() {
 }
 
 ##########################################
