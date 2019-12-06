@@ -17,14 +17,18 @@ execute "autocmd BufWritePost " . g:VimDir . "vimrc,~/.vimrc source ~/.vimrc"
 " Defining global and script variables {{{
 let MRU_File = g:VimDir . "/mru_files.txt"
 
-let g:LargeFile = 5          " [MB]
+let g:LargeFile = 5  " [MB]
 
 let g:NERDTreeDirArrows = 1
 
 let g:gitgutter_highlight_lines = 0
 
+let g:pythonMaxLineLength = 119
+let g:pymode_python = 'python3'
+let g:pymode_options_max_line_length = g:pythonMaxLineLength
+let g:pymode_lint_ignore = ["E221", "E265", "E266", "W391", "W503"]
 let g:pep8_cmd="pycodestyle"
-let g:pep8_args="--max-line-length=119"
+let g:pep8_args="--max-line-length=" . g:pythonMaxLineLength
 let g:pep8_ignore="E221,E265,E266,W391,W503"
 "" E221: multiple whitespace before operator
 "" E265: block comments
