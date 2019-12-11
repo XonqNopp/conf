@@ -25,9 +25,6 @@
 [submodule "vim/bundle/vim-gitgutter"]
 	path = vim/bundle/vim-gitgutter
 	url = ../../airblade/vim-gitgutter.git
-[submodule "vim/bundle/vim-pep8"]
-	path = vim/bundle/vim-pep8
-	url = ../vim-pep8.git
 [submodule "vim/pathogen"]
 	path = vim/pathogen
 	url = ../../tpope/vim-pathogen.git

@@ -26,15 +26,10 @@ let g:gitgutter_highlight_lines = 0
 let g:pythonMaxLineLength = 119
 let g:pymode_python = 'python3'
 let g:pymode_options_max_line_length = g:pythonMaxLineLength
-let g:pymode_lint_ignore = ["E221", "E265", "E266", "W391", "W503"]
-let g:pep8_cmd="pycodestyle"
-let g:pep8_args="--max-line-length=" . g:pythonMaxLineLength
-let g:pep8_ignore="E221,E265,E266,W391,W503"
+let g:pymode_lint_ignore = ["E221", "W391"]
+let g:pymode_lint_options_mccabe = {"complexity": 25}
 "" E221: multiple whitespace before operator
-"" E265: block comments
-"" E266: too many # leading block comments
 "" W391: newline at end
-"" W503: break before binary operator
 
 let g:b2h_use_css = 1
 let g:b2h_output_xhtml = 1
