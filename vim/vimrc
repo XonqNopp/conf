@@ -27,7 +27,7 @@ let g:pythonMaxLineLength = 119
 let g:pymode_python = 'python3'
 let g:pymode_options_max_line_length = g:pythonMaxLineLength
 let g:pymode_lint_ignore = ["E221", "E265", "E266", "W391"]
-let g:pymode_lint_options_mccabe = {"complexity": 50}
+let g:pymode_lint_options_mccabe = {"complexity": 42}
 "" E221: multiple whitespace before operator
 "" E265: block comment should start with '# '
 "" E266: too many '#' leading block comment
