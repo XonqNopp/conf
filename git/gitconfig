@@ -107,12 +107,17 @@
 [merge]
 	tool = vimgit
 
+[mergetool]
+	keepBackup = false
+
 [mergetool "vimgit"]
 	cmd = vim -d -f -c 'wincmd J' "$MERGED" "$LOCAL" "$REMOTE"
+	keepBackup = false
 	# $BASE is not worth it
 
 [mergetool "vimgitall"]
 	cmd = vim -d -f -c 'wincmd J' "$MERGED" "$LOCAL" "$BASE" "$REMOTE"
+	keepBackup = false
 	# if I really want to see $BASE
 
 [rebase]
