@@ -7,3 +7,4 @@ vim/pack/plugins/start/openssl.vim	https://github.com/vim-scripts/openssl.vim.gi
 vim/pack/plugins/start/vim-gitgutter	https://github.com/airblade/vim-gitgutter.git	2ef4f7e7b20dce7fd89adbeb6a943240b77a7a8e
 vim/pack/plugins/start/vim-man	https://github.com/vim-utils/vim-man.git	cfdc78f52707b4df76cbe57552a7c8c28a390da4
 vim/pack/plugins/start/vim-speeddating	https://github.com/tpope/vim-speeddating.git	fe98cfaa7ea9c4b838d42a6830437c919eb55b4e
+vim/pack/plugins/start/vim-shellcheck	https://github.com/itspriddle/vim-shellcheck.git	4346419ac57ef341a15aa39c827c0848f17c6faf
