@@ -163,6 +163,26 @@ function subClone() {
 
 
 ###############################################################################
+# Check if remote exists
+# Arguments:
+#	$1 - remote name
+# Returns:
+#   0 if provided remote not found
+###############################################################################
+function remoteExists() {
+	remoteName="$1"
+
+	for rem in $(git remote); do
+		if [ "$rem" = "$remoteName" ]; then
+			return 1
+		fi
+	done
+
+	return 0
+}
+
+
+###############################################################################
 # Init an existing sub
 ###############################################################################
 function subInit() {
@@ -180,24 +200,23 @@ function subInit() {
 		fi
 
 		# remote
-		remoteExists=0
-		remoteName="origin"
-		if [ "$(git remote | wc -l)" = "1" ]; then
-			remoteName=$(git remote)
-		fi
-		for rem in $(git remote -v); do
-			if [ "$rem" = "$remote" ]; then
-				remoteExists=1
-				break
+		defaultRemote="origin"
+		remoteName="$defaultRemote"
+		if remoteExists $remoteName; then
+			remoteName="upstream"
+			if remoteExists $remoteName; then
+				remoteName=$(git remote | head -n 1)
 			fi
-		done
-		if [ "$remoteExists" = "0" ]; then
+		fi
+
+		if [ "$remoteName" = "" ]; then
+			remoteName="$defaultRemote"
 			echo "Add remote $remoteName: $remote"
 			git remote add $remoteName $remote
 		fi
 
 		# fetch
-		echo "Fetching..."
+		echo "Fetching: $remoteName"
 		git fetch $remoteName
 
 		# ref
@@ -222,6 +241,8 @@ function subInit() {
 function updateGitsub() {
 	sub="$1"
 
+	echo "updateGitsub($sub)"
+
 	cd $sub
 
 	if [ ! -d ".git" ]; then
@@ -229,7 +250,7 @@ function updateGitsub() {
 		exit 1
 	fi
 
-	thisStatus=$(git status -s | wc -l)
+	thisStatusLines=$(git status -s | wc -l)
 	thisRemote=$(git status -sb | head -n 1)
 	thisBranch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 	thisRef=$(gitCommitHash)
@@ -246,19 +267,20 @@ function updateGitsub() {
 		thisBranch=" = $thisBranch"
 	fi
 
-	#echo "$sub: status=$thisStatus   remote=$thisRemote   branch=$thisBranch   ref=$thisShortRef    from subfile=${ref:0:7}"
+	# DEBUG
+	#echo "$sub: status=$thisStatusLines   remote=$thisRemote   branch=$thisBranch   ref=$thisShortRef    from subfile=${ref:0:7}"
 
 	if [ "$ref" != "$thisRef" ]; then
 		# Be careful to escape slash from sub otherwise sed thinks matching expr is finished and you get:
 		# sed: -e expression #1 char XX: unknown option to `s'
-		sed -i "s/^\(${sub/\//\\\/}\t[^\t]\+\)\t$ref/\1\t$thisRef/" $GITSUB_FILE
+		sed -i "s/^\(${sub//\//\\\/}\t[^\t]\+\)\t$ref/\1\t$thisRef/" $GITSUB_FILE
 	fi
 
 	cd - > /dev/null
 
 	echo -n "$sub: "
 
-	if [ "$thisStatus" = "0" ]; then
+	if [ "$thisStatusLines" = "0" ]; then
 		echo "clean @$thisShortRef$thisBranch"
 
 		if [[ ( "$thisRemote" != "" ) && ( "$thisRemote" != *"..."* ) ]]; then

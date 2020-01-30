@@ -1,2 +1,9 @@
-bundle/git-sub	https://github.com/XonqNopp/git-sub.git	54378f0b73eda999198282bef3552fbc00b7bea8
-vim/bundle/python-mode	https://github.com/python-mode/python-mode.git	7fbf9eb0a18c093f841a1e5afe2f57a6df2e6337
+bundle/git-sub	https://github.com/XonqNopp/git-sub.git	520827475fe67f733b8c4d3b498da7a1cd334082
+vim/pack/plugins/start/python-mode	https://github.com/python-mode/python-mode.git	1e97e4d8fa427f7b3262b2daadff8d32ca5be536
+vim/pack/plugins/start/LargeFile	https://github.com/vim-scripts/LargeFile.git	3941a37b2b0288524300348a39521a46539bf9f6
+vim/pack/plugins/start/MultipleSearch	https://github.com/vim-scripts/MultipleSearch.git	aada883338fbc80016af68450c2178fbe32d29c7
+vim/pack/plugins/start/nerdtree	https://github.com/scrooloose/nerdtree.git	8c48845d11adc4c9b07fc727725ed68be5d3177f
+vim/pack/plugins/start/openssl.vim	https://github.com/vim-scripts/openssl.vim.git	b406bd9ec0ed966e32533167dcb0effe8f4b8f47
+vim/pack/plugins/start/vim-gitgutter	https://github.com/airblade/vim-gitgutter.git	2ef4f7e7b20dce7fd89adbeb6a943240b77a7a8e
+vim/pack/plugins/start/vim-man	https://github.com/vim-utils/vim-man.git	cfdc78f52707b4df76cbe57552a7c8c28a390da4
+vim/pack/plugins/start/vim-speeddating	https://github.com/tpope/vim-speeddating.git	fe98cfaa7ea9c4b838d42a6830437c919eb55b4e

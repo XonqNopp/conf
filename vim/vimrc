@@ -6,6 +6,7 @@ set t_Co=8
 
 " Some directories used by Vim {{{
 set runtimepath+=$vash/vim,$vash/vim/after
+set packpath+=$vash/vim,$vash/vim/after
 set viewdir=$vash/vim/view
 
 let g:HOME = expand("$HOME")
@@ -42,9 +43,6 @@ let g:b2h_no_display_credit = 1
 let g:timestamp_modelines = 10
 let g:timestamp_rep = "%a %Y-%m-%d %H:%M:%S %Z"
 let g:timestamp_regexp = '\v\C%(<%(%([lL]ast )?%([cC]hanged?|[mM]odified))\s*:\s+)@<=.*|TIMESTAMP'
-
-execute pathogen#infect()
-execute pathogen#helptags()
 " }}}
 "" Configuration {{{
 if has("autocmd")
