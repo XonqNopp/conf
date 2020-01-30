@@ -81,12 +81,21 @@ export todoFile="$HOME/.todos"
 function todo() {
 	echo "* $@" >> $todoFile
 }
-alias todos="cat $todoFile"
+
+function todos() {
+	if [ `wc -l $todoFile | cut -d' ' -f1` = 0 ]; then
+		return
+	fi
+
+	echo "TODO:"
+	cat $todoFile
+}
+
 alias vimtodos="vim $todoFile"
+
 
 # Display on login
 who
 echo
-echo "TODO:"
 todos
 
