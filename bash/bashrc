@@ -1,3 +1,4 @@
+#!/bin/bash
 # Special stuff {{{
 # I don't want to save many same commands and other short ones:
 HISTIGNORE="&:help:info:exit:ls:ll:cd:cd -:pw:pwd:bc"
@@ -27,39 +28,39 @@ export LSCOLORS="gxfxcxdxbxegedabagacad"
 # PS1 colors ## {{{
 # Colors and styles ## {{{
 # Foreground colors ## {{{
-black='\[\033[0;30m\]'
-blue='\[\033[0;34m\]'
-green='\[\033[0;32m\]'
+#black='\[\033[0;30m\]'
+#blue='\[\033[0;34m\]'
+#green='\[\033[0;32m\]'
 cyan='\[\033[0;36m\]'
 red='\[\033[0;31m\]'
 purple='\[\033[0;35m\]'
 brown='\[\033[0;33m\]'
-lightgray='\[\033[0;37m\]'
-darkgray='\[\033[1;30m\]'
+#lightgray='\[\033[0;37m\]'
+#darkgray='\[\033[1;30m\]'
 lightblue='\[\033[1;34m\]'
-lightgreen='\[\033[1;32m\]'
-lightcyan='\[\033[1;36m\]'
-lightred='\[\033[1;31m\]'
-lightpurple='\[\033[1;35m\]'
-yellow='\[\033[1;33m\]'
-white='\[\033[1;37m\]'
+#lightgreen='\[\033[1;32m\]'
+#lightcyan='\[\033[1;36m\]'
+#lightred='\[\033[1;31m\]'
+#lightpurple='\[\033[1;35m\]'
+#yellow='\[\033[1;33m\]'
+#white='\[\033[1;37m\]'
 nc='\[\033[0m\]' # = No color
 # }}}
 # Background colors (useful?) ## {{{
-Bblack='\[\033[40m\]'
-Bred='\[\033[41m\]'
-Bgreen='\[\033[42m\]'
-Byellow='\[\033[43m\]'
-Bblue='\[\033[44m\]'
-Bmagenta='\[\033[45m\]'
-Bcyan='\[\033[46m\]'
-Bwhite='\[\033[47m\]'
+#Bblack='\[\033[40m\]'
+#Bred='\[\033[41m\]'
+#Bgreen='\[\033[42m\]'
+#Byellow='\[\033[43m\]'
+#Bblue='\[\033[44m\]'
+#Bmagenta='\[\033[45m\]'
+#Bcyan='\[\033[46m\]'
+#Bwhite='\[\033[47m\]'
 # }}}
 # Styles ## {{{
 boldOn='\[\033[1m\]'
-underOn='\[\033[4m\]'
+#underOn='\[\033[4m\]'
 blinkOn='\[\033[5m\]'
-inverseOn='\[\033[7m\]'
+#inverseOn='\[\033[7m\]'
 styleOff='\[\033[m\]'
 # }}}
 # }}}
@@ -92,19 +93,19 @@ export PATH="$PATH:$vash/bin:$vash/git/bin:$vash/perl/bin"
 # Vim ## {{{
 alias vi="vim"
 alias ex="vim"
-alias vix="perl $vash/perl/vix.pl"
+alias vix="perl \$vash/perl/vix.pl"
 # }}}
 # SSH ## {{{
 export switchplus="ssh-728988-gi@134.119.224.37"
-alias wsh="ssh $switchplus"
+alias wsh="ssh \$switchplus"
 function wcp() {
 	one=$1
 	if (( $# == 1 )); then
-		scp -r $switchplus:$one .
+		scp -r "$switchplus:$one" .
 	else
 		one=$1
 		shift
-		scp -r $@ $switchplus:$one
+		scp -r "$*" "$switchplus:$one"
 	fi
 }
 # }}}
@@ -128,9 +129,9 @@ export WEFF="-Weffc++"
 function vash()
 {
 	if [[ $# == 0 ]]; then
-		cd $vash
+		cd "$vash" || exit 1
 	else
-		cd $vash/$1*
+		cd "$vash/$1*" || exit 1
 	fi
 }
 # }}}
@@ -139,31 +140,32 @@ function vash()
 # ps2png ## {{{
 function ps2png()
 {
-	pstopnm -xborder=0 -yborder=0 $1
-	pnmtopng $1 > $2
+	pstopnm -xborder=0 -yborder=0 "$1"
+	pnmtopng "$1" > "$2"
 }
 # }}}
 # mergePDF ## {{{
 function mergePDF()
 {
-	output=$1
+	output="$1"
 	shift
-	gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$output $*
+	gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile="$output" "$@"
 }
 # }}}
 # splitPDF ## {{{
 function splitPDF()
 {
-	pdftk $1 burst
+	pdftk "$1" burst
 }
 # }}}
 # ps aux ## {{{
 function psf()
 {
-	local com="ps $1"
+	local com, header, contents
+	com="ps $1"
 	shift;
-	local header=`${com} | head -n 1`
-	local contents=`${com} | egrep -v grep | egrep --color=always $@`
+	header=$($com | head -n 1)
+	contents=$($com | egrep -v grep | egrep --color=always "$*")
 	if [[ ${contents} != "" ]]; then
 		echo "${header}"
 		echo "${contents}"
@@ -176,7 +178,7 @@ alias du="du -h --max-depth=0"
 function lu()
 {
 	if [[ $# == 0 ]]; then
-		du .[^.]* * 2> /dev/null
+		du ./.[^.]* ./* 2> /dev/null
 	else
 		if [[ $# == 1 ]] && [[ $1 == "-h" ]]; then
 			echo " Usage: lu [./% dir1 dir2...]"
@@ -186,11 +188,12 @@ function lu()
 		else
 			local type=$1
 			shift
-			for i in "$@"; do
+			for fileOrDir in "$@"; do
 				if [[ $type == "." ]]; then
-					du $i 2> /dev/null
+					du "$fileOrDir" 2> /dev/null
 				elif [[ $type == "%" ]]; then
-					du $i $i/.[^.]* $i/* 2> /dev/null
+					# shellcheck disable=SC2086
+					du "$fileOrDir" $fileOrDir/.[^.]* $fileOrDir/* 2> /dev/null
 				else
 					echo "Type not recognized..."
 				fi
@@ -247,21 +250,27 @@ function mkcd()
 		echo " Usage: mkcd directory"
 		echo "   Creates directory and goes into it"
 	else
-		mkdir -p $1
-		cd $1
+		mkdir -p "$1"
+		cd "$1" || exit 1
 	fi
 }
 # }}}
 # pwd function that displays absolute and relative path only if they're different {{{
 function pw()
 {
+	local relative, absolute
+
 	set +P
-	local relative=$(pwd)
+	relative=$(pwd)
+
 	set -P
-	local absolute=$(pwd)
+	absolute=$(pwd)
+
 	set +P
-	if [[ $absolute == $relative ]]; then
-		echo $absolute
+
+	if [[ "$absolute" == "$relative" ]]; then
+		echo "$absolute"
+
 	else
 		echo " +Rel: $relative"
 		echo " +Abs: $absolute"
@@ -308,8 +317,10 @@ alias GEf16="sudo vim /opt/google-earth/resources/flightsim/aircraft/f16.acf"
 # }}}
 #
 if [[ ${OSTYPE:0:6} == "darwin" ]] || [[ ${OSTYPE:0:6} == "Darwin" ]]; then
-	source $vash/bash/mac.bash
+	# shellcheck source=./bash/mac.bash
+	source "$vash/bash/mac.bash"
 else
-	source $vash/bash/linux.bash
+	# shellcheck source=./bash/linux.bash
+	source "$vash/bash/linux.bash"
 fi
 
