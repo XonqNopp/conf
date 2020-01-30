@@ -1,3 +1,12 @@
+setlocal foldmethod=indent
+if &ft == "html"
+	"" (un)comment
+	let b:ComCharStart = "<!--"
+	let b:ComCharStop  = "-->"
+endif
+
+imap @@ <esc>bdwa<<esc>pa><cr></<esc>pa><esc>kA
+
 inoremap <buffer> é &eacute;
 inoremap <buffer> è &egrave;
 inoremap <buffer> ê &ecirc;
@@ -19,9 +28,8 @@ inoremap <buffer> ù &ugrave;
 inoremap <buffer> û &ucirc;
 inoremap <buffer> ü &uuml;
 inoremap <buffer> ç &ccedil;
-inoremap <buffer> ñ &ntilde;
-inoremap <buffer> Ñ &Ntilde;
 "inoremap <buffer> œ \oe 
 "inoremap <buffer> Œ \OE 
 "inoremap <buffer> æ  \ae 
 "inoremap <buffer> Æ \AE 
+

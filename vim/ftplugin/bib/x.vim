@@ -1,8 +1,14 @@
-"" The F1 key
+setlocal nospell
+setlocal cindent
+" Folds
+setlocal foldmethod=marker
+"setlocal foldmethod=indent
+
+" The F1 key
 map <buffer> <F1> :call LatexPawa(expand("%:r").".tex")<cr><cr>
 "map <buffer> <silent> <F1> :echo "Use LaTeX pawa in this mapping"
-"" Function to have nice folds?
-"" accents
+" Function to have nice folds?
+" accents
 inoremap <buffer> é \'e
 inoremap <buffer> è \`e
 inoremap <buffer> ê \^e
@@ -28,3 +34,6 @@ inoremap <buffer> œ \oe
 inoremap <buffer> Œ \OE 
 inoremap <buffer> æ  \ae 
 inoremap <buffer> Æ \AE 
+
+source $vash/vim/ftplugin/tex/LatexPawa.vim
+

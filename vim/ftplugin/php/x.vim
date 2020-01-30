@@ -1,4 +1,12 @@
-imap @@ <esc>bdwa<<esc>pa><cr></<esc>pa><esc>kA
+setlocal cinwords=if,else,elseif,while,do,for,function,switch
+setlocal cindent
+setlocal foldmethod=indent
+setlocal textwidth=120
+if &ft == "php"
+	let b:ComChar = "//"
+	let b:ComCharStart = "/*"
+	let b:ComCharStop = "*/"
+endif
 
 inoremap <buffer> é &eacute;
 inoremap <buffer> è &egrave;
@@ -21,7 +29,10 @@ inoremap <buffer> ù &ugrave;
 inoremap <buffer> û &ucirc;
 inoremap <buffer> ü &uuml;
 inoremap <buffer> ç &ccedil;
+inoremap <buffer> ñ &ntilde;
+inoremap <buffer> Ñ &Ntilde;
 "inoremap <buffer> œ \oe 
 "inoremap <buffer> Œ \OE 
 "inoremap <buffer> æ  \ae 
 "inoremap <buffer> Æ \AE 
+

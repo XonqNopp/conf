@@ -5,3 +5,6 @@ if &ft == "xml"
 	let b:ComCharStart = "<!--"
 	let b:ComCharStop  = "-->"
 endif
+
+"source $vash/vim/functions/FoldXml.vim
+
