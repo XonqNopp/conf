@@ -43,7 +43,7 @@ function appendToSubFile() {
 	sub=$1
 	remote=$2
 	ref=$3
-	echo -e "$sub\t$remote\t$ref" >> $GITSUB_FILE
+	echo -e "$sub\t$remote\t$ref" >> "$GITSUB_FILE"
 }
 
 
@@ -67,7 +67,7 @@ function stateClean() {
 ###############################################################################
 function subNotInGitsub() {
 	sub="$1"
-	return $(grep -q -e "^$sub	" $GITSUB_FILE 2> /dev/null)
+	grep -q -e "^$sub	" "$GITSUB_FILE" 2> /dev/null
 }
 
 
@@ -77,7 +77,7 @@ function subNotInGitsub() {
 #   git commit hash
 ###############################################################################
 function gitCommitHash() {
-	echo $(git rev-parse $@ HEAD)
+	git rev-parse "$@" HEAD
 }
 
 
@@ -116,17 +116,17 @@ function subClone() {
 
 	stateClean
 
-	mkdir $sub
+	mkdir "$sub"
 
-	cd $sub
+	cd "$sub"
 
-	git clone $remote . --quiet --no-checkout
+	git clone "$remote" . --quiet --no-checkout
 
 	if [ -z "$ref" ]; then
 		ref=$(git symbolic-ref --short HEAD) 
 	fi
 
-	git checkout $ref
+	git checkout "$ref"
 
 	namedRef=$ref
 
@@ -141,21 +141,21 @@ function subClone() {
 
 	cd - > /dev/null
 
-	appendToSubFile $sub $remote $ref
+	appendToSubFile "$sub" "$remote" "$ref"
 
 	# Cannot run `git add $sub` as it would be treated as submodule :-S
 	# Need -f to add files which would be ignored otherwise
-	git add -f $sub/*
+	git add -f "$sub"/*
 	# cannot do in one line or it is considered a submodule
-	git add -f $sub/.*  # ignores .git anyway
+	git add -f "$sub"/.*  # ignores .git anyway
 
-	git add $GITSUB_FILE
+	git add "$GITSUB_FILE"
 
 	commitMessage="adding new sub $sub@${ref:0:8}$namedRef from $remote"
 	echo "git commit: $commitMessage"
 	git commit -m "$commitMessage"
 
-	cd $CUR_DIR
+	cd "$CUR_DIR"
 
 	# check did not mess anything
 	git status -sb
@@ -187,48 +187,49 @@ function remoteExists() {
 ###############################################################################
 function subInit() {
 	# Init existing subs the first time
-	for sub in $(cat $GITSUB_FILE | cut -f1); do
-		remote=$(grep -e "^$sub	" $GITSUB_FILE | cut -f2)
-		ref=$(grep -e "^$sub	" $GITSUB_FILE | cut -f3)
+	cut -f1 "$GITSUB_FILE" | while read -r sub; do
+		remote=$(grep -e "^$sub	" "$GITSUB_FILE" | cut -f2)
+		ref=$(grep -e "^$sub	" "$GITSUB_FILE" | cut -f3)
 
 		echo "git sub [$sub]: init remote=$remote ref=$ref"
-		cd $sub
 
-		# init
-		if [ ! -d ".git" ]; then
-			git init
-		fi
+		# subshell so we do not need to care about restoring CWD
+		(
+			cd "$sub"
 
-		# remote
-		defaultRemote="origin"
-		remoteName="$defaultRemote"
-		if remoteExists $remoteName; then
-			remoteName="upstream"
-			if remoteExists $remoteName; then
-				remoteName=$(git remote | head -n 1)
+			# init
+			if [ ! -d ".git" ]; then
+				git init
 			fi
-		fi
 
-		if [ "$remoteName" = "" ]; then
+			# remote
+			defaultRemote="origin"
 			remoteName="$defaultRemote"
-			echo "Add remote $remoteName: $remote"
-			git remote add $remoteName $remote
-		fi
+			if remoteExists $remoteName; then
+				remoteName="upstream"
+				if remoteExists $remoteName; then
+					remoteName=$(git remote | head -n 1)
+				fi
+			fi
 
-		# fetch
-		echo "Fetching: $remoteName"
-		git fetch $remoteName
+			if [ "$remoteName" = "" ]; then
+				remoteName="$defaultRemote"
+				echo "Add remote $remoteName: $remote"
+				git remote add "$remoteName" "$remote"
+			fi
 
-		# ref
-		echo "Checkout $ref"
-		git checkout -f $ref
+			# fetch
+			echo "Fetching: $remoteName"
+			git fetch "$remoteName"
 
-		cd - > /dev/null
+			# ref
+			echo "Checkout $ref"
+			git checkout -f "$ref"
+		)
 	done
 
-	cd $CUR_DIR
-
 	# check did not mess anything
+	cd "$CUR_DIR"
 	git status -sb
 }
 
@@ -243,7 +244,7 @@ function updateGitsub() {
 
 	echo "updateGitsub($sub)"
 
-	cd $sub
+	cd "$sub"
 
 	if [ ! -d ".git" ]; then
 		echo "$sub: Not a git repository, are you sure you ran 'git sub init' in parent git repo yet?"
@@ -255,7 +256,7 @@ function updateGitsub() {
 	thisBranch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 	thisRef=$(gitCommitHash)
 	thisShortRef=$(gitCommitHash --short)
-	ref=$(grep -e "^$sub	" $GITSUB_FILE | cut -f3)
+	ref=$(grep -e "^$sub	" "$GITSUB_FILE" | cut -f3)
 
 	if [ "${thisRemote:0:19}" = "## HEAD (no branch)" ]; then
 		thisRemote=""
@@ -273,7 +274,7 @@ function updateGitsub() {
 	if [ "$ref" != "$thisRef" ]; then
 		# Be careful to escape slash from sub otherwise sed thinks matching expr is finished and you get:
 		# sed: -e expression #1 char XX: unknown option to `s'
-		sed -i "s/^\(${sub//\//\\\/}\t[^\t]\+\)\t$ref/\1\t$thisRef/" $GITSUB_FILE
+		sed -i "s/^\(${sub//\//\\\/}\t[^\t]\+\)\t$ref/\1\t$thisRef/" "$GITSUB_FILE"
 	fi
 
 	cd - > /dev/null
@@ -324,13 +325,13 @@ function subStatus() {
 		exit 0
 	fi
 
-	for sub in $(cat $GITSUB_FILE | cut -f1); do
+	cut -f1 "$GITSUB_FILE" | while read -r sub; do
 		updateGitsub "$sub" --echo
 	done
 
 	# In case it was modified when we were in the sub:
-	git add $GITSUB_FILE
-	git status -s $GITSUB_FILE  # and show it
+	git add "$GITSUB_FILE"
+	git status -s "$GITSUB_FILE"  # and show it
 }
 
 
@@ -399,11 +400,11 @@ fi
 action=$1
 shift
 
-cd $TOP_DIR
+cd "$TOP_DIR"
 
 case $action in
 	"clone")
-		subClone $@
+		subClone "$@"
 		;;
 	"init")
 		subInit
@@ -413,14 +414,14 @@ case $action in
 		;;
 
 	"update")
-		subUpdate $@
+		subUpdate "$@"
 		;;
 	*)
-		cd $CUR_DIR
+		cd "$CUR_DIR"
 		echo "Unknown command: $action"
 		usageAndExit
 		;;
 esac
 
-cd $CUR_DIR
+cd "$CUR_DIR"
 

@@ -1,4 +1,4 @@
-bundle/git-sub	https://github.com/XonqNopp/git-sub.git	520827475fe67f733b8c4d3b498da7a1cd334082
+bundle/git-sub	https://github.com/XonqNopp/git-sub.git	00d56eafb9d326a2079959d9af8da00f7e4e1130
 vim/pack/plugins/start/python-mode	https://github.com/python-mode/python-mode.git	1e97e4d8fa427f7b3262b2daadff8d32ca5be536
 vim/pack/plugins/start/LargeFile	https://github.com/vim-scripts/LargeFile.git	3941a37b2b0288524300348a39521a46539bf9f6
 vim/pack/plugins/start/MultipleSearch	https://github.com/vim-scripts/MultipleSearch.git	aada883338fbc80016af68450c2178fbe32d29c7
