@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck source=./bash/bashrc
 source $HOME/.wash/bash/bashrc
 
 export MANPATH="$MANPATH:/usr/local/texlive/2017/texmf-dist/doc/man"

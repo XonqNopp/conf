@@ -1,8 +1,7 @@
+#!/bin/bash
 # Mac OS stuff
 
-export PATH="$PATH:$vash/bin/mac"
-
-export ki="/Volumes/$kiName"
+export PATH="$PATH:${vash:?}/bin/mac"
 
 alias ls="ls -AG"
 alias du="du -hd 0"

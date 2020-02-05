@@ -1,6 +1,9 @@
+#!/bin/bash
+
 if [ "$SSH_TTY" ]; then
-	source $HOME/.wash/bash/bashrc
+	# shellcheck source=./bash/bashrc
+	source "$HOME/.wash/bash/bashrc"
+
+	export PS1="${yellow:?}\t ${lightblue:?}\u${nc:?}@${lightred:?}\h${nc:?}: ${lightpurple:?}\W ${nc:?}$ "
 fi
-export PS1="$yellow\t $lightblue\u$nc@$lightred\h$nc: $lightpurple\W $nc$ "
-##
-## Consider git fetch/pull on login?
+
