@@ -14,12 +14,12 @@ export VISUAL="vim"
 export SUDO_EDITOR="vim"
 # Homepage for elinks:
 export WWW_HOME="http://www.bash.org/?latest"
-#
+
 # Up and down arrows are matlab-like ## {{{
 bind '"\e[A":history-search-backward'
 bind '"\e[B":history-search-forward'
 # }}}
-#
+
 # Tells the terminal to kill background processes on exit
 # (If you want daemons that are not binded to the window, use the command "nohup".)
 shopt -s huponexit
@@ -84,16 +84,44 @@ fi
 # }}}
 export PATH="$PATH:$vash/bin:$vash/git/bin:$vash/perl/bin"
 # }}}
-#
+
 # From now on, each section has the following structure:
 # variables
 # functions
 # aliases
-#
+
 # Vim ## {{{
 alias vi="vim"
 alias ex="vim"
-alias vix="perl \$vash/perl/vix.pl"
+
+
+function vix() {
+	if [ $# = 0 ]; then
+		ls ./*.tex > /dev/null 2>&1 && vim -o ./*.tex
+
+	else
+		files=""
+
+		for file in "$@"; do
+			# If filename provides .tex extension, it seems like file is already a full filename
+			if [ "${file%.tex}" = "$file" ]; then
+				# No .tex extension, glob with it
+				file="*$file*.tex"
+			fi
+
+			# Check file exists (with glob)
+			# shellcheck disable=SC2086
+			ls $file > /dev/null 2>&1 && files="$files $file"
+		done
+
+
+		if [ "$files" != "" ]; then
+			# Execute vim with glob
+			# shellcheck disable=SC2086
+			vim -o $files
+		fi
+	fi
+}
 # }}}
 # SSH ## {{{
 export switchplus="ssh-728988-gi@134.119.224.37"
@@ -315,7 +343,7 @@ alias GEf16="sudo vim /opt/google-earth/resources/flightsim/aircraft/f16.acf"
 # }}}
 # miscellaneous ## {{{
 # }}}
-#
+
 if [[ ${OSTYPE:0:6} == "darwin" ]] || [[ ${OSTYPE:0:6} == "Darwin" ]]; then
 	# shellcheck source=./bash/mac.bash
 	source "$vash/bash/mac.bash"
