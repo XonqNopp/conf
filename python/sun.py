@@ -1,7 +1,106 @@
 #!/usr/bin/env python3
+"""
+Compute angles of the sun above the horizon for different latitudes and different seasons.
+
+.. todo::
+
+   * make classes
+   * docstrings
+   * execute
+"""
+from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+
+
+class SunAngles:
+    """
+    Compute and display angles of the sun.
+    """
+    XLIM_MIN = 0  # [h]
+    XLIM_MAX = 24  # [h]
+
+    YLIM_MIN = -pi / 2.0
+    YLIM_MAX = pi / 2.0
+
+    ALPHA0 = 23  # [deg]
+
+    def __init__(self, filename: str, latitudes: list = None, season: list = None):
+        self._filename = filename
+
+        self._fig = plt.figure()
+
+        self._axObj = self._fig.gca()
+        self._axObj.xlim(self.XLIM_MIN, self.XLIM_MAX)
+        self._axObj.ylim(self.YLIM_MIN, self.YLIM_MAX)
+
+        self._latitudes = latitudes
+        self._season = season
+
+        print(' ')
+        print('Welcome to the calculator of angles of the Sun!')
+
+        # FIXME check
+        if self._latitudes is None or self._season is None:
+            print('What would you like to see?')
+            print('1: different latitudes at the equinoxe')
+            print('2: the same latitude at the equinoxe and at the solstices')
+            choice = input('your choice: [2]  ')
+            if int(choice) == 1:
+                latitudes = input('Which latitudes are you interested in?  ')
+                self._latitudes = np.array(map(float, latitudes.split()))
+            else:
+                latitude = input('Which latitude do you want?  ')
+                self._latitudes = np.array([float(latitude)])
+
+    def _onePlot(self, latitude, month):
+        N = 250
+        t = np.array(range(24 * N)) / N
+        self._axObj.plot(t, self.theta(t, latitude, month))
+
+    def _finishPlot(self):
+        self._fig.savefig(self._filename)
+        plt.show()
+
+    def plot(self, latitudes, months):
+        for latitude in latitudes:
+            for month in months:
+                self._onePlot(latitude, month)
+        self._finishPlot()
+
+    def declination(self, months):
+        return self.ALPHA0 * np.sign(months)
+
+    def theta(self, t, latitudes, months):
+        ## HRA -pi to pi instead of t 0 to 24
+        # FIXME 12=?
+        return np.asin(np.sin(self.declination(months)) * np.sin(latitudes)
+                       + np.cos(self.declination(months)) * np.cos(latitudes) * np.cos(pi / 12 * (t - 12)))
+
+    def run(self, args):
+        mainLatitudes = np.array([0, self.ALPHA0, 30, 45, 60, 90 - self.ALPHA0, 90])
+        mainMonths = np.array([0])
+        if args.month:
+            mainLatitudes = np.array([45])
+            mainMonths = np.array([-1, 0, 1])
+        if args.latitudes is not None:
+            if args.latitude[0] == -1:
+                mainLatitudes = np.array(args.latitudes)
+            else:
+                for lat in args.latitudes:
+                    if lat not in mainLatitudes:
+                        mainLatitudes.append(lat)
+        if args.time is not None:
+            mainMonths = np.array([args.time])
+        if len(mainLatitudes) <= 1 >= len(mainMonths):
+            raise ValueError('not enough data to compare')
+        if len(mainMonths) > 1 < len(mainLatitudes):
+            raise ValueError('Cannot compare more than 1 latitude at different months')
+        if len(mainLatitudes) > len(mainMonths):
+            pass
+        else:
+            pass
 
 
 def main():
@@ -29,87 +128,11 @@ def main():
     )
     args = parser.parse_args()
     raise NotImplementedError('time and latitudes must be mutually exclusive')
-    args = welcome(args)
-    run(args)
+    raise NotImplementedError  # FIXME
+    computer = SunAngles()
+    computer.run()
 
 
-def welcome(args):
-    print(' ')
-    print('Welcome to the calculator of angles of the Sun!')
-    if args.latitudes is None or args.time is None:
-        print('What would you like to see?')
-        print('1: different latitudes at the equinoxe')
-        print('2: the same latitude at the equinoxe and at the solstices')
-        choice = input('your choice: [2]  ')
-        if int(choice) == 1:
-            latitudes = input('Which latitudes are you interested in?  ')
-            args.latitudes = np.array(map(float, latitudes.split()))
-        else:
-            latitude = input('Which latitude do you want?  ')
-            args.latitudes = np.array([float(latitude)])
-    return args
-
-
-def run(args):
-    mainLatitudes = np.array([0, 23, 30, 45, 60, 90 - 23, 90])
-    mainMonths = np.array([0])
-    if args.month:
-        mainLatitudes = np.array([45])
-        mainMonths = np.array([-1, 0, 1])
-    if args.latitudes is not None:
-        if args.latitude[0] == -1:
-            mainLatitudes = np.array(args.latitudes)
-        else:
-            for lat in args.latitudes:
-                if lat not in mainLatitudes:
-                    mainLatitudes.append(lat)
-    if args.time is not None:
-        mainMonths = np.array([args.time])
-    if len(mainLatitudes) <= 1 >= len(mainMonths):
-        raise ValueError('not enough data to compare')
-    if len(mainMonths) > 1 < len(mainLatitudes):
-        raise ValueError('Cannot compare more than 1 latitude at different months')
-    if len(mainLatitudes) > len(mainMonths):
-        pass
-    else:
-        pass
-
-
-def declination(months):
-    alpha0 = 23
-    return alpha0 * np.sign(months)
-
-
-def theta(t, latitudes, months):
-    return np.asin(np.sin(declination(months)) * np.sin(latitudes)
-                   + np.cos(declination(months)) * np.cos(latitudes) * np.cos(pi / 12 * (t - 12)))
-    ## HRA -pi to pi instead of t 0 to 24
-
-
-def initPlot():
-    fig = plt.figure()
-    axObj = fig.gca()
-    axObj.ylim(-pi / 2.0, pi / 2.0)
-    axObj.xlim(0, 24)
-    return {'fig': fig, 'axObj': axObj}
-
-
-def onePlot(axObj, latitude, month):
-    N = 250
-    t = np.array(range(24 * N)) / N
-    axObj.plot(t, theta(t, latitude, month))
-
-
-def finishPlot(fig, filename):
-    fig.savefig(filename)
-    plt.show()
-
-
-def doPlot(latitudes, months):
-    filename = 'fig'
-    init = initPlot()
-    for lat in latitudes:
-        for month in months:
-            onePlot(init['axObj'], latitude, month)
-    finishPlot(init['fig'], filename)
+if __name__ == '__main__':
+    main()
 
