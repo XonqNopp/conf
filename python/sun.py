@@ -4,7 +4,6 @@ Compute angles of the sun above the horizon for different latitudes and differen
 
 .. todo::
 
-   * make classes
    * docstrings
    * execute
 """
@@ -12,6 +11,7 @@ from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+import logging
 
 
 class SunAngles:
@@ -21,90 +21,220 @@ class SunAngles:
     XLIM_MIN = 0  # [h]
     XLIM_MAX = 24  # [h]
 
-    YLIM_MIN = -pi / 2.0
-    YLIM_MAX = pi / 2.0
+    XTICK_MAJOR_STEP = 2  # [h]
+    XTICK_MINOR_STEP = 1  # [h]
+
+    YLIM_MIN = 0  # [deg]
+    YLIM_MAX = 90  # [deg]
+
+    YTICK_MAJOR_STEP = 30  # [deg]
+    YTICK_MINOR_STEP = 15  # [deg]
 
     ALPHA0 = 23  # [deg]
 
-    def __init__(self, filename: str, latitudes: list = None, season: list = None):
-        self._filename = filename
+    SINGLE_LATITUDE_DEFAULT = [45]
+    MAIN_LATITUDES = [
+        0,  # equator
+        ALPHA0,  # tropical
+        30,
+        45,
+        60,
+        90 - ALPHA0,  # polar circle
+        80,  # to show progression to pole
+        90  # last
+    ]
 
+    MAIN_SEASONS = [-1, 0, 1]
+    TEXT_SEASONS = {
+        1: 'summer',
+        0: 'equinoxe',
+        -1: 'winter',
+    }
+
+    SINGLE_SEASON = [0]
+
+    ANGLE_BY_HOUR = pi / 12  # 2pi/24
+
+    NUMBER_OF_POINTS = 120  # 5 per hour
+    HOURS_A_DAY = 24
+
+    DAWN_ANGLE = -6  # [deg]  -6 civil -12 nautical -18 astronomical
+
+    def __init__(self, args: object):
+        self._log = logging.getLogger(self.__class__.__name__)
+
+        self._filename = args.filename
+        EXT = '.svg'
+        if not self._filename.endswith(EXT):
+            self._filename += EXT
+
+        # Prepare figure
+        #with plt.xkcd():  # fun but less readable
         self._fig = plt.figure()
 
         self._axObj = self._fig.gca()
-        self._axObj.xlim(self.XLIM_MIN, self.XLIM_MAX)
-        self._axObj.ylim(self.YLIM_MIN, self.YLIM_MAX)
 
-        self._latitudes = latitudes
-        self._season = season
+        self._axObj.set_xlim(self.XLIM_MIN, self.XLIM_MAX)
+        self._axObj.set_ylim(self.YLIM_MIN, self.YLIM_MAX)
 
-        print(' ')
-        print('Welcome to the calculator of angles of the Sun!')
+        self._axObj.set_xticks(np.arange(self.XLIM_MIN, self.XLIM_MAX + 1, step=self.XTICK_MAJOR_STEP))
+        self._axObj.set_xticks(np.arange(self.XLIM_MIN, self.XLIM_MAX + 1, step=self.XTICK_MINOR_STEP), minor=True)
 
-        # FIXME check
-        if self._latitudes is None or self._season is None:
-            print('What would you like to see?')
-            print('1: different latitudes at the equinoxe')
-            print('2: the same latitude at the equinoxe and at the solstices')
-            choice = input('your choice: [2]  ')
-            if int(choice) == 1:
-                latitudes = input('Which latitudes are you interested in?  ')
-                self._latitudes = np.array(map(float, latitudes.split()))
-            else:
-                latitude = input('Which latitude do you want?  ')
-                self._latitudes = np.array([float(latitude)])
+        self._axObj.set_yticks(np.arange(self.YLIM_MIN, self.YLIM_MAX + 1, step=self.YTICK_MAJOR_STEP))
+        self._axObj.set_yticks(np.arange(self.YLIM_MIN, self.YLIM_MAX + 1, step=self.YTICK_MINOR_STEP), minor=True)
 
-    def _onePlot(self, latitude, month):
-        N = 250
-        t = np.array(range(24 * N)) / N
-        self._axObj.plot(t, self.theta(t, latitude, month))
+        self._axObj.set_xlabel('Hour of the day')
+        self._axObj.set_ylabel('Angle above horizon')
 
-    def _finishPlot(self):
+        self._axObj.grid(which='both')
+
+        self._colorIndex = 0
+
+        self._latitudes = []
+        self._seasons = []
+
+        if args.latitudes is not None:
+            for latitude in args.latitudes:
+                self._latitudes.append(float(latitude))
+
+        else:
+            self._latitudes = self.MAIN_LATITUDES
+
+            if args.doDefaultSeasons:
+                self._latitudes = self.SINGLE_LATITUDE_DEFAULT
+
+            if args.appendLatitudes:
+                for latitude in args.appendLatitudes:
+                    latitude = float(latitude)
+                    if latitude not in self._latitudes:
+                        self._latitudes.append(latitude)
+
+                self._latitudes.sort()
+
+        if args.seasons is not None:
+            for season in args.seasons:
+                self._seasons.append(int(season))
+
+        else:
+            self._seasons = self.SINGLE_SEASON
+
+            if args.doDefaultSeasons or args.allSeasons:
+                self._seasons = self.MAIN_SEASONS
+
+        if len(self._latitudes) < 1 or len(self._seasons) < 1:
+            raise ValueError('Not enough data to make a comparison')
+
+        self._log.info('\n\nWelcome to the calculator of angles of the Sun!\n')
+        self._log.info('Saving to: {}'.format(self._filename))
+
+        self._log.info('latitudes: {}'.format(self._latitudes))
+        self._log.info('seasons: {}'.format(self._seasons))
+
+    def theta(self, t: np.array, latitude: float, season: int) -> np.array:
+        """
+        Compute angle of the sun with respect to horizon [-90, 90].
+
+        https://uweb.engr.arizona.edu/~ece414a/Sun.pdf
+
+        All inputs and outputs of this method are in [deg].
+        """
+        noon = 12
+
+        radLatitude = np.deg2rad(latitude)
+
+        declination = np.deg2rad(self.ALPHA0 * np.sign(season))
+
+        hourAngleFromSolarNoon = self.ANGLE_BY_HOUR * (t - noon)
+
+        return np.rad2deg(
+            np.arcsin(
+                np.sin(declination) * np.sin(radLatitude)
+                + np.cos(declination) * np.cos(radLatitude) * np.cos(hourAngleFromSolarNoon)
+            )
+        )
+
+    def reverseTheta(self, theta: float, latitude: float, season: int) -> float:
+        """
+        Compute the time with respect to noon at which the sun is at the provided angle.
+        """
+        radLatitude = np.deg2rad(latitude)
+
+        declination = np.deg2rad(self.ALPHA0 * np.sign(season))
+
+        sinTheta = np.sin(np.deg2rad(theta))
+
+        cosTime = (sinTheta - np.sin(declination) * np.sin(radLatitude)) / (np.cos(declination) * np.cos(radLatitude))
+
+        if abs(cosTime) > 1:
+            # No dawn for this case
+            return None
+
+        hourFromSolarNoon = np.arccos(cosTime) / self.ANGLE_BY_HOUR
+
+        return hourFromSolarNoon
+
+    def _onePlot(self, latitude: float, season: int) -> None:
+        """
+        Plot a single dataset.
+        """
+        legend = '{} @ {}deg'.format(self.TEXT_SEASONS[season], latitude)
+        if latitude < 0:
+            legend = '{} @ {}deg'.format(self.TEXT_SEASONS[-season], latitude)
+
+        t = np.array(range(self.HOURS_A_DAY * self.NUMBER_OF_POINTS)) / self.NUMBER_OF_POINTS
+
+        self._colorIndex += 1
+
+        self._axObj.plot(t, self.theta(t, latitude, season), 'C{}'.format(self._colorIndex), label=legend)
+
+        # Also plot astronomical dust/dawn
+        tDayNight = self.reverseTheta(self.DAWN_ANGLE, latitude, season)
+
+        if tDayNight is None:
+            # No dawn for this case
+            return
+
+        noon = 12
+        displayAngle = 1  # [deg]
+
+        self._axObj.plot(
+            [noon - tDayNight, noon + tDayNight],
+            [displayAngle] * 2,
+            'C{}'.format(self._colorIndex),
+            marker='o',
+            linestyle='',
+        )
+
+    def _finishPlot(self) -> None:
+        """
+        Save the figure and show it.
+        """
+        self._axObj.legend(loc='upper left')
         self._fig.savefig(self._filename)
         plt.show()
+        plt.close(self._fig)
 
-    def plot(self, latitudes, months):
-        for latitude in latitudes:
-            for month in months:
-                self._onePlot(latitude, month)
+    def run(self) -> None:
+        """
+        Plot all the data.
+        """
+        for season in self._seasons:
+            for latitude in self._latitudes:
+                self._onePlot(latitude, season)
+
         self._finishPlot()
-
-    def declination(self, months):
-        return self.ALPHA0 * np.sign(months)
-
-    def theta(self, t, latitudes, months):
-        ## HRA -pi to pi instead of t 0 to 24
-        # FIXME 12=?
-        return np.asin(np.sin(self.declination(months)) * np.sin(latitudes)
-                       + np.cos(self.declination(months)) * np.cos(latitudes) * np.cos(pi / 12 * (t - 12)))
-
-    def run(self, args):
-        mainLatitudes = np.array([0, self.ALPHA0, 30, 45, 60, 90 - self.ALPHA0, 90])
-        mainMonths = np.array([0])
-        if args.month:
-            mainLatitudes = np.array([45])
-            mainMonths = np.array([-1, 0, 1])
-        if args.latitudes is not None:
-            if args.latitude[0] == -1:
-                mainLatitudes = np.array(args.latitudes)
-            else:
-                for lat in args.latitudes:
-                    if lat not in mainLatitudes:
-                        mainLatitudes.append(lat)
-        if args.time is not None:
-            mainMonths = np.array([args.time])
-        if len(mainLatitudes) <= 1 >= len(mainMonths):
-            raise ValueError('not enough data to compare')
-        if len(mainMonths) > 1 < len(mainLatitudes):
-            raise ValueError('Cannot compare more than 1 latitude at different months')
-        if len(mainLatitudes) > len(mainMonths):
-            pass
-        else:
-            pass
 
 
 def main():
+    logging.basicConfig(level=logging.INFO)
+
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        dest='filename',
+        help='filename to store the plot into'
+    )
+
     parser.add_argument(
         '-l',
         '--latitudes',
@@ -112,24 +242,40 @@ def main():
         default=None,
         help='the latitude you want to compare'
     )
+
     parser.add_argument(
-        '-t',
-        '--time',
-        default=0,
-        choices=[-1, 0, 1],
-        help='the time of the year at which you want the plot'
+        '-s',
+        '--seasons',
+        nargs='*',
+        default=None,
+        #choices=SunAngles.MAIN_SEASONS,  # not working smoothly
+        help='the season of the year at which you want the plot (0 or +/-1)'
     )
+
     parser.add_argument(
-        '-m',
-        '--month',
+        '--doDefaultSeasons',
         default=False,
         action='store_true',
         help='to plot one latitude at equinoxe and solstices'
     )
+
+    parser.add_argument(
+        '-a',
+        '--allSeasons',
+        action='store_true',
+        default=False,
+        help='plot all seasons for the provided latitudes'
+    )
+
+    parser.add_argument(
+        '--appendLatitudes',
+        nargs='*',
+        default=None,
+        help='latitudes to append to the default list'
+    )
+
     args = parser.parse_args()
-    raise NotImplementedError('time and latitudes must be mutually exclusive')
-    raise NotImplementedError  # FIXME
-    computer = SunAngles()
+    computer = SunAngles(args)
     computer.run()
 
 
