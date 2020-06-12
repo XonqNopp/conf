@@ -23,6 +23,11 @@ setlocal cinwords=if,else,elseif,while,do,for,function,switch
 setlocal nosmartindent
 setlocal cindent
 setlocal foldmethod=indent
+setlocal tabstop=4
+setlocal expandtab
+setlocal textwidth=120
+setlocal colorcolumn=120
+
 if &ft == "cpp"
 	let b:ComChar = "//"
 	let b:ComCharStart = "/*"
@@ -31,4 +36,8 @@ endif
 
 " The F1 key
 map <buffer> <F1> :w<cr>:make! %:r<cr>
+
+" Split commands for header file
+command! Sph Spit %:r.h
+command! Spc Spit %:r.cpp
 
