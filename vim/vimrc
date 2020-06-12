@@ -98,6 +98,10 @@ set cinoptions=:0.5s,(0,w1,l1,+2s,u0,U1
 								" U1 : don't forget (0 and u0 even if ( is beginning the line
 								" Units : s = shiftwidth
 "set matchpairs=(:),{:},[:]
+
+set exrc  " Allow local vimrc in projects
+set secure  " Do not allow local vimrc to screw me
+
 "" To have the right matching of pairs
 "" I am not able to add these ones: ``:'',begin:end,/*:*/
 "set printexpr=system('lpr' . (&printdevice == '' ? '' : ' -P' . &printdevice) . ' ' . v:fname_in) . delete(v:fname_in) + v:shell_error
@@ -242,10 +246,7 @@ endif
 if filereadable(vimrc2_path . ".vimrc2")
 	execute "source " . escape(vimrc2_path, " ") . ".vimrc2"
 endif
-if filereadable(".vimrc") && expand("$PWD") != expand("$HOME") && expand("$HOME") != "/root" && expand("$PWD") != "/root"
-	" do not recursively load ~/.vimrc or /root/.vimrc
-	source .vimrc
-endif
+
 ""
 "" to use environment variables, use expand("$VAR")
 ""
@@ -268,4 +269,6 @@ if !&diff && &columns > 123
 	autocmd VimEnter * wincmd l
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 endif
+
+autocmd BufReadPre *.ovr set ft=cpp
 
