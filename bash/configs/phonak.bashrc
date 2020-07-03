@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/.wash/bash/bashrc
+source "$HOME/.wash/bash/bashrc"
 
 # latex
 export PATH="$PATH:/usr/local/texlive/2018/bin/x86_64-linux"
@@ -27,6 +27,10 @@ alias ssj="ssh continuous@ch03jenkins.corp.ads"
 alias ssg="echo /var/lib/docker/volumes/gitlab_data/_data/git-data/repositories; ssh swteam@ch03rdteam.phonak.com"
 
 alias scR="screen -xRR"
+
+export workspace="$HOME/workspace"
+export swt="$workspace/swt"
+export helios="$workspace/helios"
 
 
 # PROXY
@@ -63,10 +67,11 @@ function mountOneDrive() {
 }
 
 
+# SWT
 export venv="/home/induni/workspace/swt/_venv"
 export swtVenv="$venv/default"
 export vPy="$swtVenv/bin/python"
-alias vPep8="\$vPy -m pep8 . --exclude=env,docs,helpers/software/corti/andromeda,framework,_* --max-line-length=119 --ignore=E221,E265,E266,E722,E402,W391,W503"
+alias vPep8="\$vPy -m pep8 . --exclude=env,docs,helpers/software/corti/andromeda,framework,_* --max-line-length=120 --ignore=E221,E265,E266,E722,E402,W391,W503"
 alias vPylint="\$vPy -m pylint --score=no --persistent=no --reports=no --ignore=env,docs,andromeda,framework --notes=FIXME --rcfile=/home/induni/workspace/swt/framework/pylintrc"
 alias vPylintF="vPylint devices generic.py helpers remote run.py scripts ssh swt_env.py templates tests utils common"
 alias vSphinx="\$swtVenv/bin/sphinx-build -W -b html"
@@ -74,6 +79,10 @@ function bSphinx() {
 	vSphinx "$*" "$*/_build/html"
 }
 
+
+# Helios
+alias vimmp='vim subprj/helios4/machu_picchu_firmware/'
+alias vimmpr='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl'
 
 
 export todoFile="$HOME/.todos"
