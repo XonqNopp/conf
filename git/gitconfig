@@ -10,9 +10,8 @@
 
 	# files
 	chmodx   = update-index --chmod=+x
-	grip = grep -i
-	grin = grep -in
-	gripHn = grep -inH
+	gren = grep -n
+	grip = grep -in
 	gril = grep -il
 
 	# commit
@@ -57,7 +56,7 @@
 	bd     = branch -d
 	rewind = merge --no-ff
 	bra    = branch -va
-	pum    = !git checkout master && git fetch -p && git pull
+	pum    = !git com && git fetch -p && git pull
 
 	# remote
 	putsh = push --follow-tags
@@ -132,3 +131,4 @@
 
 [instaweb]
 	local = true
+
