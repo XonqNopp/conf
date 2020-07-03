@@ -38,6 +38,7 @@ endif
 map <buffer> <F1> :w<cr>:make! %:r<cr>
 
 " Split commands for header file
-command! Sph Spit %:r.h
-command! Spc Spit %:r.cpp
+command! Sph SpitUp %:r.h
+command! Spc SpitDown %:r.cpp
+command! Spp SpitDown %:r.cpp
 
