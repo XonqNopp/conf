@@ -26,7 +26,7 @@ setlocal foldmethod=indent
 setlocal tabstop=4
 setlocal expandtab
 setlocal textwidth=120
-setlocal colorcolumn=120
+setlocal colorcolumn=121
 
 if &ft == "cpp"
 	let b:ComChar = "//"
