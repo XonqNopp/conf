@@ -52,6 +52,7 @@
 	coo    = checkout -
 	com    = checkout master
 	cb     = checkout -b
+	cub    = checkout upstream/master -b
 	br     = branch
 	bd     = branch -d
 	rewind = merge --no-ff
@@ -83,13 +84,18 @@
 	difff = diff --name-status
 
 	# log
-	slog = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)' -1
-	flog = log --graph --all --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' -1
+	slog  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)' -1
+	slogg = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)'
+	flog  = log --graph --all --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' -1
+	flogg = log --graph --all --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
 	browse2vim = log --graph --all --pretty=format:'%h {%ci} %an %% %s%d'
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
 	log-check  = log --pretty=fuller --name-status -1
+	log-checkk = log --pretty=fuller --name-status
 	log-stat   = log --pretty=fuller --stat -1
-	log-deleted = log -1 --full-history --
+	log-statt  = log --pretty=fuller --stat
+	log-deleted  = log -1 --full-history --
+	log-deletedd = log --full-history --
 	log-merges  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s%n%n%b%n%n' --merges
 
 	# misc
