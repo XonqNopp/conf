@@ -83,6 +83,9 @@ function bSphinx() {
 # Helios
 alias vimmp='vim subprj/helios4/machu_picchu_firmware/'
 alias vimmpr='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl'
+alias vimbb='vim src/building_blocks'
+alias vimbbg='vim src/building_blocks/gui_events'
+alias vimbbgu='vim src/building_blocks/gui_events/unit_test'
 
 
 export todoFile="$HOME/.todos"
