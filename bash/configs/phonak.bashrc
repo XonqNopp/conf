@@ -82,10 +82,15 @@ function bSphinx() {
 
 # Helios
 alias vimmp='vim subprj/helios4/machu_picchu_firmware/'
-alias vimmpr='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl'
-alias vimbb='vim src/building_blocks'
-alias vimbbg='vim src/building_blocks/gui_events'
-alias vimbbgu='vim src/building_blocks/gui_events/unit_test'
+alias vimmpr='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/'
+alias vimmpg='vim subprj/helios4/machu_picchu_firmware/gui/'
+alias vimmpad='vim subprj/helios4/machu_picchu_firmware/adapters/'
+alias vimmpap='vim subprj/helios4/machu_picchu_firmware/approot/'
+alias vimmpc='vim subprj/helios4/machu_picchu_firmware/config/'
+alias vimmpo='vim subprj/helios4/machu_picchu_firmware/overlays/'
+alias vimbb='vim src/building_blocks/'
+alias vimbbg='vim src/building_blocks/gui_events/'
+alias vimbbgu='vim src/building_blocks/gui_events/unit_test/'
 
 
 export todoFile="$HOME/.todos"
