@@ -52,7 +52,6 @@
 	coo    = checkout -
 	com    = checkout master
 	cb     = checkout -b
-	cub    = checkout upstream/master -b
 	br     = branch
 	bd     = branch -d
 	rewind = merge --no-ff
