@@ -83,6 +83,11 @@ function bSphinx() {
 # Helios
 alias vimmp='vim subprj/helios4/machu_picchu_firmware/'
 alias vimmpr='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/'
+alias vimmprb='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/BatteryControllerImpl.cpp'
+alias vimmprd='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/DSPControllerImpl.cpp'
+alias vimmprm='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/MainControllerImpl.cpp'
+alias vimmpru='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/UserInterfaceControllerImpl.cpp'
+alias vimmprw='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/WirelessControllerImpl.cpp'
 alias vimmpg='vim subprj/helios4/machu_picchu_firmware/gui/'
 alias vimmpad='vim subprj/helios4/machu_picchu_firmware/adapters/'
 alias vimmpap='vim subprj/helios4/machu_picchu_firmware/approot/'
