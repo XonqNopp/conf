@@ -81,21 +81,37 @@ function bSphinx() {
 
 
 # Helios
-alias vimmp='vim subprj/helios4/machu_picchu_firmware/'
-alias vimmpr='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/'
-alias vimmprb='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/BatteryControllerImpl.cpp'
-alias vimmprd='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/DSPControllerImpl.cpp'
-alias vimmprm='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/MainControllerImpl.cpp'
-alias vimmpru='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/UserInterfaceControllerImpl.cpp'
-alias vimmprw='vim subprj/helios4/machu_picchu_firmware/rhp/RhpAppImpl/WirelessControllerImpl.cpp'
-alias vimmpg='vim subprj/helios4/machu_picchu_firmware/gui/'
-alias vimmpad='vim subprj/helios4/machu_picchu_firmware/adapters/'
-alias vimmpap='vim subprj/helios4/machu_picchu_firmware/approot/'
-alias vimmpc='vim subprj/helios4/machu_picchu_firmware/config/'
-alias vimmpo='vim subprj/helios4/machu_picchu_firmware/overlays/'
-alias vimbb='vim src/building_blocks/'
-alias vimbbg='vim src/building_blocks/gui_events/'
-alias vimbbgu='vim src/building_blocks/gui_events/unit_test/'
+# MachuPicchu
+export hsrcMaPi="subprj/helios4/machu_picchu_firmware"
+export hsrcMaPiR="$hsrcMaPi/rhp/RhpAppImpl"
+alias vimmp="vim \$hsrcMaPi"
+alias vimmph="vim subprj/helios4/machu_picchu_homologation/"
+alias vimmpc="vim subprj/helios4/machu_picchu_sha_calib/"
+alias vimmpr="vim \$hsrcMaPiR"
+alias vimmprb="vim \$hsrcMaPiR/BatteryControllerImpl.cpp"
+alias vimmprd="vim \$hsrcMaPiR/DSPControllerImpl.cpp"
+alias vimmprm="vim \$hsrcMaPiR/MainControllerImpl.cpp"
+alias vimmpru="vim \$hsrcMaPiR/UserInterfaceControllerImpl.cpp"
+alias vimmprw="vim \$hsrcMaPiR/WirelessControllerImpl.cpp"
+alias vimmpg="vim \$hsrcMaPi/gui/"
+alias vimmpa="vim \$hsrcMaPi/adapters/"
+alias vimmpo="vim \$hsrcMaPi/overlays/"
+# MachuPicchu docking
+export hsrcMaPiDoc="subprj/helios4/machu_picchu_docking_firmware"
+export hsrcMaPiDocR="$hsrcMaPiDoc/rhp/RhpAppImpl"
+alias vimmpd="vim \$hsrcMaPiDoc"
+alias vimmpdr="vim \$hsrcMaPiDocR"
+alias vimmpdra="vim \$hsrcMaPiDocR/AudioControllerImpl.cpp"
+alias vimmpdrm="vim \$hsrcMaPiDocR/MainControllerImpl.cpp"
+alias vimmpda="vim \$hsrcMaPiDoc/adapters/"
+alias vimmpdo="vim \$hsrcMaPiDoc/overlays/"
+
+# BB
+export hsrcBB="src/building_blocks"
+export hsrcBBg="$hsrcBB/gui_events"
+alias vimbb="vim \$hsrcBB"
+alias vimbbg="vim \$hsrcBBg"
+alias vimbbgu="vim \$hsrcBBg/unit_test/"
 
 
 export todoFile="$HOME/.todos"
