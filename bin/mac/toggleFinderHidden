@@ -1,4 +1,5 @@
 #!/bin/bash
+
 echo " NEVER TESTED IT IN THIS WAY"
 if [[ ${SHOWHIDDEN} == "true" ]]; then
 	export SHOWHIDDEN="false"
@@ -7,3 +8,4 @@ else
 fi
 defaults write com.apple.finder AppleShowAllFiles ${SHOWHIDDEN}
 killall Finder
+
