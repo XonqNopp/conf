@@ -65,14 +65,23 @@ styleOff='\[\033[m\]'
 # }}}
 # }}}
 # PS1 ## {{{
-function PS1gitBranch() {
-	git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ @\1/'
+function gitPS1() {
+	staged=""
+	dirty=""
+	untracked=""
+	branch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ @\1/')
+	if [ "$branch" != "" ]; then
+		git diff --no-ext-diff --cached --quiet || staged="+"
+		git diff --no-ext-diff --quiet || dirty="*"
+		git ls-files --others --exclude-standard --directory --no-empty-directory --error-unmatch -- ':/*' > /dev/null 2> /dev/null && untracked="%"
+	fi
+	echo "$branch$staged$dirty$untracked"
 }
 if [[ $UID -eq 0 ]]; then
-	export PS1="$brown\t $red$boldOn$blinkOn### ROOT ###$styleOff $purple\w $nc# $red"
+	export PS1="$brown\t $red$boldOn$blinkOn### ROOT ###$styleOff $purple\w$brown\$(gitPS1) $nc# $red"
 	#export PROMPT_COMMAND='/bin/echo -ne "\033]0;## R*O*O*T ## @${HOSTNAME%%.*}:${PWD/#${HOME}/~}\007"'
 else
-	export PS1="$brown\t $cyan\u$nc@$red\h$nc: $lightblue\W$brown\$(PS1gitBranch) $nc$ "
+	export PS1="$brown\t $cyan\u$nc@$red\h$nc: $lightblue\W$brown\$(gitPS1) $nc$ "
 	#export PROMPT_COMMAND='/bin/echo -ne "\033]0;$USER@${HOSTNAME%%.*}:${PWD/#${HOME}/~}\007"'
 fi
 # }}}
