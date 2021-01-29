@@ -134,6 +134,12 @@
 	followTags = true
 	default = current  # do not ask for branch when pushing new branch
 
+[submodule]
+	recurse = true
+
+[rerere]
+	enabled = true
+
 [instaweb]
 	local = true
 
