@@ -28,6 +28,12 @@ setlocal expandtab
 setlocal textwidth=120
 setlocal colorcolumn=121
 
+" Debug
+" See https://medium.com/@948/how-does-debugging-with-vim-and-gdb-3ab5ed0dcd0f
+let g:termdebug_popup = 0
+let g:termdebug_wide = 163
+packadd termdebug
+
 if &ft == "cpp"
 	let b:ComChar = "//"
 	let b:ComCharStart = "/*"
