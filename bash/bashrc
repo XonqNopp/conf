@@ -66,16 +66,43 @@ styleOff='\[\033[m\]'
 # }}}
 # PS1 ## {{{
 function gitPS1() {
+	branch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+
+	if [ "$branch" = "" ]; then
+		return
+	fi
+
 	staged=""
 	dirty=""
 	untracked=""
-	branch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ @\1/')
-	if [ "$branch" != "" ]; then
-		git diff --no-ext-diff --cached --quiet || staged="+"
-		git diff --no-ext-diff --quiet || dirty="*"
-		git ls-files --others --exclude-standard --directory --no-empty-directory --error-unmatch -- ':/*' > /dev/null 2> /dev/null && untracked="%"
+
+	git diff --no-ext-diff --cached --quiet || staged="+"
+	git diff --no-ext-diff --quiet || dirty="*"
+	git ls-files --others --exclude-standard --directory --no-empty-directory --error-unmatch -- ':/*' > /dev/null 2> /dev/null && untracked="%"
+
+	overall="$staged$dirty$untracked"
+
+	if git symbolic-ref -q HEAD > /dev/null; then
+		synced=""
+
+		localHead=$(git rev-parse HEAD)
+		remoteTracking=$(git rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2> /dev/null)
+		remoteHead=""
+		if [ "$remoteTracking" != "" ]; then
+			remoteHead=$(git rev-parse "$remoteTracking" 2> /dev/null)
+		fi
+		if [ "$localHead" != "$remoteHead" ]; then
+			synced="#"
+		fi
+
+		overall="$overall$synced"
 	fi
-	echo "$branch$staged$dirty$untracked"
+
+	if [ "$overall" != "" ]; then
+		overall=":$overall"
+	fi
+
+	echo " @$branch$overall"
 }
 if [[ $UID -eq 0 ]]; then
 	export PS1="$brown\t $red$boldOn$blinkOn### ROOT ###$styleOff $purple\w$brown\$(gitPS1) $nc# $red"
