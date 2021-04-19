@@ -24,5 +24,5 @@ set nolinebreak
 " Go to HEAD
 call cursor(1,1)
 call searchpos("[^/]HEAD", "c")
-execute "normal 0zz"
+execute "normal z\<cr>"
 
