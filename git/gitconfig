@@ -40,6 +40,7 @@
 
 	# rebase
 	rebi  = rebase -i
+	rebim = !git rebi $(git merge-base master HEAD)
 	recont = rebase --continue
 	rabo = rebase --abort
 	remas = rebase master
@@ -73,20 +74,16 @@
 
 	# diff
 	df = difftool
-	dfhead = difftool HEAD
 	dfhat = difftool HEAD^
-	dfm = difftool master
-	dfum = difftool upstream/master
 	mt = mergetool
-	mta = mergetool --tool=vimgitall
 	dispatch = format-patch -M -n -s -o outgoing
 	difff = diff --name-status
 
 	# log
 	slog  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)' -1
 	slogg = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)'
-	flog  = log --graph --all --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' -1
-	flogg = log --graph --all --pretty=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%ai%C(reset) %C(green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+	slob = !git slogg $(git merge-base master HEAD)..HEAD
+	slub = !git slogg $(git merge-base upstream/master HEAD)..HEAD
 	browse2vim = log --graph --all --pretty=format:'%h {%ci} %an %% %s%d'
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
 	log-check  = log --pretty=fuller --name-status -1
@@ -96,9 +93,6 @@
 	log-deleted  = log -1 --full-history --
 	log-deletedd = log --full-history --
 	log-merges  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s%n%n%b%n%n' --merges
-
-	# misc
-	stlog = !echo && git st && echo && git slog
 
 
 [diff]
