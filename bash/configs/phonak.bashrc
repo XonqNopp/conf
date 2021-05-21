@@ -2,8 +2,8 @@
 
 source "$HOME/.wash/bash/bashrc"
 
-# latex
-export PATH="$PATH:/usr/local/texlive/2018/bin/x86_64-linux"
+# PATH
+export PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
 
 alias apt-proxy="sudo vim /etc/apt/apt.conf.d/99Proxy"
 
