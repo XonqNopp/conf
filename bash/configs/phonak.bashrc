@@ -36,21 +36,6 @@ export helios="$workspace/helios"
 # PROXY
 export SONOVA_PROXY_URL="proxy.ch03.emea.corp.ads"
 export SONOVA_PROXY_PORT="8080"
-#export http_proxy="$SONOVA_PROXY_URL:$SONOVA_PROXY_PORT"
-#export https_proxy="$SONOVA_PROXY_URL:$SONOVA_PROXY_PORT"
-#export HTTP_PROXY=$http_proxy
-#export HTTPS_PROXY=$https_proxy
-#export FTP_PROXY=$ftp_proxy
-#export NO_PROXY=$no_proxy
-
-#gsettings set org.gnome.system.proxy mode 'manual'
-#gsettings set org.gnome.system.proxy.http host $SONOVA_PROXY_URL
-#gsettings set org.gnome.system.proxy.http port $SONOVA_PROXY_PORT
-#gsettings set org.gnome.system.proxy.https host $SONOVA_PROXY_URL
-#gsettings set org.gnome.system.proxy.https port $SONOVA_PROXY_PORT
-#gsettings set org.gnome.system.proxy.ftp host $SONOVA_PROXY_URL
-#gsettings set org.gnome.system.proxy.ftp port $SONOVA_PROXY_PORT
-#gsettings set org.gnome.system.proxy ignore-hosts "['localhost', '127.0.0.0/8']"
 
 
 
@@ -81,30 +66,28 @@ function bSphinx() {
 
 
 # Helios
+export rhpimpl="rhp/RhpAppImpl"
+function heliosProject() {
+	directory=$1
+	shortname=$2
+	eval "function vim${shortname}() { vim -o $directory/\$@; }"
+	eval "function vim${shortname}r() { vim -o $directory/$rhpimpl/\$@; }"
+	eval "function vim${shortname}ru() { vim -o $directory/rhp/unit_test/\$@; }"
+	eval "function vim${shortname}o() { vim -o $directory/overlays/\$@; }"
+}
+
 # MachuPicchu
 export hsrcMaPi="subprj/helios4/machu_picchu_firmware"
-export hsrcMaPiR="$hsrcMaPi/rhp/RhpAppImpl"
-alias vimmp="vim \$hsrcMaPi"
-alias vimmph="vim subprj/helios4/machu_picchu_homologation/"
-alias vimmpc="vim subprj/helios4/machu_picchu_sha_calib/"
-alias vimmpr="vim \$hsrcMaPiR"
-alias vimmprb="vim \$hsrcMaPiR/BatteryControllerImpl.cpp"
-alias vimmprd="vim \$hsrcMaPiR/DSPControllerImpl.cpp"
-alias vimmprm="vim \$hsrcMaPiR/MainControllerImpl.cpp"
-alias vimmpru="vim \$hsrcMaPiR/UserInterfaceControllerImpl.cpp"
-alias vimmprw="vim \$hsrcMaPiR/WirelessControllerImpl.cpp"
-alias vimmpg="vim \$hsrcMaPi/gui/"
-alias vimmpa="vim \$hsrcMaPi/adapters/"
-alias vimmpo="vim \$hsrcMaPi/overlays/"
+heliosProject $hsrcMaPi mp
+function vimmpg() { vim \$hsrcMaPi/gui/; }
+
 # MachuPicchu docking
 export hsrcMaPiDoc="subprj/helios4/machu_picchu_docking_firmware"
-export hsrcMaPiDocR="$hsrcMaPiDoc/rhp/RhpAppImpl"
-alias vimmpd="vim \$hsrcMaPiDoc"
-alias vimmpdr="vim \$hsrcMaPiDocR"
-alias vimmpdra="vim \$hsrcMaPiDocR/AudioControllerImpl.cpp"
-alias vimmpdrm="vim \$hsrcMaPiDocR/MainControllerImpl.cpp"
-alias vimmpda="vim \$hsrcMaPiDoc/adapters/"
-alias vimmpdo="vim \$hsrcMaPiDoc/overlays/"
+heliosProject $hsrcMaPiDoc mpd
+
+# Digimaster2
+export hsrcDigi2="subprj/helios6/digimaster2_firmware"
+heliosProject $hsrcDigi2 dg
 
 # BB
 export hsrcBB="src/building_blocks"
@@ -114,6 +97,8 @@ alias vimbbg="vim \$hsrcBBg"
 alias vimbbgu="vim \$hsrcBBg/unit_test/"
 
 
+
+# To do file
 export todoFile="$HOME/.todos"
 
 function todo() {
