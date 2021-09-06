@@ -7,6 +7,7 @@ export PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
 
 alias apt-proxy="sudo vim /etc/apt/apt.conf.d/99Proxy"
 
+export LD_LIBRARY_PATH="/usr/local/lib"
 #export LD_LIBRARY_PATH=/media/sf_WS/helios/_build/protobuf-2.4.1/lib
 
 alias subu="ssh buildroot@localhost"

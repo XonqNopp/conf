@@ -1,0 +1,30 @@
+[submodule "vim/pack/plugins/start/python-mode"]
+	path = vim/pack/plugins/start/python-mode
+	url = https://github.com/python-mode/python-mode.git
+[submodule "vim/pack/plugins/start/LargeFile"]
+	path = vim/pack/plugins/start/LargeFile
+	url = https://github.com/vim-scripts/LargeFile.git
+[submodule "vim/pack/plugins/start/MultipleSearch"]
+	path = vim/pack/plugins/start/MultipleSearch
+	url = https://github.com/vim-scripts/MultipleSearch.git
+[submodule "vim/pack/plugins/start/nerdtree"]
+	path = vim/pack/plugins/start/nerdtree
+	url = https://github.com/scrooloose/nerdtree.git
+[submodule "vim/pack/plugins/start/vim-gitgutter"]
+	path = vim/pack/plugins/start/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter.git
+[submodule "vim/pack/plugins/start/vim-man"]
+	path = vim/pack/plugins/start/vim-man
+	url = https://github.com/vim-utils/vim-man.git
+[submodule "vim/pack/plugins/start/vim-speeddating"]
+	path = vim/pack/plugins/start/vim-speeddating
+	url = https://github.com/tpope/vim-speeddating.git
+[submodule "vim/pack/plugins/start/vim-shellcheck"]
+	path = vim/pack/plugins/start/vim-shellcheck
+	url = https://github.com/itspriddle/vim-shellcheck.git
+[submodule "bundle/git-sub"]
+	path = bundle/git-sub
+	url = https://github.com/XonqNopp/git-sub.git
+[submodule "vim/pack/plugins/start/openssl.vim"]
+	path = vim/pack/plugins/start/openssl.vim
+	url = https://github.com/vim-scripts/openssl.vim.git
