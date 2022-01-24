@@ -160,7 +160,7 @@ function vix() {
 }
 # }}}
 # SSH ## {{{
-export switchplus="ssh-728988-gi@134.119.224.37"
+export switchplus="ssh-728988-gi@134.119.0.135"
 alias wsh="ssh \$switchplus"
 function wcp() {
 	one=$1
