@@ -88,8 +88,8 @@ set backspace=eol,indent,start	" To the backspace key to work as usual
 set suffixes=.bak,~,.o,.obj,.info,.swp,.DS_Store,.pdf,.exe
 set listchars+=tab:T-,trail:.	" For invisible characters
 "" Option for indentation in C++
-set cinoptions=:0.5s,(0,w1,l1,+2s,u0,U1
-					  			" :0.5s = indent case statement half shiftwidth
+set cinoptions=:1s,(0,w1,l1,+2s,u0,U1
+					  			" :1s = indent case statement one shiftwidth
 								" (0 = indent from unclosed parantheses
 								" w1 = ?
 								" l1 = case body aligned on labels
