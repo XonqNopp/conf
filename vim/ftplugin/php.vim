@@ -6,6 +6,7 @@ setlocal colorcolumn=120
 if &ft == "php"
 	let b:ComChar = "//"
 	let b:ComCharStart = "/*"
+	let b:ComCharStartMore = "*"
 	let b:ComCharStop = "*/"
 endif
 
