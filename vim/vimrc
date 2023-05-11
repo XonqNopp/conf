@@ -43,6 +43,8 @@ let g:b2h_no_display_credit = 1
 let g:timestamp_modelines = 10
 let g:timestamp_rep = "%a %Y-%m-%d %H:%M:%S %Z"
 let g:timestamp_regexp = '\v\C%(<%(%([lL]ast )?%([cC]hanged?|[mM]odified))\s*:\s+)@<=.*|TIMESTAMP'
+
+let g:ale_open_list=1
 " }}}
 "" Configuration {{{
 if has("autocmd")
