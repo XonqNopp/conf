@@ -80,7 +80,15 @@ function heliosProject() {
 # MachuPicchu
 export hsrcMaPi="subprj/helios4/machu_picchu_firmware"
 heliosProject $hsrcMaPi mp
-function vimmpg() { vim \$hsrcMaPi/gui/; }
+
+function vimmpg() {
+	guiDir="$hsrcMaPi/gui"
+	if [ "$#" = "0" ]; then
+		vim $guiDir
+	else
+		vim $guiDir/$1*
+	fi
+}
 
 # MachuPicchu docking
 export hsrcMaPiDoc="subprj/helios4/machu_picchu_docking_firmware"
@@ -92,10 +100,30 @@ heliosProject $hsrcDigi2 dg
 
 # BB
 export hsrcBB="src/building_blocks"
-export hsrcBBg="$hsrcBB/gui_events"
-alias vimbb="vim \$hsrcBB"
-alias vimbbg="vim \$hsrcBBg"
-alias vimbbgu="vim \$hsrcBBg/unit_test/"
+
+function vimbb() {
+	if [ "$#" = "0" ]; then
+		vim $hsrcBB
+	else
+		vim $hsrcBB/$1*
+	fi
+}
+
+function vimbbg() {
+	if [ "$#" = "0" ]; then
+		vim gui_events
+	else
+		vim gui_events/$1*
+	fi
+}
+
+function vimbbgu() {
+	if [ "$#" = "0" ]; then
+		vim gui_events/unit_test
+	else
+		vim gui_events/unit_test/$1*
+	fi
+}
 
 
 
