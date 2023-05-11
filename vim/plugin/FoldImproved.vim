@@ -33,6 +33,10 @@ function FoldImproved()
 	""
 		"" Get name
 		let l:name = getline(v:foldstart)
+		"" C++/PHP check
+		if match(l:name, '^\s*\/\*\+$') > -1
+			let l:name = getline(v:foldstart+1)
+		endif
 		"" Python check
 		if match(l:name, '^ *"""$') > -1
 			let l:name = getline(v:foldstart+1)
@@ -64,6 +68,7 @@ function FoldImproved()
 				if exists("b:ComCharStart")
 					if exists("b:ComCharStartMore")
 						let l:ComCharStartPat = EscapeBchars(b:ComCharStart, b:ComCharStartMore, 1)
+						let l:ComCharStartMorePat = "\\s*" . EscapeBchars(b:ComCharStartMore) . "\\+\\s*"
 					else
 						let l:ComCharStartPat = EscapeBchars(b:ComCharStart)
 					endif
@@ -86,6 +91,9 @@ function FoldImproved()
 				endif
 				if exists("l:ComCharStartPat")
 					let l:name = substitute(l:name, l:ComCharStartPat, "", "g")
+				endif
+				if exists("l:ComCharStartMorePat")
+					let l:name = substitute(l:name, l:ComCharStartMorePat, "", "g")
 				endif
 				if exists("l:ComCharStopPat")
 					let l:name = substitute(l:name, l:ComCharStopPat, "", "g")
