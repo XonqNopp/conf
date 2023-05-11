@@ -13,10 +13,6 @@ export LD_LIBRARY_PATH="/usr/local/lib"
 alias subu="ssh buildroot@localhost"
 
 export testNetwork="10.64.75"
-export servicepi="pi@${testNetwork}.1"
-alias dhcPi="ssh \$servicepi cat DHCP.leases"
-
-export PYTHON_DIR="/usr/lib/python3.5"
 
 function sshpi() {
 	ip=$1
@@ -25,9 +21,8 @@ function sshpi() {
 }
 
 alias ssj="ssh continuous@ch03jenkins.corp.ads"
-alias ssg="echo /var/lib/docker/volumes/gitlab_data/_data/git-data/repositories; ssh swteam@ch03rdteam.phonak.com"
 
-alias scR="screen -xRR"
+alias scR="screen -d -R"
 
 export workspace="$HOME/workspace"
 export swt="$workspace/swt"
@@ -150,4 +145,3 @@ alias vimtodos="vim \$todoFile"
 who
 echo
 todos
-
