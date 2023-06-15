@@ -355,6 +355,10 @@ alias grip="egrep -i --color=always"
 alias gripHn="egrep -inH --color=always"
 alias gripl="egrep -il --color=always"
 alias grim="gripl --color=never"
+
+alias scR="screen -d -R"
+alias scL="screen -list"
+
 alias psg="psf \"aux\""
 alias psgu="psf \"-u \$USER\""
 alias lp_dup="lp -oPrintOutMode=Draft -oDuplexNoTumble -q100"
@@ -387,4 +391,3 @@ else
 	# shellcheck source=./bash/linux.bash
 	source "$vash/bash/linux.bash"
 fi
-

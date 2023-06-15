@@ -20,9 +20,6 @@ function sshpi() {
 	ssh "${testNetwork}.$ip" "$@"
 }
 
-alias ssj="ssh continuous@ch03jenkins.corp.ads"
-
-alias scR="screen -d -R"
 
 export workspace="$HOME/workspace"
 export swt="$workspace/swt"
