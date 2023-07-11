@@ -356,7 +356,10 @@ alias gripHn="egrep -inH --color=always"
 alias gripl="egrep -il --color=always"
 alias grim="gripl --color=never"
 
-alias scR="screen -d -R"
+function scR() {
+	screen -d -R "$*"
+	screen -list
+}
 alias scL="screen -list"
 
 alias psg="psf \"aux\""
