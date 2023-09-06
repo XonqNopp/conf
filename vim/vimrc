@@ -134,6 +134,7 @@ set nohlsearch					" Not to higlight what I look for
 set incsearch					" To highlight before ending typing (don't forget to type the enter key anyway).
 set ignorecase
 set smartcase					" To ignore case in searches but if I make a special one
+set shortmess-=S  " tell about where in search items we are
 "" }}}
 "" Backup {{{
 set updatetime=60000			" I don't need to have a backup each 4 seconds, one minute is largely sufficient...
