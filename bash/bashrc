@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/.wash/shell/config
+source $HOME/.wash/shell/config.sh
 
 # Special stuff {{{
 # I don't want to save many same commands and other short ones:

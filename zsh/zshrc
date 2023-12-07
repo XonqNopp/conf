@@ -110,3 +110,19 @@ alias k="k -hA"
 
 # Print output without less when possible
 export LESS="-FXR"
+
+# Customize PS1
+PROMPT=""
+PROMPT="%{$fg[yellow]%}%*%{$reset_color%}"  # time
+PROMPT+="@"
+PROMPT+="%{$fg[yellow]%}%m%{$reset_color%} "  # hostname
+PROMPT+="%{$fg[cyan]%}%c%{$reset_color%}"  # CWD
+PROMPT+='$(git_prompt_info) '  # git
+PROMPT+='%{$fg[blue]%}$(screen_prompt_info)%{$reset_color%}'  # screen
+PROMPT+="%(?:%{$fg_bold[green]%}%1{%#%}:%{$fg_bold[red]%}%1{%#%#%#%#%#%})%{$reset_color%}"  # return status
+PROMPT+=' '  # trailing space so user input is not merged with prompt
+
+ZSH_THEME_GIT_PROMPT_PREFIX="[%{$fg[red]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}]"
+ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg[yellow]%}%1{✗%}"
+ZSH_THEME_GIT_PROMPT_CLEAN=""

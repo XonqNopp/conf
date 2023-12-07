@@ -26,9 +26,17 @@ function sshpi() {
 
 
 #export swteam_env="f041c45fd771198c5e46035e89777e9829407558"
+
+
 function fix_vpn_mtu() {
     echo "Fix VPN MTU (sudo)..."
     sudo ip link set dev eth0 mtu 1400
+}
+
+
+function fix_screen_init() {
+    echo "Fix screen init (sudo)..."
+    sudo /etc/init.d/screen-cleanup start
 }
 
 

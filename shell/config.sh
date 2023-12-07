@@ -1,14 +1,23 @@
 #!/bin/sh
-if [[ -z ${vash+defined} || $vash == "" ]]; then
+if [ -z ${vash+defined} ] || [ "$vash" = "" ]; then
     export vash="$HOME/.wash"
 fi
 
-export PATH="$PATH:$vash/bin:$vash/git/bin:$vash/perl/bin"
+export PATH="$PATH:$vash/bin:$vash/git/bin:$vash/perl:$vash/python"
 
 
-function vash()
+screen_prompt_info() {
+    if [ "$STY" = "" ]; then
+        return
+    fi
+
+    echo "<$STY> "
+}
+
+
+vash()
 {
-    if [[ $# == 0 ]]; then
+    if [ $# -eq 0 ]; then
         cd "$vash" || exit 1
     else
         cd "$vash/$1*" || exit 1
@@ -16,14 +25,14 @@ function vash()
 }
 
 
-function ps2png()
+ps2png()
 {
     pstopnm -xborder=0 -yborder=0 "$1"
     pnmtopng "$1" > "$2"
 }
 
 
-function splitPDF()
+splitPDF()
 {
     pdftk "$1" burst
 }
@@ -33,16 +42,15 @@ function splitPDF()
 # pdftk file1.pdf file2.pdf cat output newFile.pdf
 
 
-function psf()
+psf()
 {
-    local com, header, contents
     com="ps $1"
     shift;
     header=$($com | head -n 1)
-    contents=$($com | egrep -v grep | egrep --color=always "$*")
-    if [[ ${contents} != "" ]]; then
-        echo "${header}"
-        echo "${contents}"
+    contents=$($com | grep -Ev grep | grep -E --color=always "$*")
+    if [ "$contents" != "" ]; then
+        echo "$header"
+        echo "$contents"
     fi
 }
 
@@ -50,31 +58,35 @@ function psf()
 # Needs this before lu:
 alias du="du -h --max-depth=0"
 
-function lu()
-{
-    if [[ $# == 0 ]]; then
+lu() {
+    # TODO posix glob
+    if [ $# -eq 0 ]; then
         du ./.[^.]* ./* 2> /dev/null
-    else
-        if [[ $# == 1 ]] && [[ $1 == "-h" ]]; then
-            echo " Usage: lu [./% dir1 dir2...]"
-            echo "   Displays the sizes of the elements of the current directory, or of dir1, dir2..."
-            echo "   . : displays the sizes of each arguments"
-            echo "   % : displays the sizes of the elements of each arguments"
-        else
-            local type=$1
-            shift
-            for fileOrDir in "$@"; do
-                if [[ $type == "." ]]; then
-                    du "$fileOrDir" 2> /dev/null
-                elif [[ $type == "%" ]]; then
-                    # shellcheck disable=SC2086
-                    du "$fileOrDir" $fileOrDir/.[^.]* $fileOrDir/* 2> /dev/null
-                else
-                    echo "Type not recognized..."
-                fi
-            done
-        fi
+        return
     fi
+
+    if [ $# -eq 1 ] && [ "$1" = "-h" ]; then
+        echo " Usage: lu [./% dir1 dir2...]"
+        echo "   Displays the sizes of the elements of the current directory, or of dir1, dir2..."
+        echo "   . : displays the sizes of each arguments"
+        echo "   % : displays the sizes of the elements of each arguments"
+        return
+    fi
+
+    type=$1
+    shift
+    for fileOrDir in "$@"; do
+        if [ "$type" = "." ]; then
+            du "$fileOrDir" 2> /dev/null
+
+        elif [ "$type" = "%" ]; then
+            # shellcheck disable=SC2086
+            du "$fileOrDir" $fileOrDir/.[^.]* $fileOrDir/* 2> /dev/null
+
+        else
+            echo "Type not recognized..."
+        fi
+    done
 }
 
 
@@ -95,7 +107,7 @@ alias grim="gripl --color=never"
 alias vi="vim"
 alias ex="vim"
 
-function scR() {
+scR() {
     screen -d -R "$*"
     screen -list
 }
