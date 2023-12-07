@@ -109,4 +109,4 @@ source $ZSH/oh-my-zsh.sh
 alias k="k -hA"
 
 # Print output without less when possible
-export LESS="-FX"
+export LESS="-FXR"
