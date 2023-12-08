@@ -11,7 +11,11 @@ screen_prompt_info() {
         return
     fi
 
-    echo "<$STY> "
+    # without session name: 637631.pts-4.ch03debian-gi
+    #    with session name: 637758.swtF
+    # So it is better to display just the middle part
+    scr_id="${STY#*.}"
+    echo "<${scr_id%.*}> "
 }
 
 
