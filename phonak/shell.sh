@@ -1,13 +1,18 @@
 #!/bin/bash
 
+# Custom scripts
+PATH="$PATH:/home/induni/.wash/phonak/bin"
+
 # TeXlive (debian)
-export PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
+PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
 
 # Python scripts (WSL)
-export PATH="$PATH:/mnt/c/Python310-32/Scripts"
+PATH="$PATH:/mnt/c/Python310-32/Scripts"
 
 # PHP mess detector (WSL)
-export PATH="$PATH:/home/induni/phpmd/src/bin"
+PATH="$PATH:/home/induni/phpmd/src/bin"
+
+export PATH
 
 
 alias subu="ssh buildroot@localhost"
