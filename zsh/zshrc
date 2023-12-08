@@ -113,7 +113,7 @@ export LESS="-FXR"
 
 # Customize PS1
 PROMPT=""
-PROMPT="%{$fg[yellow]%}%*%{$reset_color%}"  # time
+PROMPT="%{$fg[yellow]%}%D{%H:%M:%S}%{$reset_color%}"  # time
 PROMPT+="@"
 PROMPT+="%{$fg[yellow]%}%m%{$reset_color%} "  # hostname
 PROMPT+="%{$fg[cyan]%}%c%{$reset_color%}"  # CWD
