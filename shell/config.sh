@@ -115,7 +115,7 @@ scR() {
     screen -d -R "$*"
     screen -list
 }
-alias scL="screen -list"
+alias scL="screen -list || true"  # or'ed in case no screen, we do not want an error for this
 
 alias psg="psf \"aux\""
 alias psgu="psf \"-u \$USER\""
