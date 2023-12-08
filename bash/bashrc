@@ -28,47 +28,9 @@ bind '"\e[B":history-search-forward'
 shopt -s huponexit
 # For the LS command to be readable on a dark background
 export LSCOLORS="gxfxcxdxbxegedabagacad"
-# PS1 colors ## {{{
-# Colors and styles ## {{{
-# Foreground colors ## {{{
-#black='\[\033[0;30m\]'
-#blue='\[\033[0;34m\]'
-#green='\[\033[0;32m\]'
-cyan='\[\033[0;36m\]'
-red='\[\033[0;31m\]'
-purple='\[\033[0;35m\]'
-brown='\[\033[0;33m\]'
-#lightgray='\[\033[0;37m\]'
-#darkgray='\[\033[1;30m\]'
-lightblue='\[\033[1;34m\]'
-#lightgreen='\[\033[1;32m\]'
-#lightcyan='\[\033[1;36m\]'
-#lightred='\[\033[1;31m\]'
-#lightpurple='\[\033[1;35m\]'
-#yellow='\[\033[1;33m\]'
-#white='\[\033[1;37m\]'
-nc='\[\033[0m\]' # = No color
-# }}}
-# Background colors (useful?) ## {{{
-#Bblack='\[\033[40m\]'
-#Bred='\[\033[41m\]'
-#Bgreen='\[\033[42m\]'
-#Byellow='\[\033[43m\]'
-#Bblue='\[\033[44m\]'
-#Bmagenta='\[\033[45m\]'
-#Bcyan='\[\033[46m\]'
-#Bwhite='\[\033[47m\]'
-# }}}
-# Styles ## {{{
-boldOn='\[\033[1m\]'
-#underOn='\[\033[4m\]'
-blinkOn='\[\033[5m\]'
-#inverseOn='\[\033[7m\]'
-styleOff='\[\033[m\]'
-# }}}
-# }}}
+
 # PS1 ## {{{
-function gitPS1() {
+function git_ps1() {
     branch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 
     if [ "$branch" = "" ]; then
@@ -101,20 +63,41 @@ function gitPS1() {
         overall="$overall$synced"
     fi
 
-    if [ "$overall" != "" ]; then
-        overall=":$overall"
-    fi
-
-    echo " @$branch$overall"
+    nc=$(tput sgr0)
+    white=$(tput setaf 7)
+    red=$(tput setaf 1)
+    printf '\001%s\002[\001%s\002%s\001%s\002%s\001%s\002]' "$nc" "$red" "$branch" "$white" "$overall" "$nc"
 }
-if [[ $UID -eq 0 ]]; then
-    export PS1="$brown\t $red$boldOn$blinkOn### ROOT ###$styleOff $purple\w$brown\$(gitPS1) $nc# $red"
-    #export PROMPT_COMMAND='/bin/echo -ne "\033]0;## R*O*O*T ## @${HOSTNAME%%.*}:${PWD/#${HOME}/~}\007"'
-else
-    export PS1="$brown\t $cyan\u$nc@$red\h$nc: $lightblue\W$brown\$(gitPS1) $nc$ "
-    #export PROMPT_COMMAND='/bin/echo -ne "\033]0;$USER@${HOSTNAME%%.*}:${PWD/#${HOME}/~}\007"'
-fi
-# }}}
+
+
+customize_ps1() {
+    cyan='\[\033[1;36m\]'
+    red='\[\033[0;31m\]'
+    bold_red='\[\033[1;31m\]'
+    brown='\[\033[0;33m\]'
+    lightblue='\[\033[1;34m\]'
+    nc='\[\033[0m\]' # = No color
+
+    PS1=""
+
+    # Note about checking $?:
+    # This will give the return status of the last command.
+    # If in PS1 we start calling other commands (like below git_ps1 or screen_prompt_info) then $? gets updated
+    PS1+='$(e=$?; (( e )) && echo "'"$bold_red"'xxxxx $e xxxxx ")'  # check last command
+
+    PS1+="$brown\D{%H:%M:%S}"  # time
+    PS1+="$nc@"
+    PS1+="$brown\h "  # hostname
+    PS1+="$lightblue\W"  # CWD
+
+    PS1+='$(git_ps1) '
+    PS1+="$cyan"'$(screen_prompt_info)'
+    PS1+="$nc\$ "
+
+    export PS1
+}
+
+customize_ps1
 # }}}
 # }}}
 
