@@ -2,6 +2,7 @@
 
 # Custom scripts
 PATH="$PATH:/home/induni/.wash/phonak/bin"
+PATH="$PATH:/home/induni/workspace/helios/helios/tools/bin"
 
 # TeXlive (debian)
 PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
