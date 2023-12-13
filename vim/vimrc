@@ -116,7 +116,7 @@ autocmd BufRead,BufNewFile $vash/* set modelines=3
 ""
 "" Everything about special spaces {{{
 set expandtab					" To have spaces instead of tabs
-set tabstop=12					" Number of spaces for a tab, make it clear it is a tab
+set tabstop=10					" Number of spaces for a tab, make it clear it is a tab
 set shiftwidth=4				" Number of spaces for indentation
 set scrolloff=1					" Number of line always visible in the extremums
 set scrolljump=3				" Number of line to jump when at scrolloff
