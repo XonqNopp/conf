@@ -72,7 +72,6 @@ function git_ps1() {
 
 customize_ps1() {
     cyan='\[\033[1;36m\]'
-    red='\[\033[0;31m\]'
     bold_red='\[\033[1;31m\]'
     brown='\[\033[0;33m\]'
     lightblue='\[\033[1;34m\]'
