@@ -18,11 +18,17 @@
 	cm       = commit -m
 	cof      = commit --fixup
 	cofe     = commit --fixup HEAD
+          cop      = !git cofe && git push
 	cos      = commit --squash
+	cose     = commit --squash HEAD
+          cops     = !git cose && git push
 	cam      = commit -a -m
 	caf      = commit -a --fixup
 	cafe     = commit -a --fixup HEAD
+          cap      = !git cafe && git push
 	cas      = commit -a --squash
+	case     = commit -a --squash HEAD
+          caps     = !git case && git push
 	amend    = commit --amend
 	aamend   = commit --amend -a
 	amende   = commit --amend --no-edit
