@@ -111,11 +111,11 @@ alias grim="gripl --color=never"
 alias vi="vim"
 alias ex="vim"
 
+alias scL="screen -list || true"  # or'ed in case no screen, we do not want an error for this
 scR() {
     screen -d -R "$*"
-    screen -list
+    scL
 }
-alias scL="screen -list || true"  # or'ed in case no screen, we do not want an error for this
 
 alias psg="psf \"aux\""
 alias psgu="psf \"-u \$USER\""
