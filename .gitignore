@@ -1,8 +1,2 @@
-vim/doc/tags
-vim/doc/tags-te
-vim/GetLatest/*.vba
-vim/GetLatest/*.gz
-vim/GetLatest/*.tar
-vim/GetLatest/*.zip
-vim/spell/*.spl
-vim/spell/*.sug
+_*
+**/.*.venv
