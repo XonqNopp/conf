@@ -70,7 +70,9 @@ let maplocalleader = "\\"
 "" Vim actions enabled {{{
 "" See :help runtimepath
 "" Colorscheme
-colorscheme ron
+colorscheme pablo
+" ron is not good in diff
+" pablo slate
 filetype on                     " Enable detection of filetype
 filetype plugin indent on       " Enables sourcing right files
 syntax enable                   " To color the text
