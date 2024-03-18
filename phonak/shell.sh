@@ -20,7 +20,7 @@ alias subu="ssh buildroot@localhost"
 
 export g="ch03debian-gi.corp.ads"
 export gIP="10.64.66.153"
-alias sg="ssh \$g"
+alias sg="ssh -X \$g"
 
 export testNetwork="10.64.75"
 
