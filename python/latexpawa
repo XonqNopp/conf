@@ -1,0 +1,994 @@
+#!/usr/bin/env python3
+# pylint: disable=[logging-fstring-interpolation]
+"""
+This scripts takes care of running LaTeX command as many times as it needs,
+and to also run commands for bibliography, index...
+
+You can use config files to not have to always repeat the args on the CLI.
+The config files can be either "latexpawa.lapd" (global to all files in the
+directory) or "<filename>.lapd" (specific to the file only).
+The config files are YAML.
+
+# TODO Look for citation undef in log to rerun bib ONCE
+# TODO Look for sty files in the working directory
+# TODO Shoud look on class and packages if present in curdir and check for -w (at least)
+# TODO add option in .lapd for exotic commands to be recognized as includegraphics
+# TODO check log for: LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+"""
+
+from argparse import ArgumentParser, Namespace
+import logging
+from pathlib import Path
+import os
+from subprocess import run, Popen
+import re
+from dataclasses import dataclass, asdict
+from shutil import copy2
+from filecmp import cmp
+
+# pylint: disable=[unused-import]
+import venv_autouse.file  # noqa
+
+import yaml
+
+
+PAPER_FORMATS = [
+    'a0',
+    'a1',
+    'a2',
+    'a3',
+    'a4',
+    'a5',
+    'a6',
+    'a7',
+    'a8',
+    'a9',
+    'letter',
+    'legal',
+    'tabloid',
+    'tatement',
+    'executive',
+    'folio',
+    'quarto',
+    '10x14',
+]
+
+
+@dataclass
+class ContentsData:
+    """ File contents data. """
+    full: list[str]
+    nocomment: list[str]
+    sanitized: str
+
+
+@dataclass
+class RunFlags:
+    """ Flags to know what we need to run. """
+    latex: int
+    bibtex: int
+    makeindex: int
+
+    def __init__(self, latex: int | None = None, bibtex: int | None = None,
+                 makeindex: int | None = None) -> None:
+        self.latex = latex if latex else 0
+        self.bibtex = bibtex if bibtex else 0
+        self.makeindex = makeindex if makeindex else 0
+
+    def __str__(self) -> str:
+        """ String representation. """
+        return f'RunFlags(latex={self.latex}, bibtex={self.bibtex}, makeindex={self.makeindex})'
+
+
+class LatexRunner:
+    """
+    Runner for LaTeX and much more.
+    """
+    CONFIG_EXT: str = 'lapd'
+    DIR_CONFIG: str = f'latexpawa.{CONFIG_EXT}'
+
+    BKTEX_DIR: Path = Path('.texst')
+
+    EXT_KEPT: list[str] = [
+        '.aux',
+        '.idx',
+        '.toc',
+    ]
+
+    EXT_TMP: list[str] = [
+        '.bbl',
+        '.blg',
+        '.brf',
+        '.ilg',
+        '.ind',
+        '.log',
+        '.maf',
+        '.mtc',
+        '.nav',
+        '.out',
+        '.snm',
+        '.stc',
+        '.tns',
+    ]
+
+    EXT_TMP.extend(f'.mtc{i_mtc}' for i_mtc in range(10))
+    EXT_TMP.extend(f'.stc{i_stc}' for i_stc in range(10))
+
+    EXT_HALF: list[str] = [
+        '.dvi',
+        '.ps',
+    ]
+
+    # default mtime for missing file:
+    # if  input file, set very old so if missing, mtime will   not  trigger rerun
+    # if output file, set very old so if missing, mtime will always trigger rerun
+    MTIME_MISSING = 0
+
+    LOG_FORMATTER = logging.Formatter(
+        fmt='%(asctime)s %(levelname)s'
+            '\t%(name)s.%(funcName)s[%(lineno)d]'
+            '\t%(message)s',
+    )
+
+    def __init__(self, args: Namespace) -> None:
+        self._filename: Path = Path(args.filename)
+        self._contents: dict[Path, ContentsData] = {}
+
+        self.BKTEX_DIR.mkdir(exist_ok=True)
+
+        # Configure logger
+        log_level = self._get_log_level(args.verbose)
+
+        file_log_level = logging.DEBUG
+        if log_level < file_log_level:
+            file_log_level = log_level
+
+        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger.setLevel(file_log_level)  # so we can log more in the file
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(log_level)
+        self._add_log_handler(stream_handler)
+
+        log_file = self.BKTEX_DIR / self.filename.with_suffix('.plg').name
+        self._logger.info(f'Logging to {log_file}')
+
+        file_handler = logging.FileHandler(str(log_file), mode='w')
+        file_handler.setLevel(file_log_level)
+        self._add_log_handler(file_handler)
+
+        output: Path = self._filename.with_suffix('.pdf')
+        if args.output_filename:
+            output = Path(args.output_filename)
+
+        self.args: dict[Path, Namespace] = {output: args}
+
+        self.run_flags = RunFlags()
+        if args.force:
+            self._logger.info('Requested to force run')
+            self._set_run_latex()
+
+        self._parse_all_config_files()
+        self._logger.debug(f'{self.args=}')
+
+        tex_mtime = self._file_mtime(self.filename)
+
+        output_mtime = None
+        for output_filename, out_args in self.args.items():
+            out_args.mtime = self.MTIME_MISSING
+
+            # Check modification time of each output
+            if not output_filename.exists():
+                self._logger.info(f'{output_filename} not found, run LaTeX')
+                self._set_run_latex()
+                continue
+
+            out_args.mtime = self._file_mtime(output_filename)
+
+            if tex_mtime > out_args.mtime:
+                self._logger.info(f'{output_filename} older than the input, rerun')
+                self._set_run_latex()
+
+            if output_mtime is None or out_args.mtime < output_mtime:
+                # Keep the oldest output to compare with
+                output_mtime = out_args.mtime
+
+        if output_mtime is None:
+            output_mtime = self.MTIME_MISSING
+
+        self.output_mtime: float = output_mtime
+        self._logger.debug(f'{self.output_mtime=}')
+
+        self._output_in_progress: Path | None = None
+
+    @property
+    def filename(self) -> Path:
+        """ TeX filename. """
+        return self._filename
+
+    @property
+    def directory(self) -> Path:
+        """ Directory of TeX file. """
+        return self.filename.parent
+
+    @property
+    def aux_filename(self) -> Path:
+        """ aux filename. """
+        return self._filename.with_suffix('.aux')
+
+    @property
+    def lapd_filename(self) -> Path:
+        """ LAPD config filename. """
+        return self.filename.with_suffix(f'.{self.CONFIG_EXT}')
+
+    @property
+    def lapd_config(self) -> Path:
+        """ Common LAPD config file. """
+        return self.directory / f'latexpawa.{self.CONFIG_EXT}'
+
+    @staticmethod
+    def _get_log_level(verbose: int) -> int:
+        """ Get the log level. """
+        if verbose == 1:
+            return logging.INFO
+
+        if verbose > 1:
+            return logging.DEBUG
+
+        return logging.WARNING
+
+    def _add_log_handler(self, handler: logging.Handler) -> None:
+        """ Add a log handler properly. """
+        handler.setFormatter(self.LOG_FORMATTER)
+        self._logger.addHandler(handler)
+
+    def _file_mtime(self, file1: Path) -> float:
+        """
+        Get modification time of file.
+
+        If file does not exist, return ridiculously little value so that
+        we do not force a rerun due to a missing file.
+        """
+        mtime: float = self.MTIME_MISSING  # default
+
+        if file1.exists():
+            mtime = os.stat(file1).st_mtime
+
+        self._logger.debug(f'{file1} {mtime=}')
+        return mtime
+
+    def _file_delete(self, file1: Path) -> None:
+        """ Delete file1 (no error if missing). """
+        self._logger.debug(f'deleting {file1}')
+        file1.unlink(missing_ok=True)
+
+    def _file_rename(self, file1: Path, file2: Path) -> None:
+        """ Rename file1 to file2. """
+        if not file1.exists():
+            return
+
+        self._logger.debug(f'{file1} -> {file2}')
+        file1.rename(file2)
+
+    def _file_copy(self, file1: Path, file2: Path) -> None:
+        """ Copy file1 to file2. """
+        if not file1.exists():
+            return
+
+        self._logger.debug(f'Copy {file1} to {file2}')
+        copy2(file1, file2)
+
+    def _set_run_latex(self, iterations: int | None = None) -> None:
+        """ Set the flag to run LaTeX. """
+        if iterations is None:
+            iterations = 1
+
+        if iterations > self.run_flags.latex:
+            self.run_flags.latex = iterations
+
+    def _set_run_flag(self, flag: str, iterations: int | None = None) -> None:
+        """ Set the flag to run LaTeX. """
+        if iterations is None:
+            iterations = 1
+
+        if iterations > asdict(self.run_flags)[flag]:
+            setattr(self.run_flags, flag, iterations)
+
+        # We also need to run LaTeX twice
+        self._set_run_latex(2)
+
+    def _rerun_if_newer(self, filename: Path) -> tuple[float, bool]:
+        """
+        Flag to rerun if file is newer than the output.
+
+        Returns:
+            tuple[float, bool]: mtime and rerun bool (True if flagged to rerun)
+        """
+        output_mtime = self.output_mtime
+        if self._output_in_progress is not None:
+            output_mtime = self.args[self._output_in_progress].mtime
+
+        mtime = self._file_mtime(filename)
+
+        if mtime <= output_mtime:
+            return mtime, False
+
+        self._logger.info(f'{filename} newer than output, rerun')
+        self._set_run_latex()
+        return mtime, True
+
+    def _parse_config_file(self, filename: Path) -> None:
+        """
+        Parse a config file.
+        """
+        if not filename.exists():
+            return
+
+        args = yaml.safe_load(filename.read_text())
+
+        if 'default' not in args:
+            # No case, plain args only
+            output = list(self.args.keys())[0]
+            for key, value in args.items():
+                setattr(self.args[output], key, value)
+
+            return
+
+        # Key is output filename. Default means <filename>.pdf
+        for usecase, case_args in args.items():
+            if usecase == 'default':
+                usecase = self.filename.with_suffix('.pdf')
+
+            if usecase not in self.args:
+                self.args[usecase] = parse_args()
+
+            for key, value in case_args.items():
+                setattr(self.args[usecase], key, value)
+
+    def _parse_all_config_files(self) -> None:
+        """
+        Parse all config files.
+        """
+        self._parse_config_file(self.lapd_config)
+        self._parse_config_file(self.lapd_filename)
+
+    def cleanup(self, delete_all: bool = False):
+        """ Clean up before finishing. """
+        if not delete_all:
+            # Archive logs
+            for ext in self.EXT_KEPT:
+                filename = self.filename.with_suffix(ext)
+
+                if not filename.exists():
+                    continue
+
+                self._file_rename(filename, self.BKTEX_DIR / filename.name)
+
+        # Delete tmp file
+        for ext in self.EXT_KEPT + self.EXT_TMP + self.EXT_HALF:
+            self._file_delete(self.filename.with_suffix(ext))
+
+    def execute(self, command: list, error_message: str | None = None) -> None:
+        """ Execute a subprocess and handle errors. """
+        self._logger.warning(' '.join(command))
+
+        if self._output_in_progress is not None and self.args[self._output_in_progress].dryrun:
+            self._logger.error('DRYRUN: %s', ' '.join(command))
+            return
+
+        try:
+            process = run(command, check=False)
+
+        except FileNotFoundError as exc:
+            if exc.filename != command[0]:
+                self._logger.critical(f'{exc}')
+                raise exc
+
+            self.cleanup()
+            message = f'Command "{command[0]}" not available'
+            self._logger.critical(message)
+            raise FileNotFoundError(message) from exc
+
+        if not process.returncode:
+            return
+
+        self.cleanup()
+
+        # raise exception
+        message = f'Subprocess {command} failed'
+
+        if error_message:
+            message += f': {error_message}'
+
+        message += '\n\n'
+        message += f'STDOUT: {process.stdout.decode()}\n\n'
+        message += f'STDERR: {process.stderr.decode()}'
+        self._logger.critical(message)
+        raise RuntimeError(message)
+
+    def _read(self, filename: Path) -> ContentsData:
+        """ Read a file (if not already in buffer). """
+        if filename in self._contents:
+            return self._contents[filename]
+
+        self._logger.info(f'Reading {filename}...')
+
+        contents = [
+            line.strip()
+            for line in filename.read_text(encoding='utf-8').strip().splitlines()
+        ]
+
+        nocomment = [line for line in contents if not line.startswith('%')]
+
+        sanitized = ''.join(nocomment)
+        sanitized = re.sub('  +', ' ', sanitized)
+        sanitized = re.sub(r'\\subfloat\[[^\]]*\]\{', '', sanitized)
+        sanitized = re.sub(r'\\(only|uncover)<[^>]*>\{', '', sanitized)
+
+        self._contents[filename] = ContentsData(contents, nocomment, sanitized)
+
+        return self._contents[filename]
+
+    def _parse_includes(self, filename: Path, includes: set[Path], aux_includes: set[Path]) -> None:
+        """ Parse the includes of a tex file. """
+        self._logger.info(f'Parse includes in {filename}')
+
+        for line in self._read(filename).nocomment:
+            if not line.startswith(r'\include{') and not line.startswith(r'\input{'):
+                continue
+
+            name = re.sub(r'^\in(clude|put)\{([^}]+)\}.*$', '\\g<2>', line)
+
+            if '.' not in name:
+                name += '.tex'
+
+            new_filename = self.directory / name
+
+            if not new_filename.exists():
+                message = f'{new_filename} not found (include/input)'
+                self._logger.critical(message)
+                raise FileNotFoundError(message)
+
+            includes.add(new_filename)
+
+            if line.startswith(r'\include{'):
+                # Includes are also in aux, but not input.
+                aux_includes.add(new_filename.with_suffix(''))
+
+            self._rerun_if_newer(new_filename)
+
+            self._parse_includes(new_filename, includes, aux_includes)
+
+        self._logger.debug(f'Done parsing {filename}: {includes=} {aux_includes=}')
+
+    def _parse_external_files(self, pattern: str, file_ext: str | None = None) -> dict[Path, float]:
+        """ Parse external files in contents. """
+        files: dict[Path, float] = {}
+
+        for tex_file, contents in self._contents.items():
+            if pattern not in contents.sanitized:
+                continue
+
+            contents_split = re.split(
+                r'\\' + pattern + r'(\[[^\]]*\])?\{',
+                contents.sanitized,
+            )
+
+            # Part without } are not a command
+            filenames: list[str] = []
+            for line in contents_split:
+                if '}' not in line:
+                    continue
+
+                filenames += line.split('}')[0].split(',')
+
+            for filename in filenames:
+                if '.' not in filename and file_ext is not None:
+                    filename += file_ext
+
+                file = tex_file.parent / filename
+
+                if not file.exists():
+                    message = f'{file} not found (parsing {pattern})'
+                    self._logger.critical(message)
+                    raise FileNotFoundError(message)
+
+                st_mtime, rerun = self._rerun_if_newer(file)
+                files[file] = st_mtime
+
+                if rerun and pattern == 'bibliography':
+                    self._set_run_flag('bibtex')
+
+        return files
+
+    def _parse_bibs(self) -> set[Path]:
+        """ Parse bib from input file. """
+        return set(self._parse_external_files('bibliography', '.bib'))
+
+    def _parse_listings(self) -> None:
+        """ Parse listings from input file. """
+        self._parse_external_files('lstinputlisting')  # no return
+
+    def _ps_to_eps(self, ps_file: Path) -> None:
+        """ Convert PS picture into EPS. """
+        try:
+            self.execute(['ps2eps', '-f', f'{ps_file}'])
+
+        except KeyboardInterrupt:
+            self._file_delete(ps_file.with_suffix('.eps'))
+            raise
+
+    def _parse_pictures(self) -> None:
+        """ Parse pictures from input file. """
+        pics = self._parse_external_files('includegraphics', '.eps')
+
+        for eps_file in pics:
+            ps_file = eps_file.with_suffix('.ps')
+
+            if not ps_file.exists():
+                message = f'{ps_file} not found (parsing pictures)'
+                self._logger.critical(message)
+                raise FileNotFoundError(message)
+
+            if not eps_file.exists() or self._file_mtime(ps_file) > self._file_mtime(eps_file):
+                self._set_run_latex()
+                self._ps_to_eps(ps_file)
+
+    def run_latex(self, update_flag: bool = True) -> None:
+        """ Run latex command. """
+        self.execute(['latex', f'{self.filename}'])
+
+        if update_flag and self.run_flags.latex > 0:
+            self.run_flags.latex -= 1
+            self._logger.info(f'{self.run_flags=}')
+
+    def run_bibtex(self) -> None:
+        """ Run latex command. """
+        self.execute(['bibtex', f'{self.aux_filename}'])
+
+        if self.run_flags.bibtex > 0:
+            self.run_flags.bibtex -= 1
+            self._logger.info(f'{self.run_flags=}')
+
+    def run_makeindex(self) -> None:
+        """ Run latex command. """
+        command = ['makeindex']
+
+        ist_filename = self.filename.with_suffix('.ist')
+        if ist_filename.exists():
+            command += ['-s', f'{ist_filename}']
+
+        command += [f'{self.filename.with_suffix(".idx")}']
+
+        self.execute(command)
+
+        if self.run_flags.makeindex > 0:
+            self.run_flags.makeindex -= 1
+            self._logger.info(f'{self.run_flags=}')
+
+    def _get_tmp_files_back(self, aux_includes: set[Path]) -> None:
+        """ Copy tmp files back from backup dir. """
+        for ext in self.EXT_KEPT + self.EXT_TMP:
+            filename = self.filename.with_suffix(ext)
+            self._file_copy(self.BKTEX_DIR / filename.name, filename)
+
+        for file in aux_includes:
+            aux_file = file.with_suffix('.aux')
+            self._file_copy(self.BKTEX_DIR / aux_file.name, aux_file)
+
+    def _file_match(self, filename: Path) -> bool:
+        """ Check if file and its backup exist and match. """
+        backup = self.BKTEX_DIR / filename.name
+        self._logger.info(f'Comparing {filename} VS {backup}')
+
+        if not filename.exists() or not backup.exists():
+            self._logger.warning(f'Comparing {filename} VS {backup}: missing file(s)')
+            return False
+
+        return cmp(filename, backup, shallow=False)
+
+    def _cmp_aux_toc(self, aux_includes: set[Path]) -> None:
+        """ Compare aux and toc files. """
+        # Check aux files
+        if not self._file_match(self.aux_filename):
+            self._logger.info(f'{self.aux_filename} not matching, rerun')
+            self._set_run_latex()
+            return
+
+        # No need to check if we know we rerun
+        for file in aux_includes:
+            aux_file = file.with_suffix('.aux')
+            if not self._file_match(aux_file):
+                self._logger.info(f'{aux_file} not matching, rerun')
+                self._set_run_latex()
+                return  # no need to continue checking
+
+        # Check TOC
+        toc_file = self.filename.with_suffix('.toc')
+        if toc_file.exists() and not self._file_match(toc_file):
+            # If we already know we need to rerun, do not check
+            # If there is no TOC in dir, do not check
+            self._logger.info(f'{toc_file} not matching, rerun')
+            self._set_run_latex()
+
+    def _cmp_index(self) -> None:
+        """ Compare index output files. """
+        idx_filename = self.filename.with_suffix('.idx')
+
+        if not idx_filename.exists():
+            # No index file, no need to check makeindex
+            self._logger.debug(f'{idx_filename} missing, not running index')
+            return
+
+        if not idx_filename.with_suffix('.ind').exists():
+            self._logger.debug('.ind missing, rerun index')
+            self._set_run_flag('makeindex')
+            return
+
+        if not self._file_match(idx_filename):
+            self._logger.debug(f'{idx_filename} mismatch, rerun index')
+            self._set_run_flag('makeindex')
+            return
+
+    def _backup_artifacts(self) -> None:
+        """ Store artifacts we need for next time. """
+        for filename in self.directory.iterdir():
+            if filename.is_dir():
+                continue
+
+            if filename.suffix in ['.swp', '.vimrc']:
+                continue
+
+            if filename.suffix not in self.EXT_KEPT + self.EXT_TMP:
+                continue
+
+            self._file_rename(filename, self.BKTEX_DIR / filename.name)
+
+    def _dvi2ps(self):
+        """ Convert DVI to PS. """
+        dvi_filename = self.filename.with_suffix('.dvi')
+
+        command = ['dvips']
+
+        # if dvipsmute:
+        #     command += ['-q']
+
+        command += [f'{dvi_filename}']
+
+        self.execute(command)
+        self._file_delete(dvi_filename)
+
+    def _customize_ps(self, output: Path):
+        """ Customize PS according to user settings. """
+        args = self.args[output]
+
+        if args.paper_format == 'a4' and args.n_per_page == 1:
+            self._logger.debug('A4 1 per page -> skip PS customize')
+            return
+
+        if args.n_per_page == 0:
+            message = 'Cannot arrange 0 per page'
+            self._logger.critical(message)
+            raise ValueError(message)
+
+        ps_file = self.filename.with_suffix('.ps')
+        tmp_file = self.directory / 'tmp.ps'
+
+        self._file_rename(ps_file, tmp_file)
+
+        command = [
+            'psnup',
+            f'-p{args.paper_format}',
+        ]
+
+        if args.n_per_page > 0:
+            command += [
+                f'-{args.n_per_page}',
+                f'-P{args.paper_format}',
+            ]
+
+        else:
+            # negative number is specially handled
+            n_per_page = -args.n_per_page
+            slide_width = '-W5.04in'
+            slide_height = '-H3.78in'
+
+            command += [
+                f'-{n_per_page}',
+                slide_width,
+                slide_height,
+            ]
+
+        command += [
+            f'{tmp_file}',
+            f'{ps_file}',
+        ]
+
+        self.execute(command)
+
+        self._file_delete(tmp_file)
+
+    def _ps2pdf(self, output: Path):
+        """ Convert PS to PDF. """
+        ps_filename = self.filename.with_suffix('.ps')
+
+        command = [
+            'ps2pdf',
+            f'-sPAPERSIZE={self.args[output].paper_format}',
+        ]
+
+        if self.args[output].no_rotate:
+            command += ['-dAutoRotatePages=/None']
+
+        command += [
+            f'{ps_filename}',
+            f'{output}',
+        ]
+
+        self.execute(command)
+        self._file_delete(ps_filename)
+
+    def _run_latex_etc(self, aux_includes: set[Path], bibs: set[Path], output: Path) -> None:
+        """ Run LaTeX and all other required commands. """
+        if self.run_flags.bibtex > 0 or self.run_flags.makeindex > 0:
+            self._set_run_latex()
+
+        if self.run_flags.latex == 0:
+            return
+
+        self._get_tmp_files_back(aux_includes)
+
+        while self.run_flags.latex > 0:
+            self.run_latex()
+
+        self._cmp_aux_toc(aux_includes)
+
+        # bibtex
+        for bib in bibs:
+            if not self._file_match(bib):
+                self._logger.debug(f'{bib} mismatch, rerun bibtex')
+                self._set_run_flag('bibtex')
+
+        while self.run_flags.bibtex > 0:
+            self.run_bibtex()
+
+        # makeindex
+        self._cmp_index()
+        while self.run_flags.makeindex > 0:
+            self.run_makeindex()
+
+        # LaTeX again
+        while self.run_flags.latex > 0:
+            self.run_latex()
+
+        self._backup_artifacts()
+
+        self._dvi2ps()
+        self._customize_ps(output)
+        self._ps2pdf(output)
+
+    def process_document(self, output: Path) -> None:
+        """ Process a single document. """
+        self._output_in_progress = output
+
+        self._logger.warning(f'Processing {output}: {self.args[output]}')
+
+        includes: set[Path] = {self.filename}
+        aux_includes: set[Path] = {self.filename.with_suffix('')}
+
+        self._parse_includes(self.filename, includes, aux_includes)
+        bibs = self._parse_bibs()
+        self._parse_listings()
+        self._parse_pictures()
+
+        aux_bktex = self.BKTEX_DIR / self.aux_filename.name
+        if not self.aux_filename.exists() and not aux_bktex.exists():
+            self._logger.info(f'{self.aux_filename} missing, run initial LaTeX')
+            self.run_latex(update_flag=False)
+            self._file_copy(self.aux_filename, aux_bktex)
+            self._set_run_flag('bibtex')
+
+        self._run_latex_etc(aux_includes, bibs, output)
+
+        # Back up bibs to check if changed
+        for bib in bibs:
+            self._file_copy(bib, self.BKTEX_DIR / bib.name)
+
+        if self.args[output].cp is not None:
+            self._file_copy(output, self.args[output].cp)
+
+        if self.args[output].mv is not None:
+            self._file_rename(output, self.args[output].mv)
+
+        if not self.args[output].no_open:
+            for command in ['gnome-open', 'open', 'evince', 'acroread']:
+                if run(f'command -v {command}', shell=True, check=False).returncode == 0:
+                    break
+
+            if self.args[output].dryrun:
+                self._logger.error(f'DRYRUN: {command} {output}')
+
+            else:
+                # Do not use execute so that it starts a background process and does not block here
+                self._logger.warning(f'Opening file with background process: {command} {output}')
+                Popen([command, str(output)], close_fds=True)  # pylint: disable=[consider-using-with]
+
+        self._output_in_progress = None
+
+    def run(self) -> None:
+        """
+        Run Forest, run!
+        """
+        self._logger.warning('\n   ***** You are running LaTeX PaWaAa !! *****\n')
+
+        self._rerun_if_newer(self.lapd_config)
+        self._rerun_if_newer(self.lapd_filename)
+
+        try:
+            for output_index, output in enumerate(self.args):
+                if len(self.args) > 1:
+                    self._logger.warning(f'Processing {output_index + 1}/{len(self.args)}')
+
+                self.process_document(output)
+
+        except KeyboardInterrupt:
+            self.cleanup(delete_all=True)
+            raise
+
+
+def parse_args(args=None) -> Namespace:
+    """ Parse arguments. """
+    parser = ArgumentParser(
+        description="""This scripts runs latex as many times as required,
+and also takes care of running bibtex, makeindex...
+
+All the arguments can also be set permanently in a config file, which is a yaml format.
+To set global arguments for all the files of the directory, write them in the file "latexpawa.lapd".
+To set arguments specific to each file, set them in "<filename>.lapd".
+
+For arguments requiring a value, write the argument name followed by a colon and the value.
+Arguments that are logical should be set only as 'arg'.
+The arguments must be on separated lines.
+Commented lines (beginning with #) are ignored.
+
+You can also provide different arguments for the same file with different output filenames.
+You specify each time the output filename (PDF) except for the default case (must be present)
+which will be the input filename::
+
+    file1.pdf:
+         arg1: blabla1
+         arg2: blabla2
+         arg3
+    file2.pdf:
+         arg1: blabla4
+         arg3
+    default:
+         arg1: blabla1
+         arg2: blabla5""")
+
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        action='count',
+        default=0,
+        help='increase logging',
+    )
+
+    parser.add_argument(
+        '-d',
+        '--dryrun',
+        action='store_true',
+        default=False,
+        help='only print commands but do not execute anything',
+    )
+
+    parser.add_argument(
+        '-pf',
+        '--paper-format',
+        choices=PAPER_FORMATS,
+        default='a4',
+        help='psnup output paper format',
+    )
+
+    parser.add_argument(
+        '-N',
+        '--n-per-page',
+        type=int,
+        default=1,
+        help='number of page per page to use for the layout of the final PDF',
+    )
+
+    parser.add_argument(
+        '--slides',
+        action='store_true',
+        default=False,
+        help='use the slides mode for a beamer document, implies no_rotate',
+    )
+
+    parser.add_argument(
+        '--handout',
+        action='store_true',
+        default=False,
+        help='use the handout mode for a beamer document, implies no_rotate and 2 pages per sheet',
+    )
+
+    parser.add_argument(
+        '--notes',
+        action='store_true',
+        default=False,
+        help='use the notes mode for a beamer document, implies no_rotate and 4 pages per sheet',
+    )
+
+    parser.add_argument(
+        '--no-rotate',
+        action='store_true',
+        default=False,
+        help='to prevent ps2pdf to automatically rotate your pages '
+             '(useful when working with graphs containing 90deg text)',
+    )
+
+    parser.add_argument(
+        '--cp',
+        help='Path to copy the PDF to',
+    )
+
+    parser.add_argument(
+        '--mv',
+        help='Path to move the PDF to. '
+             'Be aware: since the PDF will not be found, script will always rerun.',
+    )
+
+    parser.add_argument(
+        '-f',
+        '--force',
+        action='store_true',
+        default=False,
+        help='force run even if automatic detection would not',
+    )
+
+    parser.add_argument(
+        '--no-open',
+        action='store_true',
+        default=False,
+        help='do not open PDF at the end of the process',
+    )
+
+    parser.add_argument(
+        dest='filename',
+        help='filename of the input tex file',
+    )
+
+    parser.add_argument(
+        dest='output_filename',
+        nargs='?',
+        default=None,
+        help='filename of the output PDF file. '
+             'If omitted, replace .tex by .pdf in the input filename.',
+    )
+
+    args = parser.parse_args(args)
+
+    if int(args.slides) + int(args.handout) + int(args.notes) > 1:
+        raise ValueError('slides/handout/notes are mutually exsclusive')
+
+    if args.slides or args.handout or args.notes:
+        args.no_rotate = True
+
+    if args.handout:
+        args.n_per_page = 2
+    elif args.notes:
+        args.n_per_page = 4
+
+    return args
+
+
+def main(args=None) -> None:
+    """
+    Main function called when file is executed.
+    """
+    runner = LatexRunner(parse_args(args))
+    runner.run()
+
+
+if __name__ == '__main__':
+    main()
