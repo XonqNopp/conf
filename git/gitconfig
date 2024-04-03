@@ -10,8 +10,6 @@
 
 	# files
 	chmodx   = update-index --chmod=+x
-	gren = grep -n
-	grip = grep -in
 	gril = grep -il
 
 	# commit
@@ -33,7 +31,7 @@
 	aamend   = commit --amend -a
 	amende   = commit --amend --no-edit
 	aamende  = commit --amend --no-edit -a
-	ramend   = commit --amend --no-edit --reset-author
+	ramende  = commit --amend --no-edit --reset-author
 
 	# reset
 	resha     = reset --hard
@@ -50,22 +48,25 @@
 	rebi  = rebase -i
 	rebim = !git rebi $(git merge-base master HEAD)
 	recont = rebase --continue
-	rabo = rebase --abort
+	rabo  = rebase --abort
 	remas = rebase master
 	rebum = rebase upstream/master
-	frum  = !git fetch -p upstream && git rebum
 	rebalf = rebase -s recursive -Xignore-space-at-eol
 
 	# branches
-	co     = checkout
-	coo    = checkout -
-	com    = checkout master
-	cb     = checkout -b
+          sw     = switch
+          sww    = switch -
+          swm    = switch master
+          swc    = switch -c
+	co     = !echo "git sw"
+	coo    = !echo "git sww"
+	com    = !echo "git swm"
+	cb     = !echo "git swc"
 	br     = branch
 	bd     = branch -d
 	rewind = merge --no-ff
 	bra    = branch -va
-	pum    = !git com && git fetch -p && git pull
+	pum    = !git swm && git fetch -p && git pull
 
 	# remote
 	putsh = push --follow-tags
@@ -73,8 +74,6 @@
 	fep   = fetch -p
 	fap   = fetch -p --all
 	fup   = fetch -p upstream
-	pinup = pull   upstream  # must add branch when invoking
-	rebu  = rebase upstream  # must add branch when invoking
 	pushf = push --force-with-lease
 	pushu = push -u
 	pushup = push -u upstream
@@ -89,15 +88,12 @@
 
 	# log
 	slog  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)' -1
-	slogg = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)'
 	slob = !git slogg $(git merge-base master HEAD)..HEAD
 	slub = !git slogg $(git merge-base upstream/master HEAD)..HEAD
 	browse2vim = log --graph --all --pretty=format:'%h {%ci} %an %% %s%d'
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
 	log-check  = log --pretty=fuller --name-status -1 --show-signature
-	log-checkk = log --pretty=fuller --name-status
 	log-stat   = log --pretty=fuller --stat -1
-	log-statt  = log --pretty=fuller --stat
 	log-deleted  = log -1 --full-history --
 	log-deletedd = log --full-history --
 	log-merges  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s%n%n%b%n%n' --merges
