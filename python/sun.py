@@ -7,6 +7,8 @@ Compute angles of the sun above the horizon for different latitudes and differen
    * docstrings
    * execute
 """
+import venv_autouse.file
+
 from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
