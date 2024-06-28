@@ -270,11 +270,10 @@ endif
 "augroup END
 ""
 
-if !&diff && &columns > 123
-	autocmd VimEnter * NERDTree
-	autocmd VimEnter * wincmd l
-	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-endif
+"if !&diff && &columns > 123
+"	autocmd VimEnter * NERDTree
+"	autocmd VimEnter * wincmd l
+"	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"endif
 
 autocmd BufReadPre *.ovr set ft=cpp
-
