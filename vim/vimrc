@@ -253,6 +253,11 @@ if filereadable(vimrc2_path . ".vimrc2")
 	execute "source " . escape(vimrc2_path, " ") . ".vimrc2"
 endif
 
+" Close quickfix/location list if the last open in tab
+if exists('##QuitPre')
+    autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+endif
+
 ""
 "" to use environment variables, use expand("$VAR")
 ""
