@@ -20,8 +20,6 @@ let MRU_File = g:VimDir . "/mru_files.txt"
 
 let g:LargeFile = 5  " [MB]
 
-let g:NERDTreeDirArrows = 1
-
 let g:gitgutter_highlight_lines = 0
 
 let g:pythonMaxLineLength = 119
@@ -274,11 +272,5 @@ endif
 	"autocmd BufWritePost *.bin,*.hex,*.BIN,*.HEX  set nomod | endif
 "augroup END
 ""
-
-"if !&diff && &columns > 123
-"	autocmd VimEnter * NERDTree
-"	autocmd VimEnter * wincmd l
-"	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-"endif
 
 autocmd BufReadPre *.ovr set ft=cpp

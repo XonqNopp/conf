@@ -58,11 +58,6 @@ function TLImLabel(n)
 	let l:winnr = tabpagewinnr(a:n)
 	let l:curbuf = l:buflist[l:winnr-1]
 	let l:bufnumber = tabpagewinnr(a:n, "$")
-	for bufIndex in l:buflist
-		if match(bufname(bufIndex), "NERD_tree") == 0 && l:bufnumber > 1 && bufIndex != l:curbuf
-			let l:bufnumber -= 1
-		endif
-	endfor
 	let l:tabnumber = tabpagenr("$")
 	let l:back = ""
 	"" tab number if more than one
