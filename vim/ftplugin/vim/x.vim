@@ -1,7 +1,7 @@
 setlocal foldmethod=marker
 setlocal foldminlines=3
 setlocal cindent
-if &ft == "vim"
+if &filetype ==# 'vim'
 	"" To (un)comment
-	let b:ComChar = "\""
+	let b:ComChar = '"'
 endif

@@ -110,9 +110,9 @@ function! MapComment() range
 	if exists('b:ComChar')
 		let l:ComCharEscaped = EscapeBchars(b:ComChar)
 		let l:ComCharUnEscaped = b:ComChar
-		let l:ComBeginCheckSingle = '^\\s*' . l:ComCharEscaped
+		let l:ComBeginCheckSingle = "^\\s*" . l:ComCharEscaped
 			"        /^(\s*)(##?[^ ]|#[^# ]|[^#\s])/ ???
-		let l:ComCheckSingle = '^\\(\\s*\\)\\(' . l:ComCharEscaped . l:ComCharEscaped . '\\?[^ ]\\|' . l:ComCharEscaped . '[^' . l:ComCharUnEscaped . ' ]\\|[^' . l:ComCharUnEscaped . '\\t ]\\)'
+		let l:ComCheckSingle = "^\\(\\s*\\)\\(" . l:ComCharEscaped . l:ComCharEscaped . "\\?[^ ]\\|" . l:ComCharEscaped . "[^" . l:ComCharUnEscaped . " ]\\|[^" . l:ComCharUnEscaped . "\\t ]\\)"
 	endif
 	" }}}
 	" Preparing stuff with ComCharStart and ComCharStop {{{
@@ -135,13 +135,13 @@ function! MapComment() range
 		let l:ComCharStopUnEscaped = b:ComCharStop
 		let l:ComCharStartPat = EscapeBchars(b:ComCharStart, b:ComCharStartMore, 2)
 		let l:ComCharStopPat = EscapeBchars(b:ComCharStop, b:ComCharStopMore, -2)
-		let l:ComCheckCouple = '^\\(\\s*\\)'
+		let l:ComCheckCouple = "^\\(\\s*\\)"
 		" Wait... what I want is it matches my pat ONLY if it is already a comment...
 		" I think I cannot do these two checks together...
 		let l:ComCheckCouple .= l:ComCharStartPat
-		let l:ComCheckCouple .= '.\\{-}'
+		let l:ComCheckCouple .= ".\\{-}"
 		let l:ComCheckCouple .= l:ComCharStopPat
-		let l:ComBeginCheckCouple = '^\\s*' . l:ComCharStartEscaped
+		let l:ComBeginCheckCouple = "^\\s*" . l:ComCharStartEscaped
 	endif
 	" }}}
 	" Looping through the lines and treat them {{{
@@ -150,15 +150,15 @@ function! MapComment() range
 		let l:go_line += 1
 		let l:SpaceGroup = 1
 		let l:TextGroup = 2
-		let l:string = l:go_line . 's/^'
-		if match(getline(l:go_line),'^\\s') != -1
-			let l:string .= '\\(\\s\\+\\)'
+		let l:string = l:go_line . "s/^"
+		if match(getline(l:go_line),"^\\s") != -1
+			let l:string .= "\\(\\s\\+\\)"
 		else
 			let l:SpaceGroup = -1
 			let l:TextGroup = 1
 		endif
 		"if l:choice == 'single'
-		let l:string .= '\\([^ \\t].*\\)'
+		let l:string .= "\\([^ \\t].*\\)"
 		"echomsg l:ComCheck
 		let l:the_line = getline(l:go_line)
 		" If ComChar, check ComBeginCheckSingle
@@ -191,14 +191,14 @@ function! MapComment() range
 				" Treating single case {{{
 				if l:SpaceGroup > 0
 					if &foldmethod !=# 'indent' && g:MapComment_at_beginning
-						let l:string .= l:ComCharEscaped . '\\' . l:SpaceGroup
+						let l:string .= l:ComCharEscaped . "\\" . l:SpaceGroup
 					else
-						let l:string .= '\\' . l:SpaceGroup . l:ComCharEscaped
+						let l:string .= "\\" . l:SpaceGroup . l:ComCharEscaped
 					endif
 				else
 					let l:string .= l:ComCharEscaped
 				endif
-				let l:string .= '\\' . l:TextGroup
+				let l:string .= "\\" . l:TextGroup
 				" }}}
 			else
 				" Treating couple case {{{
@@ -206,12 +206,12 @@ function! MapComment() range
 					if &foldmethod !=# 'indent' && g:MapComment_at_beginning
 						let l:string .= l:ComCharStartEscaped . '\\' . l:SpaceGroup
 					else
-						let l:string .= '\\' . l:SpaceGroup . l:ComCharStartEscaped
+						let l:string .= "\\" . l:SpaceGroup . l:ComCharStartEscaped
 					endif
 				else
 					let l:string .= l:ComCharStartEscaped
 				endif
-				let l:string .= '\\' . l:TextGroup
+				let l:string .= "\\" . l:TextGroup
 				let l:string .= l:ComCharStopEscaped
 				" }}}
 			endif
@@ -219,8 +219,8 @@ function! MapComment() range
 			"echomsg l:string
 			if l:the_line ==# ''
 				" Following should be tested with ComCharStart-Stop and tabs
-				let l:string = substitute(l:string, '\/[^/]*\/', '\/^$\/', '')
-				let l:string = substitute(l:string, '\\\\1', '', '')
+				let l:string = substitute(l:string, "\/[^/]*\/", "\/^$\/", '')
+				let l:string = substitute(l:string, "\\\\1", '', '')
 			endif
 			"echomsg l:string
 			execute l:string
@@ -254,9 +254,9 @@ function! MapUnComment() range
 		" Storing the escaped ComChar
 		let l:ComCharEscaped = EscapeBchars(b:ComChar)
 		" Making test string
-		let l:ComStringSingle = '^\\(\\s*\\)\\(' . l:ComCharEscaped . l:ComCharEscaped . '\\?[^ ]\\|' . l:ComCharEscaped . '[^' . l:ComCharUnEscaped . ' ]\\|[^' . l:ComCharUnEscaped . '\\t ]\\)'
+		let l:ComStringSingle = "^\\(\\s*\\)\\(" . l:ComCharEscaped . l:ComCharEscaped . "\\?[^ ]\\|" . l:ComCharEscaped . "[^" . l:ComCharUnEscaped . " ]\\|[^" . l:ComCharUnEscaped . "\\t ]\\)"
 		" Making substitution string
-		let l:ComSubstSingle = '^\\(\\s*\\)' . l:ComCharEscaped . '\\(.*\\)$'
+		let l:ComSubstSingle = "^\\(\\s*\\)" . l:ComCharEscaped . "\\(.*\\)$"
 	endif
 	" }}}
 	" Escaping ComCharSt(art|op) {{{
@@ -268,8 +268,8 @@ function! MapUnComment() range
 		let l:ComCharStopUnEscaped = b:ComCharStop
 		let l:ComCharStartPat = EscapeBchars(b:ComCharStart, b:ComCharStartMore, 4)
 		let l:ComCharStopPat = EscapeBchars(b:ComCharStop, b:ComCharStopMore, -4)
-		let l:ComStringCouple = '^\\(\\s*\\)' . l:ComCharStartPat . '.\\{-}' . l:ComCharStopPat
-		let l:ComSubstCouple = '^\\(\\s*\\)' . l:ComCharStartEscaped . '\\(.*\\)' . l:ComCharStopEscaped . '$'
+		let l:ComStringCouple = "^\\(\\s*\\)" . l:ComCharStartPat . ".\\{-}" . l:ComCharStopPat
+		let l:ComSubstCouple = "^\\(\\s*\\)" . l:ComCharStartEscaped . "\\(.*\\)" . l:ComCharStopEscaped . "$"
 	endif
 	" }}}
 	let l:ComString = ''
@@ -310,14 +310,14 @@ function! MapUnComment() range
 		endif
 		"echoerr l:ComString
 		if l:thisline =~# l:ComString
-			let l:UnCom = 's/' . l:ComSubst . '/\\1\\2/'
+			let l:UnCom = "s/" . l:ComSubst . "/\\1\\2/"
 			"echomsg l:UnCom
 			execute l:UnCom
 		endif
 		let l:string = l:go_line . 's/'
 		let l:string .= l:ComString
 		let l:string .= '/'
-		let l:string .= '\\1\\2'
+		let l:string .= "\\1\\2"
 		let l:string .= '/g'
 		"if l:do_proceed
 			if l:go_line == l:cur_line
