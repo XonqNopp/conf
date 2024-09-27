@@ -82,6 +82,8 @@
 	# diff
 	df = difftool
 	dfhat = difftool HEAD^
+	dfhatt = difftool HEAD^^ HEAD^
+	dfhattt = difftool HEAD^^^ HEAD^^
 	mt = mergetool
 	dispatch = format-patch -M -n -s -o outgoing
 	difff = diff --name-status
