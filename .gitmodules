@@ -1,27 +1,34 @@
 [submodule "vim/pack/plugins/start/LargeFile"]
 	path = vim/pack/plugins/start/LargeFile
 	url = https://github.com/vim-scripts/LargeFile.git
+          ignore = dirty
 [submodule "vim/pack/plugins/start/MultipleSearch"]
 	path = vim/pack/plugins/start/MultipleSearch
 	url = https://github.com/vim-scripts/MultipleSearch.git
+          ignore = dirty
 [submodule "vim/pack/plugins/start/vim-gitgutter"]
 	path = vim/pack/plugins/start/vim-gitgutter
 	url = https://github.com/airblade/vim-gitgutter.git
+          ignore = dirty
 [submodule "vim/pack/plugins/start/vim-man"]
 	path = vim/pack/plugins/start/vim-man
 	url = https://github.com/vim-utils/vim-man.git
+          ignore = dirty
 [submodule "vim/pack/plugins/start/vim-speeddating"]
 	path = vim/pack/plugins/start/vim-speeddating
 	url = https://github.com/tpope/vim-speeddating.git
+          ignore = dirty
 [submodule "bundle/git-sub"]
 	path = bundle/git-sub
 	url = https://github.com/XonqNopp/git-sub.git
 [submodule "vim/pack/plugins/start/openssl.vim"]
 	path = vim/pack/plugins/start/openssl.vim
 	url = https://github.com/vim-scripts/openssl.vim.git
+          ignore = dirty
 [submodule "vim/pack/plugins/start/ale"]
 	path = vim/pack/plugins/start/ale
 	url = https://github.com/dense-analysis/ale.git
+          ignore = dirty
 [submodule "zsh/oh-my-zsh"]
 	path = zsh/oh-my-zsh
 	url = https://github.com/ohmyzsh/ohmyzsh.git
