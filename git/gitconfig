@@ -47,6 +47,7 @@
 	# rebase
 	rebi  = rebase -i
 	rebim = !git rebi $(git merge-base master HEAD)
+	rebimnoa = !git rebim --no-autosquash
 	recont = rebase --continue
 	rabo  = rebase --abort
 	remas = rebase master
