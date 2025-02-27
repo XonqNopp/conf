@@ -15,6 +15,7 @@ export LANG="en_US.UTF-8"
 export EDITOR="vim"
 export VISUAL="vim"
 export SUDO_EDITOR="vim"
+alias please="sudo"
 # Homepage for elinks:
 export WWW_HOME="http://www.bash.org/?latest"
 
