@@ -170,19 +170,16 @@ set encoding=utf8
 " F keys
 "  1: update/make/latex
 "  2: copiable
-"  3: 
+"  3: git cofe & git push
 "  4: latex: toggle textwidth
 "  5: comment
 "  6: uncomment
 "  7:
 "  8: invhlsearch
 "  9: invlist
-" The following may cause some issues due to system settings:
-" 10: 
-" 11: 
-" 12: 
-" Map default F1
+" The following may cause some issues due to system settings: F10 F11 F12
 map <buffer> <silent> <F1> :update<cr>
+map <buffer> <silent> <F3> :!git cofe % && git push<cr>
 " (Un)hide the search pattern
 map <silent> <F8> :set invhlsearch<cr>
 " (Un)hide the invisible characters
