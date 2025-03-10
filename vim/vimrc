@@ -1,5 +1,5 @@
 " vimrc
-if has("gui_running") || has("win16") || has("win32") || has("win64") || has("win95")
+if has('gui_running') || has('win16') || has('win32') || has('win64') || has('win95')
 	quit
 endif
 set t_Co=8
@@ -9,14 +9,14 @@ set runtimepath+=$vash/vim,$vash/vim/after
 set packpath+=$vash/vim,$vash/vim/after
 set viewdir=$vash/vim/view
 
-let g:HOME = expand("$HOME")
-let g:vash = g:HOME . "/.wash"
-let g:VimDir = g:vash . "/vim"
+let g:HOME = expand('$HOME')
+let g:vash = g:HOME . '/.wash'
+let g:VimDir = g:vash . '/vim'
 
-execute "autocmd BufWritePost " . g:VimDir . "vimrc,~/.vimrc source ~/.vimrc"
+execute 'autocmd BufWritePost ' . g:VimDir . 'vimrc,~/.vimrc source ~/.vimrc'
 " }}}
 " Defining global and script variables {{{
-let MRU_File = g:VimDir . "/mru_files.txt"
+let MRU_File = g:VimDir . '/mru_files.txt'
 
 let g:LargeFile = 5  " [MB]
 
@@ -25,12 +25,12 @@ let g:gitgutter_highlight_lines = 0
 let g:pythonMaxLineLength = 119
 let g:pymode_python = 'python3'
 let g:pymode_options_max_line_length = g:pythonMaxLineLength
-let g:pymode_lint_ignore = ["E221", "E265", "E266", "W391"]
-let g:pymode_lint_options_mccabe = {"complexity": 42}
-"" E221: multiple whitespace before operator
-"" E265: block comment should start with '# '
-"" E266: too many '#' leading block comment
-"" W391: newline at end
+let g:pymode_lint_ignore = ['E221', 'E265', 'E266', 'W391']
+let g:pymode_lint_options_mccabe = {'complexity': 42}
+" E221: multiple whitespace before operator
+" E265: block comment should start with '# '
+" E266: too many '#' leading block comment
+" W391: newline at end
 
 let g:b2h_use_css = 1
 let g:b2h_output_xhtml = 1
@@ -39,47 +39,52 @@ let g_b2h_meta_expires = 0
 let g:b2h_no_display_credit = 1
 
 let g:timestamp_modelines = 10
-let g:timestamp_rep = "%a %Y-%m-%d %H:%M:%S %Z"
+let g:timestamp_rep = '%a %Y-%m-%d %H:%M:%S %Z'
 let g:timestamp_regexp = '\v\C%(<%(%([lL]ast )?%([cC]hanged?|[mM]odified))\s*:\s+)@<=.*|TIMESTAMP'
 
 let g:ale_open_list=1
 let g:ale_lint_on_text_changed=0
 " }}}
-"" Configuration {{{
-if has("autocmd")
-	"" Read template file if available for new files
-	autocmd BufNewFile * silent! 0read $vash/vim/templates/tpl.%:e
-	autocmd BufNewFile * silent execute "normal Gddgg"
+" Configuration {{{
+if has('autocmd')
+	augroup templates
+		" Read template file if available for new files
+		autocmd BufNewFile * silent! 0read $vash/vim/templates/tpl.%:e
+		autocmd BufNewFile * silent execute 'normal Gddgg'
+	augroup end
 
-	"" Redo help tags when doc file written
-	autocmd BufWritePost $vash/vim/doc/* helptags $vash/vim/doc
-	autocmd BufWritePost $vash/vim/doc/* echomsg " helptags done again"
-	"" What is the command to read the error messages again??? messages
+	" Redo help tags when doc file written
+	augroup HelpTags
+		autocmd BufWritePost $vash/vim/doc/* helptags $vash/vim/doc
+		autocmd BufWritePost $vash/vim/doc/* echomsg ' helptags done again'
+		" What is the command to read the error messages again??? messages
+	augroup end
 
-	"" Restore previous position
-	autocmd BufRead * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+	" Restore previous position
+	augroup Restore
+		autocmd BufRead * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+	augroup end
 endif
-"" }}}
-""" Some set stuff {{{
-let mapleader = ","
-"" default is backslash
-let maplocalleader = "\\"
-"" These could be \\ (default) , ; wihtout causing problems
-"" Vim actions enabled {{{
-"" See :help runtimepath
-"" Colorscheme
+" }}}
+" Some set stuff {{{
+let mapleader = ','
+" default is backslash
+let maplocalleader = '\\'
+" These could be \\ (default) , ; wihtout causing problems
+" Vim actions enabled {{{
+" See :help runtimepath
+" Colorscheme
 colorscheme pablo
 " ron is not good in diff
 " pablo slate
 filetype on                     " Enable detection of filetype
 filetype plugin indent on       " Enables sourcing right files
 syntax enable                   " To color the text
-"" }}}
+" }}}
 set background=dark             " Because of my black background
 "set shell=/bin/sh				" To have an environment already set
 set number						" Displays the numbers of the lines
 set ruler						" Displays the cursor's position below
-set nocompatible				" Remove the compatibility with vi
 set virtualedit=all				" To position the cursor everywhere I want
 set showcmd						" To tell in the right-lower cornoer what command I have tapped
 set title						" To display the title of the file in the terminal header bar
@@ -87,10 +92,10 @@ set history=50					" To keep 50 lines of commands in memory
 set winminheight=0				" you can understand it by yoursefl...
 set titleold=Fly,\ fly\ little\ man...\ And\ here\ you\ come\ to\ Vim\ again!
 set backspace=eol,indent,start	" To the backspace key to work as usual
-"" Suffixces of files we usually won't edit:
+" Suffixces of files we usually won't edit:
 set suffixes=.bak,~,.o,.obj,.info,.swp,.DS_Store,.pdf,.exe
 set listchars+=tab:T-,trail:.	" For invisible characters
-"" Option for indentation in C++
+" Option for indentation in C++
 set cinoptions=:1s,(0,w1,l1,+2s,u0,U1
 					  			" :1s = indent case statement one shiftwidth
 								" (0 = indent from unclosed parantheses
@@ -105,16 +110,18 @@ set cinoptions=:1s,(0,w1,l1,+2s,u0,U1
 set exrc  " Allow local vimrc in projects
 set secure  " Do not allow local vimrc to screw me
 
-"" To have the right matching of pairs
-"" I am not able to add these ones: ``:'',begin:end,/*:*/
+" To have the right matching of pairs
+" I am not able to add these ones: ``:'',begin:end,/*:*/
 "set printexpr=system('lpr' . (&printdevice == '' ? '' : ' -P' . &printdevice) . ' ' . v:fname_in) . delete(v:fname_in) + v:shell_error
 set printexpr=ConfirmPrinting()
 set nomodeline
 set modelines=0
-autocmd BufRead,BufNewFile $vash/* set modeline
-autocmd BufRead,BufNewFile $vash/* set modelines=3
-""
-"" Everything about special spaces {{{
+augroup ModeLines
+	autocmd BufRead,BufNewFile $vash/* set modeline
+	autocmd BufRead,BufNewFile $vash/* set modelines=3
+augroup end
+
+" Everything about special spaces {{{
 set expandtab					" To have spaces instead of tabs
 set tabstop=10					" Number of spaces for a tab, make it clear it is a tab
 set shiftwidth=4				" Number of spaces for indentation
@@ -123,67 +130,67 @@ set scrolljump=3				" Number of line to jump when at scrolloff
 "set smartindent
 "set cindent
 set linebreak
-"" }}}
-"" Split {{{
+" }}}
+" Split {{{
 set splitright					" vsplit the screen on the right
 set nosplitbelow				" split the screen above
 "set noequalalways				" Does not resize windows after opening or closing buffer
-"" }}}
-"" Search {{{
+" }}}
+" Search {{{
 set nohlsearch					" Not to higlight what I look for
 set incsearch					" To highlight before ending typing (don't forget to type the enter key anyway).
 set ignorecase
 set smartcase					" To ignore case in searches but if I make a special one
 set shortmess-=S  " tell about where in search items we are
-"" }}}
-"" Backup {{{
+" }}}
+" Backup {{{
 set updatetime=60000			" I don't need to have a backup each 4 seconds, one minute is largely sufficient...
 set autowrite					" Write the file when switching on superposed buffers
-"" }}}
+" }}}
 "setlocal foldcolumn=2
 "setlocal foldminlines=2
 set foldcolumn=2
 set foldminlines=2
 "set  cryptmethod=blowfish
-"" }}}
-""" Language {{{
-if has("language")
+" }}}
+" Language {{{
+if has('language')
 	" To have it in english
 	language en.utf8
 	"language messages en_GB
 	"language ctype en_GB
 	"language time en_GB
 end
-"" }}}
-""" Encoding {{{
+" }}}
+" Encoding {{{
 set encoding=utf8
-"" To have the special spaces shown:
-"" }}}
-""" Some key mappings {{{
-"" F keys
-""  1: update/make/latex
-""  2: copiable
-""  3: 
-""  4: latex: toggle textwidth
-""  5: comment
-""  6: uncomment
-""  7:
-""  8: invhlsearch
-""  9: invlist
-"" The following may cause some issues due to system settings:
-"" 10: 
-"" 11: 
-"" 12: 
-"" Map default F1
+" To have the special spaces shown:
+" }}}
+" Some key mappings {{{
+" F keys
+"  1: update/make/latex
+"  2: copiable
+"  3: 
+"  4: latex: toggle textwidth
+"  5: comment
+"  6: uncomment
+"  7:
+"  8: invhlsearch
+"  9: invlist
+" The following may cause some issues due to system settings:
+" 10: 
+" 11: 
+" 12: 
+" Map default F1
 map <buffer> <silent> <F1> :update<cr>
-"" (Un)hide the search pattern
+" (Un)hide the search pattern
 map <silent> <F8> :set invhlsearch<cr>
-"" (Un)hide the invisible characters
+" (Un)hide the invisible characters
 map <silent> <F9> :set invlist<cr>
-"" To move as usual with the arrows in normal mode
+" To move as usual with the arrows in normal mode
 "map <silent> <up> gk
 "map <silent> <down> gj
-"" To navigate easily:
+" To navigate easily:
 if &diff
 	nmap <cr>  ]c
 	nmap <bs>  [c
@@ -193,76 +200,75 @@ else
 	nmap <bs> :cprevious<cr>zz
 	nmap <silent> <tab> /#&%<cr>zvxxs
 endif
-""
-"" Insert template below cursor
+
+" Insert template below cursor
 "nmap TTT execute "read Template." . expand("%:e") . "<cr>"
-""
-"" Using yy to yank the current line allows us to map Y to another command
+
+" Using yy to yank the current line allows us to map Y to another command
 nnoremap Y y$
-"" Using Q (normally used to enter ex mode) instead of qq (used many times)
+" Using Q (normally used to enter ex mode) instead of qq (used many times)
 "map Q @q
-"" Not working...
-""
-"" Using REAL regexp for the search
+" Not working...
+
+" Using REAL regexp for the search
 "nnoremap / /\v
 "vnoremap / /\v
 "cnoremap s/ s/\v
-"" Not very good...
-""
-"" Search for single char under cursor (code: ga)
-"" <C-R> waits for register ID (" is unnamed)
+" Not very good...
+
+" Search for single char under cursor (code: ga)
+" <C-R> waits for register ID (" is unnamed)
 nnoremap <leader>ch vy/<C-R>"<cr>ga
-""
-"" Undo by branches (must think about it)
+
+" Undo by branches (must think about it)
 "noremap u g-
 "noremap <c-r> g+
-""
-"" Prevent Q to enter ex mode:
+
+" Prevent Q to enter ex mode:
 map Q :echo "You just typed Q, if you want to enter EX mode, use the command gQ or come back invoking ex"<cr>
-""
-"" For fun:
+
+" For fun:
 map <leader>rlri :set invrightleft<cr>:set invrevins<cr>
-"" }}}
-"" Some registers {{{
-let @j = "j."
-let @k = "k."
-let @a = "yyp"
-let @x = "yyp"
-"" }}}
-""
-if filereadable("Skeleton." . expand("%:e"))
-	autocmd BufNewFile *.* execute "0read Skeleton." . expand("%:e")
-	autocmd BufNewFile *.* execute "normal Gddgg"
-	autocmd BufNewFile *.* execute "normal zR"
+" }}}
+" Some registers {{{
+let @j = 'j.'
+let @k = 'k.'
+let @a = 'yyp'
+let @x = 'yyp'
+" }}}
+
+if filereadable('Skeleton.' . expand('%:e'))
+	augroup Skeleton
+		autocmd BufNewFile *.* execute '0read Skeleton.' . expand('%:e')
+		autocmd BufNewFile *.* execute 'normal Gddgg'
+		autocmd BufNewFile *.* execute 'normal zR'
+	augroup end
 endif
-"if filereadable("Skeleton.tex")
-	"autocmd BufNewFile *.tex execute "0read Skeleton.tex"
-	"autocmd BufNewFile *.tex execute "normal Gddgg"
-	"autocmd BufNewFile *.tex execute "normal zR"
-"endif
-""
-"" Load other config files
-""
-let vimrc2_path = expand("%:p:h")
-if vimrc2_path != "/"
-	let vimrc2_path = vimrc2_path . "/"
+
+" Load other config files
+
+let vimrc2_path = expand('%:p:h')
+if vimrc2_path !=? '/'
+	let vimrc2_path = vimrc2_path . '/'
 endif
-if filereadable(vimrc2_path . ".vimrc2")
-	execute "source " . escape(vimrc2_path, " ") . ".vimrc2"
+if filereadable(vimrc2_path . '.vimrc2')
+	execute 'source ' . escape(vimrc2_path, ' ') . '.vimrc2'
 endif
 
 " Close quickfix/location list if the last open in tab
 if exists('##QuitPre')
-    autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+    augroup LocList
+        autocmd QuitPre * if &filetype != 'qf' | silent! lclose | endif
+    augroup end
 endif
 
-""
-"" to use environment variables, use expand("$VAR")
-""
-"" Editing binary files
-"" vim -b : edit binary using xxd-format! (but the following 'Binary' has no special meaning...
+
+" to use environment variables, use expand("$VAR")
+
+" Editing binary files
+" vim -b : edit binary using xxd-format! (but the following 'Binary' has no special meaning...
 "augroup Binary
-""	autocmd BufReadPre   *.bin,*.hex,*.BIN,*.HEX  let &bin=1
+	"autocmd BufReadPre   *.bin,*.hex,*.BIN,*.HEX  let &bin=1
 	"autocmd BufReadPre   *.bin,*.hex,*.BIN,*.HEX  setlocal binary
 	"autocmd BufRead  *.bin,*.hex,*.BIN,*.HEX  if &binary | %!xxd
 	"autocmd BufRead  *.bin,*.hex,*.BIN,*.HEX  set ft=xxd | endif
@@ -271,6 +277,8 @@ endif
 	"autocmd BufWritePost *.bin,*.hex,*.BIN,*.HEX  if &binary | %!xxd
 	"autocmd BufWritePost *.bin,*.hex,*.BIN,*.HEX  set nomod | endif
 "augroup END
-""
 
-autocmd BufReadPre *.ovr set ft=cpp
+
+augroup ovr
+	autocmd BufReadPre *.ovr set ft=cpp
+augroup end
