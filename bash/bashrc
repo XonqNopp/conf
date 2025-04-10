@@ -5,7 +5,7 @@ source $HOME/.wash/shell/config.sh
 # Special stuff {{{
 # I don't want to save many same commands and other short ones:
 HISTIGNORE="&:help:info:exit:ls:ll:cd:cd -:pw:pwd:bc"
-HISTIGNORE="${HISTIGNORE}:git st"
+HISTIGNORE="${HISTIGNORE}:git st:git pushf"
 HISTIGNORE="${HISTIGNORE}:vash:vimpwd"
 export HISTIGNORE
 # Setting size of bash_history
