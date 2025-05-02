@@ -46,28 +46,28 @@
 
 	# rebase
 	rebi  = rebase -i
-	rebim = !git rebi $(git merge-base master HEAD)
-	rebimnoa = !git rebim --no-autosquash
+	rebimr = !git rebi $(git merge-base master HEAD)
+	rebimn = !git rebi $(git merge-base main HEAD)
+	rebimrnoa = !git rebimr --no-autosquash
+	rebimnnoa = !git rebimn --no-autosquash
 	recont = rebase --continue
 	rabo  = rebase --abort
-	remas = rebase master
-	rebum = rebase upstream/master
+	rebumr = rebase upstream/master
+	rebumn = rebase upstream/main
 	rebalf = rebase -s recursive -Xignore-space-at-eol
 
 	# branches
           sw     = switch
           sww    = switch -
-          swm    = switch master
+          swmr   = switch master
+          swmn   = switch main
           swc    = switch -c
-	co     = !echo "git sw"
-	coo    = !echo "git sww"
-	com    = !echo "git swm"
-	cb     = !echo "git swc"
 	br     = branch
 	bd     = branch -d
 	rewind = merge --no-ff
 	bra    = branch -va
-	pum    = !git swm && git fetch -p && git pull
+	pumr   = !git swmr && git fetch -p && git pull
+	pumn   = !git swmn && git fetch -p && git pull
 
 	# remote
 	putsh = push --follow-tags
@@ -91,8 +91,8 @@
 
 	# log
 	slog  = log --graph --pretty=format:'%C(red)%h%C(reset) -%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)%an%C(reset)' -1
-	slob = !git slogg $(git merge-base master HEAD)..HEAD
-	slub = !git slogg $(git merge-base upstream/master HEAD)..HEAD
+	slob = !git slog $(git merge-base master HEAD)..HEAD
+	slub = !git slog $(git merge-base upstream/master HEAD)..HEAD
 	browse2vim = log --graph --all --pretty=format:'%h {%ci} %an %% %s%d'
 	bo         = !git browse2vim | vim -S $HOME/.wash/vim/ftplugin/git/browse.vim -nRM -
 	log-check  = log --pretty=fuller --name-status -1 --show-signature
