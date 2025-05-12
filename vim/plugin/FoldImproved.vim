@@ -123,14 +123,12 @@ function FoldImproved()
     " set text
     let l:rightmargin = '  '  " because other plugins will shift display to right and we won't know here
     let l:rightpadding = ''
-    if strwidth(v:foldlevel) == 2
+    if strwidth(v:foldlevel) == 1
         let l:rightpadding = '0'
-    elseif strwidth(v:foldlevel) == 1
-        let l:rightpadding = '00'
     endif
     let l:rightstr = v:folddashes . 'FL' . l:rightpadding . v:foldlevel . l:rightmargin
 
-    let l:leftstr = v:foldend . ' (' . l:foldedlines . 'l' . '=' . l:foldedpercent . ') ' . l:name
+    let l:leftstr = v:foldend . ': ' . l:foldedlines . 'l (' . l:foldedpercent . ')   ' . l:name
 
     if strwidth(l:leftstr) >= l:textwidth
         let newwidth = l:textwidth - 2
