@@ -54,6 +54,8 @@
 	rabo  = rebase --abort
 	rebumr = rebase upstream/master
 	rebumn = rebase upstream/main
+	rebomr = rebase origin/master
+	rebomn = rebase origin/main
 	rebalf = rebase -s recursive -Xignore-space-at-eol
 
 	# branches
@@ -75,9 +77,11 @@
 	fep   = fetch -p
 	fap   = fetch -p --all
 	fup   = fetch -p upstream
+	fop   = fetch -p origin
 	pushf = push --force-with-lease
 	pushu = push -u
 	pushup = push -u upstream
+	pushuo = push -u origin
 	stapup = !git stash && git pull && git stash pop
 
 	# diff
