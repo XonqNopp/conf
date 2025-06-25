@@ -81,7 +81,7 @@
 	pushf = push --force-with-lease
 	pushu = push -u
 	pushup = push -u upstream
-	pushuo = push -u origin
+	pushor = push -u origin
 	stapup = !git stash && git pull && git stash pop
 
 	# diff
