@@ -35,3 +35,6 @@
 [submodule "zsh/plugins/zsh-autosuggestions"]
 	path = zsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "vim/pack/github/start/copilot.vim"]
+	path = vim/pack/github/start/copilot.vim
+	url = https://github.com/github/copilot.vim.git
