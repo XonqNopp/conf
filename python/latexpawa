@@ -401,8 +401,8 @@ class LatexRunner:
             message += f': {error_message}'
 
         message += '\n\n'
-        message += f'STDOUT: {process.stdout.decode()}\n\n'
-        message += f'STDERR: {process.stderr.decode()}'
+        message += f'STDOUT: {process.stdout.decode() if process.stdout is not None else None}\n\n'
+        message += f'STDERR: {process.stderr.decode() if process.stderr is not None else None}'
         self._logger.critical(message)
         raise RuntimeError(message)
 
