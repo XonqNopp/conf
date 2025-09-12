@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Custom scripts
-PATH="$PATH:/home/induni/.wash/phonak/bin"
-PATH="$PATH:/home/induni/workspace/helios/helios/tools/bin"
+PATH="$PATH:$HOME/.wash/phonak/bin"
+PATH="$PATH:$HOME/workspace/helios/helios/tools/bin"
 
 # TeXlive (debian)
 PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
@@ -11,7 +11,7 @@ PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
 PATH="$PATH:/mnt/c/Python310-32/Scripts"
 
 # PHP mess detector (WSL)
-PATH="$PATH:/home/induni/phpmd/src/bin"
+PATH="$PATH:$HOME/phpmd/src/bin"
 
 export PATH
 
