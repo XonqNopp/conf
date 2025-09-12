@@ -18,9 +18,10 @@ export PATH
 
 alias subu="ssh buildroot@localhost"
 
+export wx="ch03wxctbltx3.corp.ads"
 export g="ch03debian-gi.corp.ads"
 export gIP="10.64.66.153"
-alias sg="ssh -X \$g"
+alias sg="ssh -X \$wx"
 
 export testNetwork="10.64.75"
 
