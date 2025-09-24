@@ -73,10 +73,37 @@ let maplocalleader = '\\'
 " These could be \\ (default) , ; wihtout causing problems
 " Vim actions enabled {{{
 " See :help runtimepath
-" Colorscheme
-colorscheme pablo
-" ron is not good in diff
-" pablo slate
+" Colorscheme {{{
+colorscheme default
+" | Scheme     | Comment                          |
+" |------------|----------------------------------|
+" | darkblue   | BG not black                     |
+" | default    | G/B but fold column white        |
+" | evening    | BG not black                     |
+" | industry   | BG not black                     |
+" | murphy     | BG not black red comments        |
+"
+" | blue       | X LIGHT                          |
+" | delek      | X LIGHT                          |
+" | desert     | X git rebase single color        |
+" | elflord    | X not enough contrast            |
+" | habamax    | X W/B                            |
+" | koehler    | X not enough contrast            |
+" | lunaperche | X not enough contrast            |
+" | morning    | X LIGHT                          |
+" | pablo      | X bracket matching not visible   |
+" | peachpuff  | X LIGHT                          |
+" | quiet      | X all green                      |
+" | retrobox   | X LIGHT                          |
+" | ron        | X diff not good                  |
+" | shine      | X LIGHT                          |
+" | slate      | X UNUSABLE                       |
+" | sorbet     | X git rebase single color        |
+" | torte      | X not enough contrast            |
+" | wildcharm  | X UNUSABLE                       |
+" | zaibatsu   | X not enough contrast            |
+" | zellner    | X LIGHT                          |
+" }}}
 filetype on                     " Enable detection of filetype
 filetype plugin indent on       " Enables sourcing right files
 syntax enable                   " To color the text
