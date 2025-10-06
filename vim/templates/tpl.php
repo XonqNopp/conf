@@ -1,30 +1,24 @@
 <?php
-/* TODO:
- */
-require("#&%functions/classPage.php");
+require_once("#&%functions/page_helper.php");
 $rootPath = "#&%";
 $funcpath = "$rootPath/functions";
 $page = new PhPage($rootPath);
-//$page->initDB();
-//// debug
-//$page->initHTML();
-//$page->LogLevelUp(6);
-//// CSS paths
-//$page->CSS_ppJump();
-//$page->CSS_ppWing();
-//// init body
+
+// debug
+//$page->htmlHelper->init();
+//$page->logger->levelUp(6);
+
+$page->bobbyTable->init();
+//$userIsAdmin = $page->loginHelper->userIsAdmin();
+
 $body = "";
 
 
-//// GoHome
-$gohome = new stdClass();
-$body .= $page->GoHome($gohome);
-//// Set title and hot booty
-$body .= $page->SetTitle(#&%);// before HotBooty
-$page->HotBooty();
+$body = $page->bodyBuilder->goHome(NULL, "..");
+// Set title and hot booty
+$body .= $page->htmlHelper->setTitle(#&%);  // before HotBooty
+$page->htmlHelper->hotBooty();
 
 
-//// Finish
 echo $body;
-unset($page);
 ?>
