@@ -276,6 +276,7 @@ if vimrc2_path !=? '/'
 	let vimrc2_path = vimrc2_path . '/'
 endif
 if filereadable(vimrc2_path . '.vimrc2')
+	echoerr "Please use the built-in ./.vimrc file reading instead of .vimrc2"
 	execute 'source ' . escape(vimrc2_path, ' ') . '.vimrc2'
 endif
 
@@ -306,3 +307,7 @@ endif
 augroup ovr
 	autocmd BufReadPre *.ovr set ft=cpp
 augroup end
+
+
+" Copilot settings
+nnoremap <silent> <leader>cc :CopilotChatOpen<cr>
