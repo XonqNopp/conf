@@ -3,7 +3,7 @@
 # Custom scripts
 PATH="$PATH:$HOME/.wash/phonak/bin"
 PATH="$PATH:$HOME/workspace/helios/helios/tools/bin"
-PATH="$PATH:$HOME/workspace/apollo/apollo/script/bin"
+PATH="$PATH:$HOME/workspace/apollo/apollo/script"
 
 # TeXlive (debian)
 PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
