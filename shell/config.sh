@@ -15,7 +15,7 @@ screen_prompt_info() {
     #    with session name: 637758.swtF
     # So it is better to display just the middle part
     scr_id="${STY#*.}"
-    echo "<${scr_id%.*}> "
+    echo "<${scr_id%.*}>"
 }
 
 

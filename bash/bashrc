@@ -31,7 +31,7 @@ shopt -s huponexit
 export LSCOLORS="gxfxcxdxbxegedabagacad"
 
 # PS1 ## {{{
-function git_ps1() {
+function git_ps1() {  # {{{
     branch=$(git branch --color=never 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 
     if [ "$branch" = "" ]; then
@@ -68,32 +68,32 @@ function git_ps1() {
     white=$(tput setaf 7)
     red=$(tput setaf 1)
     printf '\001%s\002[\001%s\002%s\001%s\002%s\001%s\002]' "$nc" "$red" "$branch" "$white" "$overall" "$nc"
-}
+}  # }}}
 
 
 customize_ps1() {
-    cyan='\[\033[1;36m\]'
-    bold_red='\[\033[1;31m\]'
-    brown='\[\033[0;33m\]'
-    lightblue='\[\033[1;34m\]'
     nc='\[\033[0m\]' # = No color
+
+    blue_light='\[\033[1;34m\]'
+    brown='\[\033[0;33m\]'
+    cyan='\[\033[1;36m\]'
+    red_bold='\[\033[1;31m\]'
 
     PS1=""
 
     # Note about checking $?:
     # This will give the return status of the last command.
     # If in PS1 we start calling other commands (like below git_ps1 or screen_prompt_info) then $? gets updated
-    PS1+='$(e=$?; (( e )) && echo "'"$bold_red"'xxxxx $e xxxxx ")'  # check last command
+    PS1+='$(e=$?; (( e )) && echo "'"$red_bold"'xxxxx $e xxxxx ")'  # check last command
 
-    PS1+="$brown\D{%H:%M:%S}"  # time
-    PS1+="$nc@"
-    PS1+="$brown\h "  # hostname
-    PS1+="$lightblue\W"  # CWD
-
-    PS1+='$(git_ps1) '
+    PS1+="$nc\D{%H:%M:%S}"  # time
+    PS1+=" $brown\u$nc@$brown\h"  # username+hostname
     PS1+="$cyan"'$(screen_prompt_info)'
-    PS1+="$nc\$ "
 
+    PS1+=" $blue_light\W"  # CWD
+    PS1+='$(git_ps1)'
+
+    PS1+="$nc \$ "
     export PS1
 }
 
