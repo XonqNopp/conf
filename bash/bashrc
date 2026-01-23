@@ -131,18 +131,23 @@ function vix() {
 }
 
 
-export switchplus="ssh-728988-gi@134.119.0.135"
-alias wsh="ssh \$switchplus"
+export ww="b13d3_induni@b13d3.ftp.infomaniak.com"
+alias wsh="ssh \$ww"
+export wwxn="$ww:sites/xonqnopp.ch"
 
 function wcp() {
     one=$1
     if (( $# == 1 )); then
-        scp -r "$switchplus:$one" .
+        scp -r "$wwxn:$one" .
     else
         one=$1
         shift
-        scp -r "$*" "$switchplus:$one"
+        scp -r "$*" "$wwxn:$one"
     fi
+}
+
+function navcp() {
+    scp "$@" "$wwxn/fly/nav/files/"
 }
 
 
