@@ -36,6 +36,7 @@
 	amende   = commit --amend --no-edit
 	aamende  = commit --amend --no-edit -a
 	ramende  = commit --amend --no-edit --reset-author
+          reve     = revert --no-edit HEAD
 
 	# reset
 	resha     = reset --hard
