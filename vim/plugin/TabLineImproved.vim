@@ -57,8 +57,20 @@ function TLImLabel(n)
 	let l:buflist = tabpagebuflist(a:n)
 	let l:winnr = tabpagewinnr(a:n)
 	let l:curbuf = l:buflist[l:winnr-1]
-	let l:bufnumber = tabpagewinnr(a:n, '$')
 	let l:tabnumber = tabpagenr('$')
+
+	let l:bufnumber = 0
+	for iBuffer in range(tabpagewinnr(a:n, '$'))
+		let l:wininfo = getwininfo(win_getid(iBuffer, a:n))
+		if len(l:wininfo) == 0
+			continue
+		endif
+		if l:wininfo[0].loclist == 1 || l:wininfo[0].quickfix == 1
+			continue
+		endif
+		let l:bufnumber += 1
+	endfor
+
 	let l:back = ''
 	" tab number if more than one
 	if l:tabnumber > 1
