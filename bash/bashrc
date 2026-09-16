@@ -88,6 +88,11 @@ customize_ps1() {
 
     PS1+="$nc\D{%H:%M:%S}"  # time
     PS1+=" $brown\u$nc@$brown\h"  # username+hostname
+    # TODO add version if WSL
+    if [ "$(uname -r | cut -d- -f2)" = "microsoft" ]; then
+        description=$(lsb_release -d | cut -d: -f2 | tr -d '[:space:]')
+        PS1+="[$description]"
+    fi
     PS1+="$cyan"'$(screen_prompt_info)'
 
     PS1+=" $blue_light\W"  # CWD
