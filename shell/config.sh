@@ -121,7 +121,7 @@ scr() {
     scl
 }
 scop() {
-    scr cop "$*"
+    scr cop
 }
 
 alias psg="psf \"aux\""
