@@ -114,14 +114,14 @@ alias ex="vim"
 cop() {
     copilot -i '/usage' "$@"
 }
+copp() {
+    copilot --resume
+}
 
 alias scl="screen -list || true"  # or'ed in case no screen, we do not want an error for this
 scr() {
     screen -d -R "$*"
     scl
-}
-scop() {
-    scr cop
 }
 
 alias psg="psf \"aux\""
