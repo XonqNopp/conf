@@ -111,10 +111,17 @@ alias grim="gripl --color=never"
 alias vi="vim"
 alias ex="vim"
 
-alias scL="screen -list || true"  # or'ed in case no screen, we do not want an error for this
-scR() {
+cop() {
+    copilot -i '/usage' "$@"
+}
+
+alias scl="screen -list || true"  # or'ed in case no screen, we do not want an error for this
+scr() {
     screen -d -R "$*"
-    scL
+    scl
+}
+scop() {
+    scr cop "$*"
 }
 
 alias psg="psf \"aux\""
@@ -125,4 +132,4 @@ alias forNum="echo \"for i in {1..10..2}\""
 
 # Run on each login
 who
-scL
+scl
