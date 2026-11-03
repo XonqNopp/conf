@@ -117,6 +117,9 @@ cop() {
 copp() {
     copilot --resume
 }
+coup() {
+    (git log --patch --format="%H%n%s%n%b%n---" main..HEAD) > output.txt
+}
 
 alias scl="screen -list || true"  # or'ed in case no screen, we do not want an error for this
 scr() {
